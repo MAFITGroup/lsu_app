@@ -12,8 +12,12 @@ class _SignupPageState extends State<SignupPage> {
   final formKey = new GlobalKey<FormState>();
 
   String email, password;
+  String nombreCompleto;
+  String telefono;
+  String localidad;
+  String especialidad;
 
-  Color greenColor = Color(0xFF00AF19);
+  Color colorAzul = Colors.blue;
 
   //To check fields during submit
   checkFields() {
@@ -49,26 +53,10 @@ class _SignupPageState extends State<SignupPage> {
     return Padding(
         padding: const EdgeInsets.only(left: 25.0, right: 25.0),
         child: ListView(children: [
-          SizedBox(height: 75.0),
-          Container(
-              height: 125.0,
-              width: 200.0,
-              child: Stack(
-                children: [
-                  Text('Registrarse',
-                      style: TextStyle(fontFamily: 'Trueno', fontSize: 60.0)),
-                  //Dot placement
-                  Positioned(
-                      top: 62.0,
-                      left: 200.0,
-                      child: Container(
-                          height: 10.0,
-                          width: 10.0,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: greenColor)))
-                ],
-              )),
+          SizedBox(height: 95.0),
           SizedBox(height: 25.0),
+
+          //COREO
           TextFormField(
               decoration: InputDecoration(
                   labelText: 'CORREO',
@@ -77,13 +65,16 @@ class _SignupPageState extends State<SignupPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: greenColor),
+                    borderSide: BorderSide(color: colorAzul),
                   )),
               onChanged: (value) {
                 this.email = value;
               },
-              validator: (value) =>
-              value.isEmpty ? 'El correo es requerido' : validarCorreo(value)),
+              validator: (value) => value.isEmpty
+                  ? 'El correo es requerido'
+                  : validarCorreo(value)),
+
+          // CONTRASEÑA
           TextFormField(
               decoration: InputDecoration(
                   labelText: 'CONTRASEÑA',
@@ -92,30 +83,99 @@ class _SignupPageState extends State<SignupPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: greenColor),
+                    borderSide: BorderSide(color: colorAzul),
                   )),
               obscureText: true,
               onChanged: (value) {
                 this.password = value;
               },
               validator: (value) =>
-              value.isEmpty ? 'La contraseña es requerida' : null),
+                  value.isEmpty ? 'La contraseña es requerida' : null),
+
+          // NOMBRE COMPLETO
+          TextFormField(
+              decoration: InputDecoration(
+                  labelText: 'NOMBRE COMPLETO',
+                  labelStyle: TextStyle(
+                      fontFamily: 'Trueno',
+                      fontSize: 12.0,
+                      color: Colors.grey.withOpacity(0.5)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: colorAzul),
+                  )),
+              onChanged: (value) {
+                this.nombreCompleto = value;
+              },
+              validator: (value) =>
+                  value.isEmpty ? 'El nombre completo es requerido' : null),
+
+          // TELEFONO
+          TextFormField(
+              decoration: InputDecoration(
+                  labelText: 'TELEFONO',
+                  labelStyle: TextStyle(
+                      fontFamily: 'Trueno',
+                      fontSize: 12.0,
+                      color: Colors.grey.withOpacity(0.5)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: colorAzul),
+                  )),
+              onChanged: (value) {
+                this.telefono = value;
+              },
+              validator: (value) =>
+                  value.isEmpty ? 'El telefono es requerido' : null),
+
+          // LOCALIDAD
+          TextFormField(
+              decoration: InputDecoration(
+                  labelText: 'LOCALIDAD',
+                  labelStyle: TextStyle(
+                      fontFamily: 'Trueno',
+                      fontSize: 12.0,
+                      color: Colors.grey.withOpacity(0.5)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: colorAzul),
+                  )),
+              onChanged: (value) {
+                this.localidad = value;
+              },
+              validator: (value) =>
+                  value.isEmpty ? 'La localidad es requerida' : null),
+
+          // ESPECIALIDAD
+          TextFormField(
+              decoration: InputDecoration(
+                  labelText: 'ESPECIALIDAD',
+                  labelStyle: TextStyle(
+                      fontFamily: 'Trueno',
+                      fontSize: 12.0,
+                      color: Colors.grey.withOpacity(0.5)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: colorAzul),
+                  )),
+              onChanged: (value) {
+                this.especialidad = value;
+              },
+              validator: (value) =>
+                  value.isEmpty ? 'La especialidad es requerida' : null),
           SizedBox(height: 50.0),
           TextButton(
             onPressed: () {
-              if (checkFields())
+              if (checkFields()) {
                 AuthService().signUp(email, password).then((userCreds) {
                   Navigator.of(context).pop();
                 }).catchError((e) {
                   ErrorHandler().errorDialog(context, e);
                 });
+              }
             },
             child: Container(
                 height: 50.0,
                 child: Material(
                     borderRadius: BorderRadius.circular(25.0),
                     shadowColor: Colors.greenAccent,
-                    color: greenColor,
+                    color: colorAzul,
                     elevation: 7.0,
                     child: Center(
                         child: Text('REGISTRARSE',
@@ -130,7 +190,7 @@ class _SignupPageState extends State<SignupPage> {
                 },
                 child: Text('Atras',
                     style: TextStyle(
-                        color: greenColor,
+                        color: colorAzul,
                         fontFamily: 'Trueno',
                         decoration: TextDecoration.underline)))
           ])

@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String email, password;
 
-  Color greenColor = Color(0xFF00AF19);
+  Color colorAzul = Colors.blue;
 
   //Valida los campos durante el inicio de sesion
   validarCampos() {
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: greenColor),
+                    borderSide: BorderSide(color: colorAzul),
                   )),
               onChanged: (value) {
                 this.email = value;
@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: greenColor),
+                    borderSide: BorderSide(color: colorAzul),
                   )),
               obscureText: true,
               onChanged: (value) {
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: InkWell(
                       child: Text('Olvide mi contraseña',
                           style: TextStyle(
-                              color: greenColor,
+                              color: colorAzul,
                               fontFamily: 'Trueno',
                               fontSize: 11.0,
                               decoration: TextDecoration.underline))))),
@@ -112,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Material(
                     borderRadius: BorderRadius.circular(25.0),
                     shadowColor: Colors.greenAccent,
-                    color: greenColor,
+                    color: colorAzul,
                     elevation: 7.0,
                     child: Center(
                         child: Text('INICIAR SESION',
@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 child: Text('Registrate',
                     style: TextStyle(
-                        color: greenColor,
+                        color: colorAzul,
                         fontFamily: 'Trueno',
                         decoration: TextDecoration.underline)))
           ])
