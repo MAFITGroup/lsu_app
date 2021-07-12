@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
+import 'package:lsu_app/servicios/database.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -11,7 +14,13 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final formKey = new GlobalKey<FormState>();
 
-  String email, password;
+  Usuario _usuarioActual;
+
+  Database database = Database();
+
+  String uid;
+  String email;
+  String password;
   String nombreCompleto;
   String telefono;
   String localidad;
@@ -89,8 +98,17 @@ class _SignupPageState extends State<SignupPage> {
               onChanged: (value) {
                 this.password = value;
               },
-              validator: (value) =>
-                  value.isEmpty ? 'La contraseña es requerida' : null),
+              // VALIDACIONES PARA CONTRASEÑA
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'La contraseña es requerida';
+                }
+                if (value.length <= 6) {
+                  return 'La contraseña debe contener mas de 6 caracteres';
+                } else {
+                  return null;
+                }
+              }),
 
           // NOMBRE COMPLETO
           TextFormField(
@@ -120,6 +138,11 @@ class _SignupPageState extends State<SignupPage> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: colorAzul),
                   )),
+              // SOLO NUMEROS
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ],
               onChanged: (value) {
                 this.telefono = value;
               },
@@ -163,7 +186,10 @@ class _SignupPageState extends State<SignupPage> {
           TextButton(
             onPressed: () {
               if (checkFields()) {
-                AuthService().signUp(email, password).then((userCreds) {
+                AuthService()
+                    .signUp(email, password, nombreCompleto, telefono,
+                        localidad, especialidad, false)
+                    .then((userCreds) {
                   Navigator.of(context).pop();
                 }).catchError((e) {
                   ErrorHandler().errorDialog(context, e);
@@ -186,6 +212,9 @@ class _SignupPageState extends State<SignupPage> {
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             InkWell(
                 onTap: () {
+                  // guardo datos del usuario
+
+                  // lo
                   Navigator.of(context).pop();
                 },
                 child: Text('Atras',

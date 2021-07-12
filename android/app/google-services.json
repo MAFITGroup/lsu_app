@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "700959996946",
+    "project_id": "lsuapp-b3290",
+    "storage_bucket": "lsuapp-b3290.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700959996946:android:44854143f567a4d686eccb",
+        "android_client_info": {
+          "package_name": "com.maf.uy.lsu_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700959996946-canu8qqghvthcfrd3v3fk31uir024g0n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-IuuxCZv03Qepcq6slXR66UFRsUtoeCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700959996946-canu8qqghvthcfrd3v3fk31uir024g0n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

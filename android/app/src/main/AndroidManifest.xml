@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.maf.uy.lsu_app">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="lsu_app"
+        android:label="LSU App"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

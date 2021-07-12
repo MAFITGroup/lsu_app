@@ -41,10 +41,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Form(key: formKey, child: loginForm())));
+        body: Padding(
+          padding: const EdgeInsets.all(50),
+          child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Form(key: formKey, child: loginForm())),
+        ));
   }
 
   loginForm() {
