@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
-import 'package:lsu_app/pantallas/PaginInicial.dart';
-import 'package:lsu_app/pantallas/loginPage.dart';
+import 'package:lsu_app/pantallas/Login.dart';
+import 'package:lsu_app/pantallas/PaginaInicial.dart';
 import 'package:lsu_app/servicios/database.dart';
 
 import 'ErrorHandler.dart';

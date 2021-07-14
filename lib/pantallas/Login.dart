@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
-import 'package:lsu_app/widgets/ResetPassword.dart';
+import 'package:lsu_app/servicios/ResetPassword.dart';
 
-import 'SignUpPage.dart';
+import 'IniciarSesion.dart';
 
 class LoginPage extends StatefulWidget {
   @override
