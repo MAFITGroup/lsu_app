@@ -1,17 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/manejadores/ManejadorUsuario.dart';
 import 'package:lsu_app/pantallas/Login.dart';
 import 'package:lsu_app/pantallas/PaginaInicial.dart';
-import 'package:lsu_app/servicios/database.dart';
 
 import 'ErrorHandler.dart';
 
 class AuthService {
+  ManejadorUsuario manej = new ManejadorUsuario();
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
   //Determino si el usuario esta autenticado.
   handleAuth() {
     return StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
+        stream: firebaseAuth.authStateChanges(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             return PaginaInicial();
@@ -23,35 +25,42 @@ class AuthService {
 
   //Cerrar sesion
   signOut() {
-    FirebaseAuth.instance.signOut();
+    firebaseAuth.signOut();
   }
 
   //Iniciar Sesion
   signIn(String email, String password, context) {
-    FirebaseAuth.instance
+    firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password)
-        .then((val) {
-    }).catchError((e) {
+        .then((val) {})
+        .catchError((e) {
       ErrorHandler().errorDialog(context, e);
     });
   }
 
   //Iniciar sesion con usuario nuevo
-  signUp(String email, String password, String nombreCompleto, String telefono,
-      String localidad, String especialidad, bool esAdministrador) {
-    return FirebaseAuth.instance
+  signUp(
+      String uid,
+      String email,
+      String password,
+      String nombreCompleto,
+      String telefono,
+      String localidad,
+      String especialidad,
+      bool esAdministrador) {
+    return firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
+      String userID = firebaseAuth.currentUser.uid;
       //creo mi nuevo usuario
-      Usuario usuario = new Usuario(value.user.uid, email, nombreCompleto,
-          telefono, localidad, especialidad, esAdministrador);
-      Database database = new Database();
-      database.crearUsuario(usuario);
+
+      manej.crearUsuario(userID, email, nombreCompleto, telefono, localidad,
+          especialidad, esAdministrador);
     });
   }
 
   //Resetear Password
   resetPasswordLink(String email) {
-    FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    firebaseAuth.sendPasswordResetEmail(email: email);
   }
 }

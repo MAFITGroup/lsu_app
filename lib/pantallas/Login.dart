@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/pantallas/ResetPassword.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
-import 'package:lsu_app/servicios/ResetPassword.dart';
 
-import 'IniciarSesion.dart';
+import 'Registrarse.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,9 +13,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final formKey = new GlobalKey<FormState>();
 
-  String email, password;
+  String _email;
+  String _password;
+  bool _verContrasenia = true;
 
-  Color colorAzul = Colors.blue;
+  Color _colorAzul = Colors.blue;
 
   //Valida los campos durante el inicio de sesion
   validarCampos() {
@@ -42,12 +44,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(50),
-          child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Form(key: formKey, child: loginForm())),
-        ));
+      padding: const EdgeInsets.all(50),
+      child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Form(key: formKey, child: loginForm())),
+    ));
   }
 
   loginForm() {
@@ -56,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
         child: ListView(children: [
           SizedBox(height: 150.0),
           SizedBox(height: 25.0),
+          // CORREO
           TextFormField(
               decoration: InputDecoration(
                   labelText: 'CORREO',
@@ -64,15 +67,17 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: colorAzul),
+                    borderSide: BorderSide(color: _colorAzul),
                   )),
               onChanged: (value) {
-                this.email = value;
+                this._email = value;
               },
               validator: (value) => value.isEmpty
                   ? 'El correo es requerido'
                   : validarCorreo(value)),
+          // CONTRASEÑA
           TextFormField(
+              obscureText: _verContrasenia,
               decoration: InputDecoration(
                   labelText: 'CONTRASEÑA',
                   labelStyle: TextStyle(
@@ -80,11 +85,18 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: colorAzul),
+                    borderSide: BorderSide(color: _colorAzul),
+                  ),
+                  suffix: InkWell(
+                    onTap: _accionVerContrasenia,
+                    child: Icon(
+                        _verContrasenia
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: _colorAzul),
                   )),
-              obscureText: true,
               onChanged: (value) {
-                this.password = value;
+                this._password = value;
               },
               validator: (value) =>
                   value.isEmpty ? 'La contraseña es requerida' : null),
@@ -100,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: InkWell(
                       child: Text('Olvide mi contraseña',
                           style: TextStyle(
-                              color: colorAzul,
+                              color: _colorAzul,
                               fontFamily: 'Trueno',
                               fontSize: 11.0,
                               decoration: TextDecoration.underline))))),
@@ -108,14 +120,14 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
             onPressed: () {
               if (validarCampos())
-                AuthService().signIn(email, password, context);
+                AuthService().signIn(_email, _password, context);
             },
             child: Container(
                 height: 50.0,
                 child: Material(
                     borderRadius: BorderRadius.circular(25.0),
                     shadowColor: Colors.greenAccent,
-                    color: colorAzul,
+                    color: _colorAzul,
                     elevation: 7.0,
                     child: Center(
                         child: Text('INICIAR SESION',
@@ -133,10 +145,16 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 child: Text('Registrate',
                     style: TextStyle(
-                        color: colorAzul,
+                        color: _colorAzul,
                         fontFamily: 'Trueno',
                         decoration: TextDecoration.underline)))
           ])
         ]));
+  }
+
+  void _accionVerContrasenia() {
+    setState(() {
+      _verContrasenia = !_verContrasenia;
+    });
   }
 }

@@ -18,15 +18,16 @@ class _SignupPageState extends State<SignupPage> {
 
   Database database = Database();
 
-  String uid;
-  String email;
-  String password;
-  String nombreCompleto;
-  String telefono;
-  String localidad;
-  String especialidad;
+  String _email;
+  String _password;
+  String _nombreCompleto;
+  String _telefono;
+  String _localidad;
+  String _especialidad;
 
-  Color colorAzul = Colors.blue;
+  bool _verContrasenia = true;
+
+  Color _colorAzul = Colors.blue;
 
   //To check fields during submit
   checkFields() {
@@ -55,10 +56,10 @@ class _SignupPageState extends State<SignupPage> {
         body: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: Form(key: formKey, child: FormularioRegistro())));
+            child: Form(key: formKey, child: formularioRegistro())));
   }
 
-  FormularioRegistro() {
+  formularioRegistro() {
     return Padding(
         padding: const EdgeInsets.only(left: 25.0, right: 25.0),
         child: ListView(children: [
@@ -74,10 +75,10 @@ class _SignupPageState extends State<SignupPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: colorAzul),
+                    borderSide: BorderSide(color: _colorAzul),
                   )),
               onChanged: (value) {
-                this.email = value;
+                this._email = value;
               },
               validator: (value) => value.isEmpty
                   ? 'El correo es requerido'
@@ -85,6 +86,7 @@ class _SignupPageState extends State<SignupPage> {
 
           // CONTRASEÑA
           TextFormField(
+              obscureText: _verContrasenia,
               decoration: InputDecoration(
                   labelText: 'CONTRASEÑA',
                   labelStyle: TextStyle(
@@ -92,11 +94,18 @@ class _SignupPageState extends State<SignupPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: colorAzul),
+                    borderSide: BorderSide(color: _colorAzul),
+                  ),
+                  suffix: InkWell(
+                    onTap: _accionVerContrasenia,
+                    child: Icon(
+                        _verContrasenia
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: _colorAzul),
                   )),
-              obscureText: true,
               onChanged: (value) {
-                this.password = value;
+                this._password = value;
               },
               // VALIDACIONES PARA CONTRASEÑA
               validator: (value) {
@@ -119,10 +128,10 @@ class _SignupPageState extends State<SignupPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: colorAzul),
+                    borderSide: BorderSide(color: _colorAzul),
                   )),
               onChanged: (value) {
-                this.nombreCompleto = value;
+                this._nombreCompleto = value;
               },
               validator: (value) =>
                   value.isEmpty ? 'El nombre completo es requerido' : null),
@@ -136,7 +145,7 @@ class _SignupPageState extends State<SignupPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: colorAzul),
+                    borderSide: BorderSide(color: _colorAzul),
                   )),
               // SOLO NUMEROS
               keyboardType: TextInputType.number,
@@ -144,7 +153,7 @@ class _SignupPageState extends State<SignupPage> {
                 FilteringTextInputFormatter.digitsOnly
               ],
               onChanged: (value) {
-                this.telefono = value;
+                this._telefono = value;
               },
               validator: (value) =>
                   value.isEmpty ? 'El telefono es requerido' : null),
@@ -158,10 +167,10 @@ class _SignupPageState extends State<SignupPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: colorAzul),
+                    borderSide: BorderSide(color: _colorAzul),
                   )),
               onChanged: (value) {
-                this.localidad = value;
+                this._localidad = value;
               },
               validator: (value) =>
                   value.isEmpty ? 'La localidad es requerida' : null),
@@ -175,10 +184,10 @@ class _SignupPageState extends State<SignupPage> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: colorAzul),
+                    borderSide: BorderSide(color: _colorAzul),
                   )),
               onChanged: (value) {
-                this.especialidad = value;
+                this._especialidad = value;
               },
               validator: (value) =>
                   value.isEmpty ? 'La especialidad es requerida' : null),
@@ -187,8 +196,9 @@ class _SignupPageState extends State<SignupPage> {
             onPressed: () {
               if (checkFields()) {
                 AuthService()
-                    .signUp(email, password, nombreCompleto, telefono,
-                        localidad, especialidad, false)
+                    //dejo me UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
+                    .signUp('', _email, _password, _nombreCompleto, _telefono,
+                        _localidad, _especialidad, false)
                     .then((userCreds) {
                   Navigator.of(context).pop();
                 }).catchError((e) {
@@ -201,7 +211,7 @@ class _SignupPageState extends State<SignupPage> {
                 child: Material(
                     borderRadius: BorderRadius.circular(25.0),
                     shadowColor: Colors.greenAccent,
-                    color: colorAzul,
+                    color: _colorAzul,
                     elevation: 7.0,
                     child: Center(
                         child: Text('REGISTRARSE',
@@ -219,10 +229,16 @@ class _SignupPageState extends State<SignupPage> {
                 },
                 child: Text('Atras',
                     style: TextStyle(
-                        color: colorAzul,
+                        color: _colorAzul,
                         fontFamily: 'Trueno',
                         decoration: TextDecoration.underline)))
           ])
         ]));
+  }
+
+  void _accionVerContrasenia() {
+    setState(() {
+      _verContrasenia = !_verContrasenia;
+    });
   }
 }

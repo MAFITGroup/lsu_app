@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/manejadores/ManejadorUsuario.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BotoneraMenuInicio.dart';
 
@@ -15,6 +17,8 @@ class PaginaInicial extends StatefulWidget {
 }
 
 class _PaginaInicialState extends State<PaginaInicial> {
+  String _usuarioUID = FirebaseAuth.instance.currentUser.uid;
+  ManejadorUsuario _manejadorUsuario = new ManejadorUsuario();
 
   @override
   Widget build(BuildContext context) {
@@ -30,35 +34,38 @@ class _PaginaInicialState extends State<PaginaInicial> {
             Botonera(
                 titulo: 'Glosario',
                 icono: Icons.search_rounded,
-                onTap: navegarAGlosario),
+                onTap: _navegarAGlosario),
             Botonera(
                 titulo: 'Biblioteca',
                 icono: Icons.local_library_outlined,
-                onTap: navegarABiblioteca),
+                onTap: _navegarABiblioteca),
             Botonera(
                 titulo: 'Noticias',
                 icono: Icons.chat_outlined,
-                onTap: navegarANoticias),
-            Botonera(
-                titulo: 'Categorias',
-                icono: Icons.category_outlined,
-                onTap: navegarACategorias),
+                onTap: _navegarANoticias),
+             Botonera(
+                  titulo: 'Categorias',
+                  icono: Icons.category_outlined,
+                  onTap: _navegarACategorias),
             Botonera(
                 titulo: 'Perfil',
                 icono: Icons.person_outline,
-                onTap: navegarAPerfil),
-            ElevatedButton(
-                onPressed: () {
-                  AuthService().signOut();
-                },
-                child: Center(child: Text('LOG OUT')))
+                onTap: _navegarAPerfil),
+            Botonera(
+                titulo: 'Cerrar Sesion',
+                icono: Icons.logout,
+                onTap: _cerrarSesion),
           ],
         ),
       ),
     ));
   }
 
-  void navegarAGlosario() {
+  void _cerrarSesion() {
+    AuthService().signOut();
+  }
+
+  void _navegarAGlosario() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -66,7 +73,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
         ));
   }
 
-  void navegarABiblioteca() {
+  void _navegarABiblioteca() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -74,7 +81,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
         ));
   }
 
-  void navegarANoticias() {
+  void _navegarANoticias() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -82,7 +89,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
         ));
   }
 
-  void navegarACategorias() {
+  void _navegarACategorias() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -90,7 +97,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
         ));
   }
 
-  void navegarAPerfil() {
+  void _navegarAPerfil() {
     Navigator.push(
         context,
         MaterialPageRoute(
