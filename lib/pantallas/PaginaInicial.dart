@@ -25,37 +25,41 @@ class _PaginaInicialState extends State<PaginaInicial> {
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(30.0),
-      child: Container(
-        // Menu de dos columnas
-        child: GridView.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: 2,
-          children: [
-            Botonera(
-                titulo: 'Glosario',
-                icono: Icons.search_rounded,
-                onTap: _navegarAGlosario),
-            Botonera(
-                titulo: 'Biblioteca',
-                icono: Icons.local_library_outlined,
-                onTap: _navegarABiblioteca),
-            Botonera(
-                titulo: 'Noticias',
-                icono: Icons.chat_outlined,
-                onTap: _navegarANoticias),
-             Botonera(
-                  titulo: 'Categorias',
-                  icono: Icons.category_outlined,
-                  onTap: _navegarACategorias),
-            Botonera(
-                titulo: 'Perfil',
-                icono: Icons.person_outline,
-                onTap: _navegarAPerfil),
-            Botonera(
-                titulo: 'Cerrar Sesion',
-                icono: Icons.logout,
-                onTap: _cerrarSesion),
-          ],
+      child: Center(
+        child: Container(
+          height: 700,
+          width: 600,
+          // Menu de dos columnas
+          child: GridView.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: 2,
+            children: [
+              Botonera(
+                  titulo: 'Glosario',
+                  icono: Icons.search_rounded,
+                  onTap: _navegarAGlosario),
+              Botonera(
+                  titulo: 'Biblioteca',
+                  icono: Icons.local_library_outlined,
+                  onTap: _navegarABiblioteca),
+              Botonera(
+                  titulo: 'Noticias',
+                  icono: Icons.chat_outlined,
+                  onTap: _navegarANoticias),
+               Botonera(
+                    titulo: 'Categorias',
+                    icono: Icons.category_outlined,
+                    onTap: _navegarACategorias),
+              Botonera(
+                  titulo: 'Perfil',
+                  icono: Icons.person_outline,
+                  onTap: _navegarAPerfil),
+              Botonera(
+                  titulo: 'Cerrar Sesion',
+                  icono: Icons.logout,
+                  onTap: _cerrarSesion),
+            ],
+          ),
         ),
       ),
     ));

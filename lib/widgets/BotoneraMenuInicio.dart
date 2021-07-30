@@ -27,11 +27,11 @@ class Botonera extends StatelessWidget {
             children: [
               Icon(
                 this.icono,
-                size: 70.0,
+                size: 60.0,
               ),
               Text(
                 titulo,
-                style: TextStyle(fontSize: 17),
+                style: TextStyle(fontSize: 14,fontFamily: 'Trueno'),
               )
             ],
           ),

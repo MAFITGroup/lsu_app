@@ -44,112 +44,115 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
-      padding: const EdgeInsets.all(50),
-      child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Form(key: formKey, child: loginForm())),
+      padding: const EdgeInsets.all(30),
+      child: Center(
+        child: Container(child: Form(key: formKey, child: loginForm())),
+      ),
     ));
   }
 
   loginForm() {
     return Padding(
         padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-        child: ListView(children: [
-          SizedBox(height: 150.0),
-          SizedBox(height: 25.0),
-          // CORREO
-          TextFormField(
-              decoration: InputDecoration(
-                  labelText: 'CORREO',
-                  labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5)),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: _colorAzul),
-                  )),
-              onChanged: (value) {
-                this._email = value;
-              },
-              validator: (value) => value.isEmpty
-                  ? 'El correo es requerido'
-                  : validarCorreo(value)),
-          // CONTRASEÑA
-          TextFormField(
-              obscureText: _verContrasenia,
-              decoration: InputDecoration(
-                  labelText: 'CONTRASEÑA',
-                  labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5)),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: _colorAzul),
-                  ),
-                  suffix: InkWell(
-                    onTap: _accionVerContrasenia,
-                    child: Icon(
-                        _verContrasenia
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: _colorAzul),
-                  )),
-              onChanged: (value) {
-                this._password = value;
-              },
-              validator: (value) =>
-                  value.isEmpty ? 'La contraseña es requerida' : null),
-          SizedBox(height: 5.0),
-          GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ResetPassword()));
-              },
-              child: Container(
-                  alignment: Alignment(1.0, 0.0),
-                  padding: EdgeInsets.only(top: 15.0, left: 20.0),
-                  child: InkWell(
-                      child: Text('Olvide mi contraseña',
-                          style: TextStyle(
-                              color: _colorAzul,
-                              fontFamily: 'Trueno',
-                              fontSize: 11.0,
-                              decoration: TextDecoration.underline))))),
-          SizedBox(height: 50.0),
-          TextButton(
-            onPressed: () {
-              if (validarCampos())
-                AuthService().signIn(_email, _password, context);
-            },
-            child: Container(
-                height: 50.0,
-                child: Material(
-                    borderRadius: BorderRadius.circular(25.0),
-                    shadowColor: Colors.greenAccent,
-                    color: _colorAzul,
-                    elevation: 7.0,
-                    child: Center(
-                        child: Text('INICIAR SESION',
-                            style: TextStyle(
-                                color: Colors.white, fontFamily: 'Trueno'))))),
-          ),
-          SizedBox(height: 20.0),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text('Si eres un usuario nuevo'),
-            SizedBox(width: 5.0),
-            InkWell(
+        child: SingleChildScrollView(
+          child: Column(children: [
+            SizedBox(height: 150.0),
+            SizedBox(height: 25.0),
+            // CORREO
+            TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'CORREO',
+                    labelStyle: TextStyle(
+                        fontFamily: 'Trueno',
+                        fontSize: 12.0,
+                        color: Colors.grey.withOpacity(0.5)),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: _colorAzul),
+                    )),
+                onChanged: (value) {
+                  this._email = value;
+                },
+                validator: (value) => value.isEmpty
+                    ? 'El correo es requerido'
+                    : validarCorreo(value)),
+            // CONTRASEÑA
+            TextFormField(
+                obscureText: _verContrasenia,
+                decoration: InputDecoration(
+                    labelText: 'CONTRASEÑA',
+                    labelStyle: TextStyle(
+                        fontFamily: 'Trueno',
+                        fontSize: 12.0,
+                        color: Colors.grey.withOpacity(0.5)),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: _colorAzul),
+                    ),
+                    suffix: InkWell(
+                      onTap: _accionVerContrasenia,
+                      child: Icon(
+                          _verContrasenia
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: _colorAzul),
+                    )),
+                onChanged: (value) {
+                  this._password = value;
+                },
+                validator: (value) =>
+                    value.isEmpty ? 'La contraseña es requerida' : null),
+            SizedBox(height: 5.0),
+            GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => SignupPage()));
+                      MaterialPageRoute(builder: (context) => ResetPassword()));
                 },
-                child: Text('Registrate',
-                    style: TextStyle(
-                        color: _colorAzul,
-                        fontFamily: 'Trueno',
-                        decoration: TextDecoration.underline)))
-          ])
-        ]));
+                child: Container(
+                    alignment: Alignment(1.0, 0.0),
+                    padding: EdgeInsets.only(top: 15.0, left: 20.0),
+                    child: InkWell(
+                        child: Text('Olvide mi contraseña',
+                            style: TextStyle(
+                                color: _colorAzul,
+                                fontFamily: 'Trueno',
+                                fontSize: 11.0,
+                                decoration: TextDecoration.underline))))),
+            SizedBox(height: 50.0),
+            TextButton(
+              onPressed: () {
+                if (validarCampos())
+                  AuthService().signIn(_email, _password, context);
+              },
+              child: Container(
+                  height: 50.0,
+                  width: 600,
+                  child: Material(
+                      borderRadius: BorderRadius.circular(25.0),
+                      shadowColor: Colors.blueAccent,
+                      color: _colorAzul,
+                      elevation: 7.0,
+                      child: Center(
+                          child: Text('INICIAR SESION',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Trueno'))))),
+            ),
+            SizedBox(height: 20.0),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text('Si eres un usuario nuevo'),
+              SizedBox(width: 5.0),
+              InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => SignupPage()));
+                  },
+                  child: Text('Registrate',
+                      style: TextStyle(
+                          color: _colorAzul,
+                          fontFamily: 'Trueno',
+                          decoration: TextDecoration.underline)))
+            ])
+          ]),
+        ));
   }
 
   void _accionVerContrasenia() {

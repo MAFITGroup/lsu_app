@@ -79,7 +79,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 height: 50.0,
                 child: Material(
                     borderRadius: BorderRadius.circular(25.0),
-                    shadowColor: Colors.greenAccent,
+                    shadowColor: Colors.blueAccent,
                     color: _colorAzul,
                     elevation: 7.0,
                     child: Center(
