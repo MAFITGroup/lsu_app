@@ -13,11 +13,13 @@ class BarraDeBusqueda extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(titulo, style:TextStyle(fontFamily: 'Trueno', fontSize: 16)),
-      actions: [
-        IconButton(onPressed: onPressed, icon: Icon(Icons.search))
-      ],
+    return SingleChildScrollView(
+      child: AppBar(
+        title: Text(titulo, style:TextStyle(fontFamily: 'Trueno', fontSize: 16)),
+        actions: [
+          IconButton(onPressed: onPressed, icon: Icon(Icons.search))
+        ],
+      ),
     );
   }
 }

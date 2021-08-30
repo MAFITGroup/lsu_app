@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "700959996946",
-    "project_id": "lsuapp-b3290",
-    "storage_bucket": "lsuapp-b3290.appspot.com"
+    "project_number": "1051905371406",
+    "project_id": "plataformalsu-bd176",
+    "storage_bucket": "plataformalsu-bd176.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:700959996946:android:44854143f567a4d686eccb",
+        "mobilesdk_app_id": "1:1051905371406:android:3cf90cc67de4cf911a3b5f",
         "android_client_info": {
-          "package_name": "com.maf.uy.lsu_app"
+          "package_name": "com.maf.uy.plataforma_lsu_android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "700959996946-canu8qqghvthcfrd3v3fk31uir024g0n.apps.googleusercontent.com",
+          "client_id": "1051905371406-b5u0sus48hj3ru8eik2m2lv8bviq33a7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB-IuuxCZv03Qepcq6slXR66UFRsUtoeCs"
+          "current_key": "AIzaSyAUL-bAwM-0cJuOXRAWE4bLFuxH2XizzrI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "700959996946-canu8qqghvthcfrd3v3fk31uir024g0n.apps.googleusercontent.com",
+              "client_id": "1051905371406-b5u0sus48hj3ru8eik2m2lv8bviq33a7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

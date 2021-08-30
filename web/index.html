@@ -27,9 +27,12 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
+
+
 <!-- This script installs service_worker.js to provide PWA functionality to
      application. For more information, see:
      https://developers.google.com/web/fundamentals/primers/service-workers -->
+
 <script>
     var serviceWorkerVersion = null;
     var scriptLoaded = false;
@@ -96,34 +99,16 @@
 
 </script>
 
-<!-- Conexion con FireBase, aca se crea el proyecto
- en la cuenta personal que va a gestionar el proyecto
-
-  Ver si crear un correo especial para administrarlo.
- -->
 
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/init.js"></script>
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
 
-
-<!-- TODO: Reemplazar por cuenta final de google del proyecto-->
-<script>
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyCXfh2S_z-Kh6KBAoVtmFFGmOmGAb9YyMs",
-    authDomain: "lsuapp-b3290.firebaseapp.com",
-    projectId: "lsuapp-b3290",
-    storageBucket: "lsuapp-b3290.appspot.com",
-    messagingSenderId: "700959996946",
-    appId: "1:700959996946:web:1be36c5d8df375f486eccb"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-</script>
+<script src="web/js/firebaseConfig.js"> </script>
 
 </body>
 </html>

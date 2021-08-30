@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lsu_app/widgets/SeleccionadorVideo.dart';
+import 'package:video_player/video_player.dart';
 
 class AltaSenia extends StatefulWidget {
   @override
@@ -28,10 +29,12 @@ class _AltaSeniaState extends State<AltaSenia> {
                 children: [
                   SizedBox(height: 50.0),
                   Container(
-                    child: archivoDeVideo == null
-                        ? Icon(Icons.video_library_outlined,
-                            color: _colorAzul, size: 180)
-                        : SeleccionadorVideo(archivoDeVideo),
+                    child: DataSourceType.file == null
+                        ? Text('No Se puede reproducri video')
+                        : (archivoDeVideo == null
+                            ? Icon(Icons.video_library_outlined,
+                                color: _colorAzul, size: 180)
+                            : SeleccionadorVideo(archivoDeVideo)),
                   ),
                   SizedBox(height: 50.0),
                   TextFormField(
@@ -92,7 +95,7 @@ class _AltaSeniaState extends State<AltaSenia> {
     );
   }
 
-  Future obtenerVideo() async {
+  void obtenerVideo() async {
     final media = await ImagePicker().pickVideo(source: ImageSource.gallery);
     final file = File(media.path);
     setState(() {

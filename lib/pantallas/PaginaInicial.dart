@@ -31,7 +31,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
           width: 600,
           // Menu de dos columnas
           child: GridView.count(
-            crossAxisCount: 2,
+            crossAxisCount: 1,
             mainAxisSpacing: 2,
             children: [
               Botonera(

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/modelo/Categoria.dart';
 import 'package:lsu_app/widgets/BarraDeBusqueda.dart';
+import 'package:lsu_app/widgets/ListaCategorias.dart';
 
 class Categorias extends StatelessWidget {
   @override

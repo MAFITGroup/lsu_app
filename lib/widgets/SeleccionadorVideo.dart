@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+
 
 class SeleccionadorVideo extends StatefulWidget {
   final File file;
@@ -12,6 +12,7 @@ class SeleccionadorVideo extends StatefulWidget {
   @override
   SeleccionadorVideoState createState() => SeleccionadorVideoState();
 }
+
 
 class SeleccionadorVideoState extends State<SeleccionadorVideo> {
   VideoPlayerController _controladorDeVideo;
@@ -93,7 +94,6 @@ class SeleccionadorVideoState extends State<SeleccionadorVideo> {
           }
         },
       );
-
 }
 
 class FadeAnimation extends StatefulWidget {
