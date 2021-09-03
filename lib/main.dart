@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/pantallas/InicioPage.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 
 void main() async {
@@ -15,7 +16,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'LSU',
-      home: AuthService().handleAuth(),
+      //home: AuthService().handleAuth(),
+      home: InicioPage(),
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: Color.fromRGBO(239, 243, 248, 1.0)
+      ),
     );
   }
 }
