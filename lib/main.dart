@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/pantallas/InicioPage.dart';
-import 'package:lsu_app/servicios/AuthService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'LSU',
+      title: 'Plataforma LSU',
       //home: AuthService().handleAuth(),
       home: InicioPage(),
       theme: ThemeData.light().copyWith(
