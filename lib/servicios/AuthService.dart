@@ -18,7 +18,7 @@ class AuthService {
           if (snapshot.hasData) {
             return PaginaInicial();
           } else {
-            return LoginPage();
+            return Login();
           }
         });
   }

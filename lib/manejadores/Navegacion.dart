@@ -3,8 +3,12 @@ import 'package:lsu_app/pantallas/AltaSenia.dart';
 import 'package:lsu_app/pantallas/Biblioteca.dart';
 import 'package:lsu_app/pantallas/Categorias.dart';
 import 'package:lsu_app/pantallas/Glosario.dart';
+import 'package:lsu_app/pantallas/Login.dart';
 import 'package:lsu_app/pantallas/Noticias.dart';
+import 'package:lsu_app/pantallas/PaginaInicial.dart';
 import 'package:lsu_app/pantallas/Perfil.dart';
+import 'package:lsu_app/pantallas/Registrarse.dart';
+import 'package:lsu_app/pantallas/ResetPassword.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 
 /*
@@ -66,4 +70,36 @@ class Navegacion {
           builder: (context) => AltaSenia(),
         ));
   }
+
+  void navegarALogin() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Login(),
+        ));
+  }
+
+  void navegarARegistrarse() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Registrarse(),
+        ));
+  }
+
+  void navegarAResetPassword() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResetPassword(),
+        ));
+  }
+  void navegarAPaginaInicial() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaginaInicial(),
+        ));
+  }
+
 }

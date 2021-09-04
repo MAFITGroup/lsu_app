@@ -6,12 +6,14 @@ class TextFieldTexto extends StatelessWidget {
   final String nombre;
   final Function(String) valor;
   final Function(String) validacion;
+  final Icon icon;
 
   TextFieldTexto({
     Key key,
     this.nombre,
     this.valor,
     this.validacion,
+    this.icon,
   }) : super(key: key);
 
   @override
@@ -20,13 +22,14 @@ class TextFieldTexto extends StatelessWidget {
       padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: TextFormField(
           decoration: InputDecoration(
+              prefixIcon: icon == null ? Icon(null) : icon,
               labelText: nombre,
               labelStyle: TextStyle(
                   fontFamily: 'Trueno',
                   fontSize: 12.0,
-                  color: Colors.grey.withOpacity(0.5)),
+                  color: Colores().colorSombraBotones),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colores().colorAzul),
+                borderSide: BorderSide(color: Colores().colorSombraBotones),
               )),
           onChanged: valor,
           validator: validacion),

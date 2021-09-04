@@ -7,8 +7,9 @@ class TextFieldContrasenia extends StatefulWidget {
   final Function(String) valor;
   final Function(String) validacion;
   bool verContrasenia = true;
+  final Icon icon;
 
-  TextFieldContrasenia({Key key, this.nombre, this.valor, this.validacion})
+  TextFieldContrasenia({Key key, this.nombre, this.valor, this.validacion, this.icon})
       : super(key: key);
 
   @override
@@ -23,13 +24,14 @@ class _TextFieldContraseniaState extends State<TextFieldContrasenia> {
       child: TextFormField(
           obscureText: widget.verContrasenia,
           decoration: InputDecoration(
+              prefixIcon: widget.icon == null ? Icon(null) : widget.icon,
               labelText: widget.nombre,
               labelStyle: TextStyle(
                   fontFamily: 'Trueno',
                   fontSize: 12.0,
-                  color: Colors.grey.withOpacity(0.5)),
+                  color: Colores().colorSombraBotones),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colores().colorAzul),
+                borderSide: BorderSide(color: Colores().colorSombraBotones),
               ),
               suffix: InkWell(
                 onTap: _accionVerContrasenia,

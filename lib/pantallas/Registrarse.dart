@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
@@ -8,12 +9,12 @@ import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
-class SignupPage extends StatefulWidget {
+class Registrarse extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _RegistrarseState createState() => _RegistrarseState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _RegistrarseState extends State<Registrarse> {
   final formKey = new GlobalKey<FormState>();
 
   String _email;
@@ -22,27 +23,6 @@ class _SignupPageState extends State<SignupPage> {
   String _telefono;
   String _localidad;
   String _especialidad;
-
-  //To check fields during submit
-  checkFields() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-  //Valido el correo y su formato
-  String validarCorreo(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Ingresa un correo valido';
-    else
-      return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,16 +46,18 @@ class _SignupPageState extends State<SignupPage> {
         //CORREO
         TextFieldTexto(
             nombre: 'CORREO',
+            icon: Icon(Icons.alternate_email_rounded),
             valor: (value) {
               this._email = value;
             },
             validacion: (value) => value.isEmpty
                 ? 'El correo es requerido'
-                : validarCorreo(value)),
+                : Validar().validarCorreo(value)),
 
         // CONTRASEÑA
         TextFieldContrasenia(
           nombre: 'CONTRASEÑA',
+          icon: Icon(Icons.lock_outline),
           valor: (value) {
             this._password = value;
           },
@@ -94,6 +76,7 @@ class _SignupPageState extends State<SignupPage> {
         // NOMBRE COMPLETO
         TextFieldTexto(
             nombre: 'NOMBRE COMPLETO',
+            icon: Icon(Icons.person),
             valor: (value) {
               this._nombreCompleto = value;
             },
@@ -103,6 +86,7 @@ class _SignupPageState extends State<SignupPage> {
         // TELEFONO
         TextFieldNumerico(
             nombre: 'TELEFONO',
+            icon: Icon(Icons.phone),
             valor: (value) {
               this._telefono = value;
             },
@@ -112,6 +96,7 @@ class _SignupPageState extends State<SignupPage> {
         // LOCALIDAD
         TextFieldTexto(
             nombre: 'LOCALIDAD',
+            icon: Icon(Icons.location_city_outlined),
             valor: (value) {
               this._localidad = value;
             },
@@ -121,6 +106,7 @@ class _SignupPageState extends State<SignupPage> {
         // ESPECIALIDAD
         TextFieldTexto(
             nombre: 'ESPECIALIDAD',
+            icon: Icon(Icons.military_tech_outlined),
             valor: (value) {
               this._especialidad = value;
             },
@@ -130,7 +116,7 @@ class _SignupPageState extends State<SignupPage> {
         Boton(
           titulo: 'REGISTRARSE',
           onTap: () {
-            if (checkFields()) {
+            if (Validar().camposVacios(formKey)) {
               AuthService()
                   //dejo mi UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
                   .signUp('', _email, _password, _nombreCompleto, _telefono,
