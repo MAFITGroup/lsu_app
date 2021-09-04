@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:lsu_app/manejadores/ManejadorUsuario.dart';
+import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/pantallas/Login.dart';
 import 'package:lsu_app/pantallas/PaginaInicial.dart';
 
 import 'ErrorHandler.dart';
 
 class AuthService {
-  ManejadorUsuario manej = new ManejadorUsuario();
+  ControladorUsuario manej = new ControladorUsuario();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   //Determino si el usuario esta autenticado.

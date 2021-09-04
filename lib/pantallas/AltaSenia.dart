@@ -1,11 +1,18 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
+import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/SeleccionadorVideo.dart';
-import 'package:video_player/video_player.dart';
+import 'package:universal_html/html.dart' as html;
 
 class AltaSenia extends StatefulWidget {
   @override
@@ -13,94 +20,122 @@ class AltaSenia extends StatefulWidget {
 }
 
 class _AltaSeniaState extends State<AltaSenia> {
-  Color _colorAzul = Colors.blue;
   String _nombreSenia;
   File archivoDeVideo;
+  String _url;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Center(
-            child: Container(
-              child: Column(
-                children: [
-                  SizedBox(height: 50.0),
-                  Container(
-                    child: DataSourceType.file == null
-                        ? Text('No Se puede reproducri video')
-                        : (archivoDeVideo == null
+        child: Column(
+          children: [
+            BarraDeNavegacion(
+              titulo: 'ALTA DE SEÑA',
+              iconoBtnUno: null,
+              onPressedBtnUno: null,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: Container(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20.0),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 300,
+                        child: archivoDeVideo == null && this._url == null
                             ? Icon(Icons.video_library_outlined,
-                                color: _colorAzul, size: 180)
-                            : SeleccionadorVideo(archivoDeVideo)),
+                                color: Colores().colorTextos, size: 150)
+                            : (kIsWeb
+                                ? SeleccionadorVideo(null, _url)
+                                : SeleccionadorVideo(archivoDeVideo, null)),
+                      ),
+                      SizedBox(height: 50.0),
+                      TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'NOMBRE DE LA SEÑA',
+                              labelStyle: TextStyle(
+                                  fontFamily: 'Trueno',
+                                  fontSize: 12.0,
+                                  color: Colors.grey.withOpacity(0.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colores().colorTextos),
+                              )),
+                          onChanged: (value) {
+                            this._nombreSenia = value;
+                          }),
+                      SizedBox(height: 20.0),
+                      SeleccionadorCategorias(),
+                      SizedBox(height: 20.0),
+                      Boton(
+                        titulo: 'SELECCIONAR ARCHIVO',
+                        onTap: obtenerVideo,
+                      ),
+                      SizedBox(height: 20.0),
+                      Boton(
+                        titulo: 'GUARDAR',
+                        onTap: () {},
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 50.0),
-                  TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'NOMBRE DE LA SEÑA',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Trueno',
-                              fontSize: 12.0,
-                              color: Colors.grey.withOpacity(0.5)),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: _colorAzul),
-                          )),
-                      onChanged: (value) {
-                        this._nombreSenia = value;
-                      }),
-                  SizedBox(height: 20.0),
-                  SeleccionadorCategorias(),
-                  SizedBox(height: 20.0),
-                  TextButton(
-                    onPressed: obtenerVideo,
-                    child: Container(
-                        height: 50.0,
-                        width: 600,
-                        child: Material(
-                            borderRadius: BorderRadius.circular(25.0),
-                            shadowColor: Colors.blueAccent,
-                            color: _colorAzul,
-                            elevation: 7.0,
-                            child: Center(
-                                child: Text('SELECCIONAR ARCHIVO',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Trueno'))))),
-                  ),
-                  SizedBox(height: 20.0),
-                  TextButton(
-                    onPressed: () {},
-                    child: Container(
-                        height: 50.0,
-                        width: 600,
-                        child: Material(
-                            borderRadius: BorderRadius.circular(25.0),
-                            shadowColor: Colors.blueAccent,
-                            color: _colorAzul,
-                            elevation: 7.0,
-                            child: Center(
-                                child: Text('GUARDAR',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Trueno'))))),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  void obtenerVideo() async {
-    final media = await ImagePicker().pickVideo(source: ImageSource.gallery);
-    final file = File(media.path);
-    setState(() {
-      archivoDeVideo = file;
+  Future<Uint8List> _getHtmlFileContent(html.File blob) async {
+    Uint8List file;
+    final reader = html.FileReader();
+    reader.readAsDataUrl(blob.slice(0, blob.size, blob.type));
+    reader.onLoadEnd.listen((event) {
+      Uint8List data =
+          Base64Decoder().convert(reader.result.toString().split(",").last);
+      file = data;
+    }).onData((data) {
+      file = Base64Decoder().convert(reader.result.toString().split(",").last);
+      return file;
     });
+    while (file == null) {
+      await new Future.delayed(const Duration(milliseconds: 1));
+      if (file != null) {
+        break;
+      }
+    }
+    setState(() {
+      archivoDeVideo = File.fromRawPath(file);
+    });
+    return file;
+  }
+
+  void obtenerVideo() async {
+    FilePickerResult result =
+        await FilePicker.platform.pickFiles(type: FileType.video);
+
+    if (kIsWeb) {
+      if (result.files.first != null) {
+        var fileBytes = result.files.first.bytes;
+        var fileName = result.files.first.name;
+        final blob = html.Blob([fileBytes]);
+        this._url = html.Url.createObjectUrlFromBlob(blob);
+        html.File file = html.File(fileBytes, fileName);
+        await _getHtmlFileContent(file);
+      }
+    } else {
+      if (result != null) {
+        File file = File(result.files.single.path);
+        if (file != null) {
+          setState(() {
+            archivoDeVideo = file;
+          });
+        }
+      }
+    }
   }
 }
 

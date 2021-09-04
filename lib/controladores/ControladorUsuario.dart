@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 
-class ManejadorUsuario {
+class ControladorUsuario {
   String _uid;
   String _correo;
   String _nombreCompleto;

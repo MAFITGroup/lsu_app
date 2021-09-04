@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lsu_app/widgets/BarraDeBusqueda.dart';
-
-import 'AltaSenia.dart';
+import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/manejadores/Navegacion.dart';
+import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
 class Glosario extends StatelessWidget {
   @override
@@ -14,21 +14,18 @@ class Glosario extends StatelessWidget {
         child: Scaffold(
           body: Column(
             children: [
-              BarraDeBusqueda(
-                titulo: 'Busqueda de Señas',
-                onPressed: () {}, // TODO Implementar busqueda de señas
+              BarraDeNavegacion(
+                titulo: 'BUSQUEDA DE SEÑAS',
+                onPressedBtnUno: () {},
+                iconoBtnUno:
+                    Icon(Icons.search), // TODO Implementar busqueda de señas
               ),
             ],
           ),
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AltaSenia(),
-                  ));
-            },
+            backgroundColor: Colores().colorAzul,
+            onPressed: Navegacion(context).navegarAltaSenia,
           ),
         ),
       ),
