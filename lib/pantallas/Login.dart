@@ -6,7 +6,8 @@ import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
-import 'package:lsu_app/widgets/widgets.dart';
+import 'package:lsu_app/widgets/auth_background.dart';
+import 'package:lsu_app/widgets/card_container.dart';
 
 class Login extends StatefulWidget {
   @override
