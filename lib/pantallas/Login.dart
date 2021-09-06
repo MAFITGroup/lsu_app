@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
+import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
@@ -39,7 +40,7 @@ class _LoginState extends State<Login> {
                         color: Colores().colorAzul),
                   ),
                   SizedBox(height: 30),
-                  LoginForm(),
+                  Form(key: formKey, child: loginForm()),
                 ],
               ),
             ),
@@ -50,10 +51,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-  LoginForm() {
+  loginForm() {
     return Container(
       child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
             TextFieldTexto(
@@ -87,14 +87,11 @@ class _LoginState extends State<Login> {
             SizedBox(height: 30),
             Boton(
                 titulo: 'INGRESAR',
-                onTap: Navegacion(context).navegarAPaginaInicial,
-                /*
                 onTap: () {
-                  if (Validar().camposVacios(formKey)) {
-                    AuthService().signIn(email, contrasenia, context);
+                    if (Validar().camposVacios(formKey)) {
+                      AuthService().signIn(email, contrasenia, context);
                   }
-                  */
-                ),
+                }),
             SizedBox(height: 10),
             GestureDetector(
                 onTap: Navegacion(context).navegarAResetPassword,

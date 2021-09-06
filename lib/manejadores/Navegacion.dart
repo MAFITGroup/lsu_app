@@ -95,11 +95,8 @@ class Navegacion {
         ));
   }
   void navegarAPaginaInicial() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PaginaInicial(),
-        ));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => PaginaInicial()));
   }
 
 }

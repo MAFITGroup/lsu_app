@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
-import 'package:lsu_app/pantallas/Login.dart';
+import 'package:lsu_app/manejadores/Navegacion.dart';
+import 'package:lsu_app/pantallas/InicioPage.dart';
 import 'package:lsu_app/pantallas/PaginaInicial.dart';
 
 import 'ErrorHandler.dart';
@@ -18,7 +19,7 @@ class AuthService {
           if (snapshot.hasData) {
             return PaginaInicial();
           } else {
-            return Login();
+            return InicioPage();
           }
         });
   }
@@ -32,7 +33,9 @@ class AuthService {
   signIn(String email, String password, context) {
     firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password)
-        .then((val) {})
+        .then((val) {
+          Navegacion(context).navegarAPaginaInicial();
+    })
         .catchError((e) {
       ErrorHandler().errorDialog(context, e);
     });

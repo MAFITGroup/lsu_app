@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class BarraDeNavegacion extends StatelessWidget {
@@ -22,9 +23,12 @@ class BarraDeNavegacion extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: AppBar(
+        backwardsCompatibility: false,
+        systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.black),
         backgroundColor: Colores().colorAzul,
         title:
-            Text(titulo, style: TextStyle(fontFamily: 'Trueno', fontSize: 16)),
+            Text(titulo, style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
         actions: [
           /*
           El ultimo icono que se agrege se posiciona a la izquierda,
@@ -46,4 +50,3 @@ class BarraDeNavegacion extends StatelessWidget {
     );
   }
 }
-
