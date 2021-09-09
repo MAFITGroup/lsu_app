@@ -5,13 +5,17 @@ import 'dart:typed_data';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/SeleccionadorVideo.dart';
+import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:universal_html/html.dart' as html;
 
 class AltaSenia extends StatefulWidget {
@@ -23,6 +27,9 @@ class _AltaSeniaState extends State<AltaSenia> {
   String _nombreSenia;
   File archivoDeVideo;
   String _url;
+  final formKey = new GlobalKey<FormState>();
+  String usuarioUID = FirebaseAuth.instance.currentUser.uid;
+  Uint8List fileWeb;
 
   @override
   Widget build(BuildContext context) {
@@ -53,19 +60,15 @@ class _AltaSeniaState extends State<AltaSenia> {
                                 : SeleccionadorVideo(archivoDeVideo, null)),
                       ),
                       SizedBox(height: 50.0),
-                      TextFormField(
-                          decoration: InputDecoration(
-                              labelText: 'NOMBRE DE LA SEÑA',
-                              labelStyle: TextStyle(
-                                  fontFamily: 'Trueno',
-                                  fontSize: 12.0,
-                                  color: Colors.grey.withOpacity(0.5)),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colores().colorTextos),
-                              )),
-                          onChanged: (value) {
-                            this._nombreSenia = value;
-                          }),
+                      TextFieldTexto(
+                        nombre: 'NOMBRE',
+                        icon: Icon(Iconos.hand),
+                        valor: (value) {
+                          this._nombreSenia = value;
+                        },
+                        validacion: ((value) =>
+                            value.isEmpty ? 'El nombre es requerido' : null),
+                      ),
                       SizedBox(height: 20.0),
                       SeleccionadorCategorias(),
                       SizedBox(height: 20.0),
@@ -73,10 +76,9 @@ class _AltaSeniaState extends State<AltaSenia> {
                         titulo: 'SELECCIONAR ARCHIVO',
                         onTap: obtenerVideo,
                       ),
-                      SizedBox(height: 20.0),
                       Boton(
                         titulo: 'GUARDAR',
-                        onTap: () {},
+                        onTap: guardarSenia,
                       ),
                     ],
                   ),
@@ -90,27 +92,44 @@ class _AltaSeniaState extends State<AltaSenia> {
   }
 
   Future<Uint8List> _getHtmlFileContent(html.File blob) async {
-    Uint8List file;
     final reader = html.FileReader();
     reader.readAsDataUrl(blob.slice(0, blob.size, blob.type));
     reader.onLoadEnd.listen((event) {
       Uint8List data =
           Base64Decoder().convert(reader.result.toString().split(",").last);
-      file = data;
+      fileWeb = data;
     }).onData((data) {
-      file = Base64Decoder().convert(reader.result.toString().split(",").last);
-      return file;
+      fileWeb =
+          Base64Decoder().convert(reader.result.toString().split(",").last);
+      return fileWeb;
     });
-    while (file == null) {
+    while (fileWeb == null) {
       await new Future.delayed(const Duration(milliseconds: 1));
-      if (file != null) {
+      if (fileWeb != null) {
         break;
       }
     }
     setState(() {
-      archivoDeVideo = File.fromRawPath(file);
+      archivoDeVideo = File.fromRawPath(fileWeb);
     });
-    return file;
+    return fileWeb;
+  }
+
+  Future guardarSenia() async {
+    final destino = 'files/$_nombreSenia';
+    if (archivoDeVideo == null) {
+      return;
+    } else {
+      // creo la senia en la base de datos
+      ControladorSenia().crearSenia('Ag', this._nombreSenia, 'Cate Prueb');
+
+      // Guardo el video
+      if (kIsWeb) {
+        ControladorSenia().subirSeniaBytes(destino, fileWeb);
+      } else {
+        ControladorSenia().subirSeniaArchivo(destino, archivoDeVideo);
+      }
+    }
   }
 
   void obtenerVideo() async {

@@ -2,21 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
-class Boton extends StatelessWidget {
+class Boton extends StatefulWidget {
 
   final String titulo;
   final VoidCallback onTap;
 
-  const Boton({
-    Key key,
-    this.titulo,
-    this.onTap,
-  }) : super(key: key);
+  const Boton({Key key, this.titulo, this.onTap}) : super(key: key);
+
+  @override
+  _BotonState createState() => _BotonState();
+}
+
+class _BotonState extends State<Boton> {
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: onTap,
+      onPressed: widget.onTap,
       child: Padding(
         padding: const EdgeInsets.all(1.0),
         child: Container(
@@ -28,7 +30,7 @@ class Boton extends StatelessWidget {
                 color: Colores().colorAzul,
                 elevation: 7.0,
                 child: Center(
-                    child: Text(titulo,
+                    child: Text(widget.titulo,
                         style: TextStyle(
                             color: Colores().colorBlanco,
                             fontFamily: 'Trueno',))))),

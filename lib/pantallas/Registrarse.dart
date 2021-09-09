@@ -19,7 +19,6 @@ class Registrarse extends StatefulWidget {
 class _RegistrarseState extends State<Registrarse> {
 
   final formKey = new GlobalKey<FormState>();
-
   String _email;
   String _password;
   String _nombreCompleto;

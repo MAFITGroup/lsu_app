@@ -4,54 +4,28 @@ import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 
 class InicioPage extends StatelessWidget {
-  final formKey = new GlobalKey<FormState>();
-
-  String _email;
-  String _password;
-
-  //To check fields during submit
-  checkFields() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-  //Valido el correo y su formato
-  String validarCorreo(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Ingresa un correo valido';
-    else
-      return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
 //        color: Color.fromRGBO(159, 206, 255, 0.5),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        margin: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            SizedBox(height: 1),
-            _imageInicio(),
-            SizedBox(height: 1),
-            _infoInicio(),
-            SizedBox(height: 1),
-            Boton(titulo: 'LOGIN', onTap: Navegacion(context).navegarALogin),
-            SizedBox(height: 1),
-            Boton(
-                titulo: 'REGISTRARSE',
-                onTap: Navegacion(context).navegarARegistrarse),
-          ],
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          margin: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              _imageInicio(),
+              SizedBox(height: 10),
+              _infoInicio(),
+              SizedBox(height: 10),
+              Boton(titulo: 'LOGIN', onTap: Navegacion(context).navegarALogin),
+              SizedBox(height: 10),
+              Boton(
+                  titulo: 'REGISTRARSE',
+                  onTap: Navegacion(context).navegarARegistrarse),
+            ],
+          ),
         ),
-      ),
     );
   }
 

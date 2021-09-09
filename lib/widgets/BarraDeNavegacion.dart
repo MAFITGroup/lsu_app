@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +27,8 @@ class BarraDeNavegacion extends StatelessWidget {
       child: AppBar(
         backwardsCompatibility: false,
         systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.black),
+            statusBarColor: Color.fromARGB(255,255, 255, 0)),
+
         backgroundColor: Colores().colorAzul,
         title:
             Text(titulo, style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
