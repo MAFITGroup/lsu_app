@@ -10,6 +10,7 @@ class ControladorUsuario {
   String _localidad;
   String _especialidad;
   bool _esAdministrador;
+  String _statusUsuario;
   Usuario usuario = new Usuario();
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -22,7 +23,8 @@ class ControladorUsuario {
       String telefono,
       String localidad,
       String especialidad,
-      bool esAdministrador) {
+      bool esAdministrador,
+      String statusUsuario){
     //creo mi nuevo usuario
     firestore.collection("usuarios").doc(firebaseAuth.currentUser.uid).set({
       'usuarioUID': uid,
@@ -32,6 +34,7 @@ class ControladorUsuario {
       'localidad': localidad,
       'especialidad': especialidad,
       'esAdministrador': esAdministrador,
+      'statusUsuario' : statusUsuario,
     });
   }
 
@@ -49,6 +52,7 @@ class ControladorUsuario {
         _localidad = documentSnapshot['localidad'];
         _especialidad = documentSnapshot['especialidad'];
         _esAdministrador = documentSnapshot['esAdministrador'];
+        _statusUsuario = documentSnapshot['statusUsuario'];
 
         usuario.uid = _uid;
         usuario.correo = _correo;
@@ -57,6 +61,7 @@ class ControladorUsuario {
         usuario.localidad = _localidad;
         usuario.especialidad = _especialidad;
         usuario.esAdministrador = _esAdministrador;
+        usuario.statusUsuario = _statusUsuario;
 
         return usuario;
       }else{
@@ -77,4 +82,22 @@ class ControladorUsuario {
       return false;
     }
   }
-}
+
+  Future<Usuario> obtenerUsuarios(String stadoUsuario) async{
+
+     var resultado = await firestore
+        .collection('usuarios')
+        .where('statusUsuario', isEqualTo: stadoUsuario )
+        .get();
+        resultado.docs.forEach((result) {
+            result.get(_nombreCompleto);
+            print(result.data());
+          });
+    }
+
+
+
+  }
+
+
+

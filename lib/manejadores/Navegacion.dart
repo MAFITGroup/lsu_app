@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/pantallas/AltaSenia.dart';
 import 'package:lsu_app/pantallas/Biblioteca.dart';
 import 'package:lsu_app/pantallas/Categorias.dart';
+import 'package:lsu_app/pantallas/GestionUsuarios.dart';
 import 'package:lsu_app/pantallas/Glosario.dart';
 import 'package:lsu_app/pantallas/Login.dart';
 import 'package:lsu_app/pantallas/Noticias.dart';
@@ -79,6 +80,14 @@ class Navegacion {
         ));
   }
 
+  void navegarALoginDest() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Login(),
+        ));
+  }
+
   void navegarARegistrarse() {
     Navigator.push(
         context,
@@ -97,6 +106,22 @@ class Navegacion {
   void navegarAPaginaInicial() {
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) => PaginaInicial()));
+  }
+
+  void navegarAPaginaInicialDest() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaginaInicial(),
+        ));
+  }
+
+  void navegarAPaginaGestionUsuario() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GestionUsuarios(),
+        ));
   }
 
 }

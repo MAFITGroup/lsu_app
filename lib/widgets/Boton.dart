@@ -18,7 +18,7 @@ class Boton extends StatelessWidget {
     return TextButton(
       onPressed: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(1.0),
         child: Container(
             height: 50.0,
             width: 600,

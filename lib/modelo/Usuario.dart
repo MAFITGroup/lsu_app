@@ -6,6 +6,7 @@ class Usuario {
   String _localidad;
   String _especialidad;
   bool _esAdministrador;
+  String _statusUsuario;
 
   Usuario();
 
@@ -26,6 +27,8 @@ class Usuario {
   String get especialidad => _especialidad;
 
   bool get esAdministrador => _esAdministrador;
+
+  String get statusUsuario => _statusUsuario;
 
   set esAdministrador(bool value) {
     _esAdministrador = value;
@@ -53,5 +56,9 @@ class Usuario {
 
   set uid(String value) {
     _uid = value;
+  }
+
+  set statusUsuario(String value){
+    _statusUsuario = value;
   }
 }

@@ -39,13 +39,13 @@ class InicioPage extends StatelessWidget {
         margin: EdgeInsets.all(20),
         child: Column(
           children: [
-            SizedBox(height: 10),
+            SizedBox(height: 1),
             _imageInicio(),
-            SizedBox(height: 10),
+            SizedBox(height: 1),
             _infoInicio(),
-            SizedBox(height: 10),
+            SizedBox(height: 1),
             Boton(titulo: 'LOGIN', onTap: Navegacion(context).navegarALogin),
-            SizedBox(height: 10),
+            SizedBox(height: 1),
             Boton(
                 titulo: 'REGISTRARSE',
                 onTap: Navegacion(context).navegarARegistrarse),

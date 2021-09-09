@@ -7,7 +7,7 @@ import 'package:lsu_app/pantallas/PaginaInicial.dart';
 
 import 'ErrorHandler.dart';
 
-class AuthService {
+class AuthService extends ChangeNotifier{
   ControladorUsuario manej = new ControladorUsuario();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
@@ -50,7 +50,8 @@ class AuthService {
       String telefono,
       String localidad,
       String especialidad,
-      bool esAdministrador) {
+      bool esAdministrador,
+      String statusUsuario) {
     return firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
@@ -58,7 +59,7 @@ class AuthService {
       //creo mi nuevo usuario
 
       manej.crearUsuario(userID, email, nombreCompleto, telefono, localidad,
-          especialidad, esAdministrador);
+          especialidad, esAdministrador, statusUsuario);
     });
   }
 

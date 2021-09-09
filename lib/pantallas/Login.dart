@@ -10,6 +10,8 @@ import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:lsu_app/widgets/auth_background.dart';
 import 'package:lsu_app/widgets/card_container.dart';
 
+import 'PaginaInicial.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -17,8 +19,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final formKey = new GlobalKey<FormState>();
-  String email;
-  String contrasenia;
+  String _email;
+  String _password;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class _LoginState extends State<Login> {
           child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 200),
+            SizedBox(height: 150),
             CardContainer(
               child: Column(
                 children: [
@@ -54,13 +56,14 @@ class _LoginState extends State<Login> {
   loginForm() {
     return Container(
       child: Form(
+        //autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
             TextFieldTexto(
               nombre: 'CORREO',
               icon: Icon(Icons.alternate_email_rounded),
               valor: (value) {
-                this.email = value;
+                this._email = value;
               },
               validacion: (value) => value.isEmpty
                   ? 'El correo es requerido'
@@ -71,7 +74,7 @@ class _LoginState extends State<Login> {
               nombre: 'CONTRASEÑA',
               icon: Icon(Icons.lock_outline),
               valor: (value) {
-                this.contrasenia = value;
+                this._password = value;
               },
               validacion: (value) {
                 if (value.isEmpty) {
@@ -89,7 +92,7 @@ class _LoginState extends State<Login> {
                 titulo: 'INGRESAR',
                 onTap: () {
                     if (Validar().camposVacios(formKey)) {
-                      AuthService().signIn(email, contrasenia, context);
+                      AuthService().signIn(_email, _password, context);
                   }
                 }),
             SizedBox(height: 10),
