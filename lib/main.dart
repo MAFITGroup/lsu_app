@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Future.delayed(Duration(seconds: 30));
+  print('Firebase.initializeApp');
   await Firebase.initializeApp();
+  print('runApp(MyApp())');
   runApp(MyApp());
 }
 
