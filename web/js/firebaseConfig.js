@@ -11,4 +11,4 @@
   };
 
   // Initialize Firebase
-  await firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
