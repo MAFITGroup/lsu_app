@@ -6,7 +6,6 @@ import 'package:lsu_app/pantallas/GestionUsuarios.dart';
 import 'package:lsu_app/pantallas/Glosario.dart';
 import 'package:lsu_app/pantallas/Login.dart';
 import 'package:lsu_app/pantallas/Noticias.dart';
-import 'package:lsu_app/pantallas/PaginaInicial.dart';
 import 'package:lsu_app/pantallas/Perfil.dart';
 import 'package:lsu_app/pantallas/Registrarse.dart';
 import 'package:lsu_app/pantallas/ResetPassword.dart';
@@ -103,18 +102,6 @@ class Navegacion {
           builder: (context) => ResetPassword(),
         ));
   }
-  void navegarAPaginaInicial() {
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => PaginaInicial()));
-  }
-
-  void navegarAPaginaInicialDest() {
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PaginaInicial(),
-        ));
-  }
 
   void navegarAPaginaGestionUsuario() {
     Navigator.push(
@@ -123,5 +110,4 @@ class Navegacion {
           builder: (context) => GestionUsuarios(),
         ));
   }
-
 }

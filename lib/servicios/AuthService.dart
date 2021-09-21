@@ -1,13 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/pantallas/InicioPage.dart';
 import 'package:lsu_app/pantallas/PaginaInicial.dart';
 
 import 'ErrorHandler.dart';
 
-class AuthService extends ChangeNotifier{
+class AuthService extends ChangeNotifier {
   ControladorUsuario manej = new ControladorUsuario();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
@@ -34,9 +33,8 @@ class AuthService extends ChangeNotifier{
     firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((val) {
-          Navegacion(context).navegarAPaginaInicial();
-    })
-        .catchError((e) {
+      Navigator.pop(context);
+    }).catchError((e) {
       ErrorHandler().errorDialog(context, e);
     });
   }
