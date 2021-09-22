@@ -109,7 +109,13 @@
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
 
+<script type="module">
+    // Your web app's Firebase configuration
+    import { firebaseConfig } from 'web/js/firebaseConfig.js';
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
 
+  </script>
 
 </body>
 </html>
