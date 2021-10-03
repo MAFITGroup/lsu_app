@@ -27,7 +27,9 @@ class BarraDeNavegacion extends StatelessWidget {
       child: AppBar(
         backwardsCompatibility: false,
         systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Color.fromARGB(255,255, 255, 0)),
+            statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light),
 
         backgroundColor: Colores().colorAzul,
         title:
@@ -44,7 +46,7 @@ class BarraDeNavegacion extends StatelessWidget {
           IconButton(
               onPressed: onPressedBtnDos == null ? null : onPressedBtnDos,
               icon: iconoBtnDos == null ? Icon(null) : iconoBtnDos),
-          SizedBox(width: 10),
+          SizedBox(width: 5),
           IconButton(
               onPressed: onPressedBtnUno == null ? null : onPressedBtnUno,
               icon: iconoBtnUno == null ? Icon(null) : iconoBtnUno),

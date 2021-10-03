@@ -1,13 +1,13 @@
-class Category {
+class Categoria {
 
-  String _name;
+  String _nombre;
 
 
-  Category(String name);
+  Categoria(String name);
 
-  String get name => _name;
+  String get nombre => _nombre;
 
-  set name(String value) {
-    _name = value;
+  set nombre(String value) {
+    _nombre = value;
   }
 }

@@ -74,7 +74,7 @@ class ControladorUsuario {
 
   Future<bool> isUsuarioAdministrador(String usuarioActualUID) async {
     usuario = await obtenerUsuarioLogueado(usuarioActualUID);
-    if (usuario.esAdministrador) {
+    if (usuario.esAdministrador == true) {
       print('Obtuve usuario administrador');
       return true;
     } else {
@@ -111,6 +111,10 @@ class ControladorUsuario {
           });
     }
 
+    Future<String> obtenerNombreUsuario(String usuarioActualUID) async {
+      usuario = await obtenerUsuarioLogueado(usuarioActualUID);
+      return usuario.nombreCompleto;
+    }
 
 
   }
