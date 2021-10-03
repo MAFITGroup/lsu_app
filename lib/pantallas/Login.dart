@@ -92,7 +92,7 @@ class _LoginState extends State<Login> {
             Boton(
                 titulo: 'INGRESAR',
                 onTap: () {
-                    if (Validar().camposVacios(formKey)) {
+                    if (Validar().camposVacios(formKey) != true ) {
 
                     showDialog(
                         context: context,
