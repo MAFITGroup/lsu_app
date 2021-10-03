@@ -94,6 +94,22 @@ class ControladorUsuario {
             print(result.data());
           });
     }
+    
+    Future<bool> existeUsuario(String email) async{
+      bool q = false;
+      var resultado = await firestore
+          .collection('usuarios')
+          .where('correo', isEqualTo: email)
+          .get();
+          resultado.docs.forEach((result) {
+            result.get(_correo);
+            print(result.data());
+            if(result != null){
+              q = true;
+              return q;
+            }
+          });
+    }
 
 
 

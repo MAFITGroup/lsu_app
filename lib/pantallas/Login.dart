@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
@@ -92,8 +93,36 @@ class _LoginState extends State<Login> {
                 titulo: 'INGRESAR',
                 onTap: () {
                     if (Validar().camposVacios(formKey)) {
+
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text('Campos requeridos'),
+                            content: Text('Los campos usuario y contraseña son obligatorios'),
+                            actions: [
+                              TextButton(
+                                  child: Text('Ok',
+                                    style: TextStyle(
+                                      color: Colores().colorAzul,
+                                      fontFamily: 'Trueno',
+                                      fontSize: 11.0,
+                                      decoration: TextDecoration.underline
+                                    ),
+                                  ),
+                                onPressed: Navegacion(context).navegarALogin,
+                              )
+                            ],
+                          );
+
+                        }
+                    );
+
+                  }else {
+
                       AuthService().signIn(_email, _password, context);
-                  }
+
+                    }
                 }),
             SizedBox(height: 10),
             GestureDetector(

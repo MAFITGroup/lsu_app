@@ -68,6 +68,7 @@ class _ResetPasswordState extends State<ResetPassword> {
           GestureDetector(
             onTap: () {
               if (checkFields()) {
+
                 AuthService().resetPasswordLink(_email).then((userCreds) {
                   Navigator.of(context).pop();
                 },
@@ -75,7 +76,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     context: context,
                     builder: (BuildContext context){
                       return AlertDialog(
-                        title: Text('Solicitud de nueva contrase;a'),
+                        title: Text('Solicitud de nueva contraseña'),
                         content: Text('Infomarcion enviada a $_email'),
 
                         actions: [

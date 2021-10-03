@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/pantallas/InicioPage.dart';
@@ -65,6 +66,12 @@ class AuthService extends ChangeNotifier{
 
   //Resetear Password
   resetPasswordLink(String email) {
+
+    Future<bool> q  =  manej.existeUsuario(email);
+
     firebaseAuth.sendPasswordResetEmail(email: email);
   }
+
+
+
 }

@@ -62,7 +62,8 @@ class _RegistrarseState extends State<Registrarse> {
 
                 validacion: (value) => value.isEmpty
                   ? 'Campo obligatorio'
-                  : Validar().validarCorreo(value)),
+                  : Validar().validarCorreo(value)
+              ),
 
               // CONTRASEÑA
               TextFieldContrasenia(
@@ -94,24 +95,17 @@ class _RegistrarseState extends State<Registrarse> {
                 validacion: ((value) =>
                   value.isEmpty ? 'Campo obligatorio' : null)),
 
-              // TELEFONO
+              // CELULAR
               TextFieldNumerico(
-                nombre: 'TELEFONO',
+                nombre: 'CELULAR',
                 icon: Icon(Icons.phone),
                 valor: (value) {
                   this._telefono = value;
                 },
-                validacion: (value) {
-                  if(value.isEmpty){
-                    return 'Campo obligatorio';
-                  }
-                  if(value.length != 9){
-                    return 'Formato no valido';
-                  }
-                  else{
-                    return null;
-                  }
-                }
+
+                validacion: (value)  => value.isEmpty
+                  ? 'Campo obligatorio'
+                  : Validar().validarCelular(value)
               ),
 
               // LOCALIDAD
@@ -173,10 +167,18 @@ class _RegistrarseState extends State<Registrarse> {
                                           decoration: TextDecoration.underline
                                       )),
                                   onPressed: Navegacion(context).navegarALogin,
-                                )
+
+
+
+                                ),
+
+
                               ],
+
                             );
+
                           }
+
                       );
 
 

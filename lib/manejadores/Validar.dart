@@ -22,4 +22,14 @@ class Validar {
     else
       return null;
   }
+
+  // Validar campo celular
+  String validarCelular(String value){
+    Pattern pattern =  r'(^09+[0-9]{7}$)';
+    RegExp regex = new RegExp(pattern);
+    if(!regex.hasMatch(value))
+      return 'El número de celudar debe comenzar con 09 y tener un largo de 9 caracteres';
+    else
+      return null;
+  }
 }
