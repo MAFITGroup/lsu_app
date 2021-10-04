@@ -32,4 +32,14 @@ class Validar {
     else
       return null;
   }
+
+  String validarPassword(String value){
+    Pattern pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regex = new RegExp(pattern);
+
+    if(!regex.hasMatch(value))
+      return "La contraseña debe tener el siguiente formanto: Un carácter mayúscula, Un dígito numérico, Un carácter especial(! @ # \$ & * ~)";
+    else
+      return null;
+  }
 }

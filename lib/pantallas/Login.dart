@@ -57,7 +57,6 @@ class _LoginState extends State<Login> {
   loginForm() {
     return Container(
       child: Form(
-        //autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
             TextFieldTexto(
@@ -66,9 +65,9 @@ class _LoginState extends State<Login> {
               valor: (value) {
                 this._email = value;
               },
-              validacion: (value) => value.isEmpty
+              validacion: ((value) => value.isEmpty
                   ? 'El correo es requerido'
-                  : Validar().validarCorreo(value),
+                  : Validar().validarCorreo(value)),
             ),
             SizedBox(height: 30),
             TextFieldContrasenia(
@@ -77,53 +76,46 @@ class _LoginState extends State<Login> {
               valor: (value) {
                 this._password = value;
               },
-              validacion: (value) {
-                if (value.isEmpty) {
-                  return 'La contraseña es requerida';
-                }
-                if (value.length <= 6) {
-                  return 'La contraseña debe contener mas de 6 caracteres';
-                } else {
-                  return null;
-                }
-              },
+                validacion: ((value)=> value.isEmpty
+                  ? 'La contraseña es requerida'
+                  : null ),
             ),
             SizedBox(height: 30),
             Boton(
                 titulo: 'INGRESAR',
                 onTap: () {
-                    if (Validar().camposVacios(formKey) != true ) {
+                  Validar().camposVacios(formKey);
+                  AuthService().signIn(_email, _password, context);
 
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context){
-                          return AlertDialog(
-                            title: Text('Campos requeridos'),
-                            content: Text('Los campos usuario y contraseña son obligatorios'),
-                            actions: [
-                              TextButton(
+                    /*if(Validar().camposVacios(formKey)){
+                      AuthService().signIn(_email, _password, context);
+                    }else{
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context){
+                            return AlertDialog(
+                              title: Text('Campos requeridos'),
+                              content: Text('Los campos usuario y contraseña son obligatorios'),
+                              actions: [
+                                TextButton(
                                   child: Text('Ok',
                                     style: TextStyle(
-                                      color: Colores().colorAzul,
-                                      fontFamily: 'Trueno',
-                                      fontSize: 11.0,
-                                      decoration: TextDecoration.underline
+                                        color: Colores().colorAzul,
+                                        fontFamily: 'Trueno',
+                                        fontSize: 11.0,
+                                        decoration: TextDecoration.underline
                                     ),
                                   ),
-                                onPressed: Navegacion(context).navegarALogin,
-                              )
-                            ],
-                          );
+                                  onPressed: Navegacion(context).navegarALogin,
+                                )
+                              ],
+                            );
 
-                        }
-                    );
-
-                  }else {
-
-                      AuthService().signIn(_email, _password, context);
-
-                    }
-                }),
+                          }
+                      );
+                    } */
+                }
+            ),
             SizedBox(height: 10),
             GestureDetector(
                 onTap: Navegacion(context).navegarAResetPassword,
@@ -136,7 +128,11 @@ class _LoginState extends State<Login> {
                                 color: Colores().colorAzul,
                                 fontFamily: 'Trueno',
                                 fontSize: 11.0,
-                                decoration: TextDecoration.underline))))),
+                                decoration: TextDecoration.underline)
+                        )
+                    )
+                )
+            ),
           ],
         ),
       ),

@@ -32,6 +32,7 @@ class AuthService extends ChangeNotifier{
 
   //Iniciar Sesion
   signIn(String email, String password, context) {
+
     firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((val) {
@@ -39,8 +40,10 @@ class AuthService extends ChangeNotifier{
     })
         .catchError((e) {
       ErrorHandler().errorDialog(context, e);
+
     });
   }
+
 
   //Iniciar sesion con usuario nuevo
   signUp(

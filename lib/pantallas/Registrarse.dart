@@ -73,16 +73,9 @@ class _RegistrarseState extends State<Registrarse> {
                   this._password = value;
                 },
 
-                validacion: (value) {
-                  if (value.isEmpty) {
-                    return 'Campo obligatorio';
-                  }
-                  if (value.length <= 6) {
-                    return 'La contraseña debe contener mas de 6 caracteres';
-                  } else {
-                    return null;
-                  }
-                },
+                validacion: (value) => value.isEmpty
+                  ? 'Campo obligatorio'
+                  : Validar().validarPassword(value)  
               ),
 
               // NOMBRE COMPLETO
