@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
+import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
@@ -16,6 +18,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   final formKey = new GlobalKey<FormState>();
 
   String _email;
+  List<String> listaCorreos = [];
 
 
   //To check fields during submit
@@ -65,42 +68,22 @@ class _ResetPasswordState extends State<ResetPassword> {
           ),
 
           SizedBox(height: 50.0),
-          GestureDetector(
+          Boton(
+              titulo: 'CONFIRMAR',
             onTap: () {
               if (checkFields()) {
 
-                AuthService().resetPasswordLink(_email).then((userCreds) {
-                  Navigator.of(context).pop();
-                },
-                    showDialog(
-                    context: context,
-                    builder: (BuildContext context){
-                      return AlertDialog(
-                        title: Text('Solicitud de nueva contraseña'),
-                        content: Text('Infomarcion enviada a $_email'),
+                AuthService()
+                    .resetPasswordLink(_email, context);
 
-                        actions: [
-                          TextButton(
-                            child: Text('Ok',
-                                style: TextStyle(
-                                    color: Colores().colorAzul,
-                                    fontFamily: 'Trueno',
-                                    fontSize: 11.0,
-                                    decoration: TextDecoration.underline
-                                )),
-                            onPressed: Navegacion(context).navegarALoginDest,
-                          )
-                        ],
-                      );
-                    }
-                )
 
-                );
-              }
-            },
-            child: Boton(
+
+              } // if(checkField)
+            }, // onTap
+
+           /* child: Boton(
                 titulo: 'CONFIRMAR',
-                )
+                )*/
 
 
           ),
@@ -123,4 +106,5 @@ class _ResetPasswordState extends State<ResetPassword> {
         )
     );
   }
+
 }

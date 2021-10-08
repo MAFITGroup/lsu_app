@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
@@ -13,6 +14,8 @@ import 'package:lsu_app/widgets/card_container.dart';
 
 import 'PaginaInicial.dart';
 
+enum stadoUsuario {pendiente, activo, inactivo}
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -22,6 +25,8 @@ class _LoginState extends State<Login> {
   final formKey = new GlobalKey<FormState>();
   String _email;
   String _password;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,33 +92,6 @@ class _LoginState extends State<Login> {
                   Validar().camposVacios(formKey);
                   AuthService().signIn(_email, _password, context);
 
-                    /*if(Validar().camposVacios(formKey)){
-                      AuthService().signIn(_email, _password, context);
-                    }else{
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context){
-                            return AlertDialog(
-                              title: Text('Campos requeridos'),
-                              content: Text('Los campos usuario y contraseña son obligatorios'),
-                              actions: [
-                                TextButton(
-                                  child: Text('Ok',
-                                    style: TextStyle(
-                                        color: Colores().colorAzul,
-                                        fontFamily: 'Trueno',
-                                        fontSize: 11.0,
-                                        decoration: TextDecoration.underline
-                                    ),
-                                  ),
-                                  onPressed: Navegacion(context).navegarALogin,
-                                )
-                              ],
-                            );
-
-                          }
-                      );
-                    } */
                 }
             ),
             SizedBox(height: 10),
@@ -138,4 +116,6 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
+
 }
