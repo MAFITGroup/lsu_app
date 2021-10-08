@@ -44,7 +44,6 @@ class _AltaSeniaState extends State<AltaSenia> {
   dynamic _catSeleccionada;
   UploadTask uploadTask;
 
-
   @override
   void initState() {
     listarCateogiras();
@@ -52,15 +51,12 @@ class _AltaSeniaState extends State<AltaSenia> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             BarraDeNavegacion(
               titulo: 'ALTA DE SEÑA',
-              iconoBtnUno: null,
-              onPressedBtnUno: null,
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
@@ -141,7 +137,9 @@ class _AltaSeniaState extends State<AltaSenia> {
                                   /*verifico que el archivo de video no sea null dependiendo
                                   si estoy en la web
                                    */
-                                  (kIsWeb ? fileWeb != null : archivoDeVideo != null) &&
+                                  (kIsWeb
+                                      ? fileWeb != null
+                                      : archivoDeVideo != null) &&
                                   _catSeleccionada != null) {
                                 guardarSenia()
                                   ..then((userCreds) {
@@ -199,29 +197,6 @@ class _AltaSeniaState extends State<AltaSenia> {
     );
   }
 
-  Future<Uint8List> _getHtmlFileContent(html.File blob) async {
-    final reader = html.FileReader();
-    reader.readAsDataUrl(blob.slice(0, blob.size, blob.type));
-    reader.onLoadEnd.listen((event) {
-      Uint8List data =
-          Base64Decoder().convert(reader.result.toString().split(",").last);
-      fileWeb = data;
-    }).onData((data) {
-      fileWeb =
-          Base64Decoder().convert(reader.result.toString().split(",").last);
-      return fileWeb;
-    });
-    while (fileWeb == null) {
-      await new Future.delayed(const Duration(milliseconds: 1));
-      if (fileWeb != null) {
-        break;
-      }
-    }
-    setState(() {
-      archivoDeVideo = File.fromRawPath(fileWeb);
-    });
-    return fileWeb;
-  }
 
   Future guardarSenia() async {
     String urlVideo;
@@ -243,7 +218,8 @@ class _AltaSeniaState extends State<AltaSenia> {
       ya que es el tipo de archivo que se puede reproducir
       con el widget de reproductor de video.
        */
-        _controladorSenia.subirSeniaBytes(destino, fileWeb);
+        _controladorSenia.crearYSubirSeniaBytes(_nombreSenia, _descripcionSenia,
+            _catSeleccionada, nombreUsuario, destino, fileWeb);
       }
     } else {
       /*
@@ -252,22 +228,28 @@ class _AltaSeniaState extends State<AltaSenia> {
       if (archivoDeVideo == null) {
         return;
       } else {
-         _controladorSenia.subirSeniaArchivo(destino, archivoDeVideo);
-      }
 
+        _controladorSenia.crearYSubirSenia(_nombreSenia, _descripcionSenia,
+            _catSeleccionada, nombreUsuario, destino, archivoDeVideo);
+      }
     }
 
     /*
     TERMINO DE SUBIR LOS ARCHIVOS Y GUARDO LA SENIA
     ESTO ES INDEPENDIENTE DE LA PLATAFORMA
      */
-    
-    urlVideo = _controladorSenia.urlVideo;
-    _controladorSenia.crearSenia(
-        nombreUsuario, _nombreSenia, _descripcionSenia, _catSeleccionada, urlVideo);
   }
 
   void obtenerVideo() async {
+    /*
+    Si al obtenerVideo, tengo algo cargado
+    lo saco
+     */
+    setState(() {
+        archivoDeVideo = null;
+        this._url = null;
+    });
+
     FilePickerResult result =
         await FilePicker.platform.pickFiles(type: FileType.video);
 
@@ -278,6 +260,7 @@ class _AltaSeniaState extends State<AltaSenia> {
         final blob = html.Blob([fileBytes]);
         this._url = html.Url.createObjectUrlFromBlob(blob);
         html.File file = html.File(fileBytes, fileName);
+        //metodo que hace que el video web se pueda reproducir
         await _getHtmlFileContent(file);
       }
     } else {
@@ -290,6 +273,30 @@ class _AltaSeniaState extends State<AltaSenia> {
         }
       }
     }
+  }
+
+  Future<Uint8List> _getHtmlFileContent(html.File blob) async {
+    final reader = html.FileReader();
+    reader.readAsDataUrl(blob.slice(0, blob.size, blob.type));
+    reader.onLoadEnd.listen((event) {
+      Uint8List data =
+      Base64Decoder().convert(reader.result.toString().split(",").last);
+      fileWeb = data;
+    }).onData((data) {
+      fileWeb =
+          Base64Decoder().convert(reader.result.toString().split(",").last);
+      return fileWeb;
+    });
+    while (fileWeb == null) {
+      await new Future.delayed(const Duration(milliseconds: 1));
+      if (fileWeb != null) {
+        break;
+      }
+    }
+    setState(() {
+      archivoDeVideo = File.fromRawPath(fileWeb);
+    });
+    return fileWeb;
   }
 
   Future<void> listarCateogiras() async {

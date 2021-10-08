@@ -1,10 +1,10 @@
-import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
+import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 
@@ -28,8 +28,20 @@ class _PaginaInicialState extends State<PaginaInicial> {
       child: Column(children: [
         BarraDeNavegacion(
           titulo: 'MENU',
-          iconoBtnUno: Icon(Icons.person_off),
-          onPressedBtnUno: () {}, //TODO agregar opcion cerrar sesion y perfiles
+          listaWidget: [
+            PopupMenuButton<int>(
+              /*
+              Agregar en el metodo on Selected
+              las acciones
+               */
+              onSelected: (item) => onSelected(context, item),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                    value: 0,
+                    child: Text("Cerrar Sesion"))
+              ],
+            ),
+          ],
         ),
         Center(
           child: Container(
@@ -75,6 +87,14 @@ class _PaginaInicialState extends State<PaginaInicial> {
         ),
       ]),
     ));
+  }
+
+  void onSelected(BuildContext context, int item) {
+    switch(item){
+      case 0:
+        AuthService().signOut();
+        break;
+    }
   }
 
   Future<void> obtenerUsuarioAdministrador() async {

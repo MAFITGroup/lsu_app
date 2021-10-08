@@ -28,17 +28,17 @@ class Validar {
     Pattern pattern =  r'(^09+[0-9]{7}$)';
     RegExp regex = new RegExp(pattern);
     if(!regex.hasMatch(value))
-      return 'El número de celudar debe comenzar con 09 y tener un largo de 9 caracteres';
+      return 'El número de celular debe comenzar con 09 y tener un largo de 9 caracteres';
     else
       return null;
   }
 
   String validarPassword(String value){
-    Pattern pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    Pattern pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~.]).{8,}$';
     RegExp regex = new RegExp(pattern);
 
     if(!regex.hasMatch(value))
-      return "La contraseña debe tener el siguiente formanto: Un carácter mayúscula, Un dígito numérico, Un carácter especial(! @ # \$ & * ~)";
+      return "La contraseña debe contener al menos: Una letra mayúscula, Un dígito numérico, Un carácter especial (. ! @ # \$ & * ~)";
     else
       return null;
   }

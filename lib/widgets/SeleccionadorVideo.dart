@@ -40,6 +40,10 @@ class SeleccionadorVideoState extends State<SeleccionadorVideo> {
           ),
           videoPlayerController: _controladorDeVideo =
               VideoPlayerController.file(widget.file));
+
+      /*
+      Uso tanto para reproductor web, como para visualizador de senias
+       */
     } else if (widget.url != null) {
       chewieController = ChewieController(
           aspectRatio: kIsWeb ? 16 / 9 : 5 / 4,
@@ -50,7 +54,7 @@ class SeleccionadorVideoState extends State<SeleccionadorVideo> {
           showControlsOnInitialize: true,
           showOptions: true,
           allowFullScreen: false,
-
+          deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
           placeholder: Container(
             color: Colors.black,
           ),

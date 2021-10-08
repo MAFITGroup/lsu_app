@@ -14,8 +14,8 @@ class ControladorSenia {
   String urlVideo;
   Senia senia;
 
-  void crearSenia(String usuarioAlta, String nombre, String descripcion,
-      String categoria, String linkRefVideo) {
+  void crearSenia(String nombre, String descripcion, String categoria,
+      String usuarioAlta, String linkRefVideo) {
     String docId = nombre.trim() + categoria.trim();
     //creo mi senia
     firestore.collection("senias").doc(docId).set({
@@ -25,6 +25,90 @@ class ControladorSenia {
       'categoria': categoria,
       'videoRef': linkRefVideo,
     });
+  }
+
+  void editarSenia(String nombre, String descripcion, String categoria){
+    String docId = nombre.trim() + categoria.trim();
+    firestore.collection("senias").doc(docId).update({
+      'nombre': nombre,
+      'descripcion': descripcion,
+      'categoria': categoria,
+    });
+  }
+
+  Future<UploadTask> crearYSubirSenia(String nombre,
+      String descripcion,
+      String categoria,
+      String usuarioAlta,
+      String destino,
+      File archivo) async {
+    /*
+    Primero subo el archivo
+     */
+    UploadTask subida;
+    String downloadLink;
+    String docId = nombre.trim() + categoria.trim();
+    try {
+      final ref = FirebaseStorage.instance.ref(destino);
+      subida = ref.putFile(archivo);
+      downloadLink = await (await subida)
+          .ref
+          .getDownloadURL();
+
+      /*
+      Creo la senia luego de obtener el link de la url
+       */
+      await firestore.collection("senias").doc(docId).set({
+        'usuarioAlta': usuarioAlta,
+        'nombre': nombre,
+        'descripcion': descripcion,
+        'categoria': categoria,
+        'videoRef': downloadLink,
+      });
+
+    } on FirebaseException catch (e) {
+    print('error al subir archivo ');
+    return null;
+    }
+  }
+
+  /*
+  Este metodo se usa para la subida de la seña
+  desde la web, ya que el reproductor de video es null en la web
+  por lo tanto se pasa como @param un tipo de dato Uint8List
+   */
+  Future<UploadTask> crearYSubirSeniaBytes(String nombre,
+      String descripcion,
+      String categoria,
+      String usuarioAlta,
+      String destino,
+      Uint8List archivo
+      ) async {
+    /*
+    Primero subo el archivo
+     */
+    UploadTask subida;
+    String downloadLink;
+    String docId = nombre.trim() + categoria.trim();
+    try {
+      final ref = FirebaseStorage.instance.ref(destino);
+      subida = ref.putData(archivo, SettableMetadata(contentType: 'video/mp4'));
+      downloadLink = await (await subida).ref.getDownloadURL();
+      /*
+      Creo la senia luego de obtener el link de la url
+       */
+      await firestore.collection("senias").doc(docId).set({
+        'usuarioAlta': usuarioAlta,
+        'nombre': nombre,
+        'descripcion': descripcion,
+        'categoria': categoria,
+        'videoRef': downloadLink,
+      });
+
+    } on FirebaseException catch (e) {
+      print('error al subir archivo ');
+      return null;
+    }
   }
 
   Future<UploadTask> subirSeniaArchivo(String destino, File archivo) async {
@@ -69,7 +153,6 @@ class ControladorSenia {
         .collection('senias')
         .get()
         .then((QuerySnapshot querySnapshot) {
-
       querySnapshot.docs.forEach((doc) {
         nombre = doc['nombre'];
         descripcion = doc['descripcion'];
@@ -87,7 +170,6 @@ class ControladorSenia {
 
         lista.add(senia);
       });
-
     });
 
     return lista;

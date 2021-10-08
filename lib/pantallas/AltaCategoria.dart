@@ -21,8 +21,6 @@ class _AltaCategoria extends State<AltaCategoria> {
               children: [
                 BarraDeNavegacion(
                   titulo: 'ALTA DE CATEGORIA',
-                  iconoBtnUno: null,
-                  onPressedBtnUno: null,
                 ),
                 SizedBox(height: 10),
                 TextFieldTexto(

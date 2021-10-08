@@ -17,8 +17,7 @@ class Categorias extends StatelessWidget {
           children: [
             BarraDeNavegacion(
               titulo: 'BUSQUEDA DE CATEGORIAS',
-              onPressedBtnUno: () {}, // TODO Implementar busqueda de categorias
-              iconoBtnUno: Icon(Icons.search),
+              // TODO Implementar busqueda de categorias
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(

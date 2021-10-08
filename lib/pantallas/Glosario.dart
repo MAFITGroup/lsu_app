@@ -36,12 +36,6 @@ class _GlosarioState extends State<Glosario> {
             children: [
               BarraDeNavegacion(
                 titulo: "BUSQUEDA DE SEÑAS",
-                onPressedBtnUno: () {
-                  setState(() {
-                    isSearching = !isSearching;
-                  });
-                }, // TODO Implementar busqueda de señas
-                iconoBtnUno: Icon(Icons.search),
               ),
               Expanded(
                 child: Container(
