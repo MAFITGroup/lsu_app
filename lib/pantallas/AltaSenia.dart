@@ -142,7 +142,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                       : archivoDeVideo != null) &&
                                   _catSeleccionada != null) {
                                 guardarSenia()
-                                  ..then((userCreds) {
+                                  .then((userCreds) {
                                     /*
                                     Luego de guardar la seña,
                                     creo un dialogo de alerta indicando que se
@@ -233,11 +233,6 @@ class _AltaSeniaState extends State<AltaSenia> {
             _catSeleccionada, nombreUsuario, destino, archivoDeVideo);
       }
     }
-
-    /*
-    TERMINO DE SUBIR LOS ARCHIVOS Y GUARDO LA SENIA
-    ESTO ES INDEPENDIENTE DE LA PLATAFORMA
-     */
   }
 
   void obtenerVideo() async {
