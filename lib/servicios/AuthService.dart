@@ -7,6 +7,7 @@ import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/pantallas/InicioPage.dart';
 import 'package:lsu_app/pantallas/PaginaInicial.dart';
 import 'package:lsu_app/widgets/AlertDialog.dart';
+import 'package:universal_html/html.dart';
 
 import 'ErrorHandler.dart';
 
@@ -35,49 +36,59 @@ class AuthService extends ChangeNotifier {
   //Iniciar Sesion
   signIn(String email, String password, context) async {
 
-    final stdUsr =
-        await manej.obtenerUsuarios(email).then((value) => value.toString() );
 
-    switch(stdUsr){
-      case 'pendiente': {
-        return showCupertinoDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) {
-              return AlertDialog_usrPendiente();
+
+
+      final stdUsr =
+      await manej.obtenerUsuarios(email).then((value) => value.toString());
+
+      switch (stdUsr) {
+        case 'pendiente':
+          {
+            return showCupertinoDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog_usrPendiente();
+                });
+          }
+          break;
+
+        case 'activo':
+          {
+            firebaseAuth
+                .signInWithEmailAndPassword(email: email, password: password)
+                .then((val) {
+              Navegacion(context).navegarAPaginaInicial();
+            }).catchError((e) {
+              ErrorHandler().errorDialog(context, e);
             });
-      }break;
+          }
+          break;
 
-      case 'activo': {
-        firebaseAuth
-            .signInWithEmailAndPassword(email: email, password: password)
-            .then((val) {
-          Navegacion(context).navegarAPaginaInicial();
-        }).catchError((e) {
-          ErrorHandler().errorDialog(context, e);
-        });
-      }break;
+        case 'inactivo':
+          {
+            return showCupertinoDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog_usrInactivo();
+                });
+          }
+          break;
 
-      case 'inactivo': {
-        return showCupertinoDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) {
-              return AlertDialog_usrInactivo();
-            });
-      }break;
+        default:
+          {
+            return showCupertinoDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog_usrNoRegistrado();
+                });
+          }
+          break;
 
-      default: {
-        return showCupertinoDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) {
-              return AlertDialog_usrNoRegistrado();
-            });
-      }break;
-
-    }
-
+      }
   }
 
   //Iniciar sesion con usuario nuevo

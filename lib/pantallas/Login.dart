@@ -6,6 +6,7 @@ import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 
 import 'package:lsu_app/servicios/AuthService.dart';
+import 'package:lsu_app/widgets/AlertDialog.dart';
 
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
@@ -47,7 +48,7 @@ class _LoginState extends State<Login> {
                         color: Colores().colorAzul),
                   ),
                   SizedBox(height: 30),
-                  Form(key: formKey, child: loginForm()),
+                  Form(key: formKey, child: loginForm(context)),
                 ],
               ),
             ),
@@ -58,7 +59,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  loginForm() {
+  loginForm(context) {
     return Container(
       child: Form(
         child: Column(
@@ -69,32 +70,55 @@ class _LoginState extends State<Login> {
               valor: (value) {
                 this._email = value;
               },
-              validacion: ((value) => value.isEmpty
+              validacion: (value) => value.isEmpty
                   ? 'El correo es requerido'
-                  : Validar().validarCorreo(value)),
+                  : Validar().validarCorreo(value)
             ),
+
             SizedBox(height: 30),
+
             TextFieldContrasenia(
               nombre: 'CONTRASEÑA',
               icon: Icon(Icons.lock_outline),
               valor: (value) {
                 this._password = value;
               },
-              validacion: ((value) =>
-                  value.isEmpty ? 'La contraseña es requerida' : null),
+              validacion: (value) =>
+                  value.isEmpty
+                      ? 'La contraseña es requerida'
+                      : Validar().validarPassword(value),
             ),
+
             SizedBox(height: 30),
+
             Boton(
                 titulo: 'INGRESAR',
                 onTap: () {
-                  Validar().camposVacios(formKey);
+                  print('valores login');
+                  print(_email);
+                  print(_password);
 
-                  AuthService().signIn(_email, _password, context);
+                  if(_email != null || _password != null){
+
+                    AuthService().signIn(_email, _password, context);
+
+                  }
+                  else{
+                    return showCupertinoDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (context) {
+                          return AlertDialog_campoVacio();
+                        });
+                  }
+
 
                 }),
+
             SizedBox(height: 10),
-            GestureDetector(
-                onTap: Navegacion(context).navegarAResetPassword,
+
+            TextButton(
+                onPressed: Navegacion(context).navegarAResetPassword,
                 child: Container(
                     alignment: Alignment.bottomCenter,
                     padding: EdgeInsets.only(top: 15.0, left: 20.0),
@@ -104,7 +128,11 @@ class _LoginState extends State<Login> {
                                 color: Colores().colorAzul,
                                 fontFamily: 'Trueno',
                                 fontSize: 11.0,
-                                decoration: TextDecoration.underline))))),
+                                decoration: TextDecoration.underline)
+                        )
+                    )
+                )
+            ),
           ],
         ),
       ),

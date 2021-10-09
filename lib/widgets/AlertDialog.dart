@@ -198,7 +198,9 @@ class AlertDialog_resgistro extends StatelessWidget {
     );
   }
 
-}class AlertDialog_usrRegistrado extends StatelessWidget {
+}
+
+class AlertDialog_usrRegistrado extends StatelessWidget {
 
   final Widget child;
 
@@ -213,6 +215,38 @@ class AlertDialog_resgistro extends StatelessWidget {
       title: Text('Usuario registrado'),
       content:
       Text('El usuario ya se encuentra registrado'),
+      actions: [
+        TextButton(
+          child: Text('Ok',
+              style: TextStyle(
+                  color: Colores().colorAzul,
+                  fontFamily: 'Trueno',
+                  fontSize: 11.0,
+                  decoration: TextDecoration.underline)),
+          onPressed: Navegacion(context).navegarALogin,
+        ),
+
+      ],
+    );
+  }
+
+}
+
+class AlertDialog_campoVacio extends StatelessWidget {
+
+  final Widget child;
+
+  const AlertDialog_campoVacio ({
+    Key key,
+    this.child
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Campos obligatorios'),
+      content:
+      Text('Los campos usuario y contraseña son obligatorios'),
       actions: [
         TextButton(
           child: Text('Ok',
