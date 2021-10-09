@@ -6,10 +6,11 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/pantallas/InicioPage.dart';
 import 'package:lsu_app/pantallas/PaginaInicial.dart';
+import 'package:lsu_app/widgets/AlertDialog.dart';
 
 import 'ErrorHandler.dart';
 
-class AuthService extends ChangeNotifier{
+class AuthService extends ChangeNotifier {
   ControladorUsuario manej = new ControladorUsuario();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
@@ -32,20 +33,52 @@ class AuthService extends ChangeNotifier{
   }
 
   //Iniciar Sesion
-  signIn(String email, String password, context) {
+  signIn(String email, String password, context) async {
 
-    firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password)
-        .then((val) {
+    final stdUsr =
+        await manej.obtenerUsuarios(email).then((value) => value.toString() );
 
+    switch(stdUsr){
+      case 'pendiente': {
+        return showCupertinoDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) {
+              return AlertDialog_usrPendiente();
+            });
+      }break;
+
+      case 'activo': {
+        firebaseAuth
+            .signInWithEmailAndPassword(email: email, password: password)
+            .then((val) {
           Navegacion(context).navegarAPaginaInicial();
-    })
-        .catchError((e) {
-      ErrorHandler().errorDialog(context, e);
+        }).catchError((e) {
+          ErrorHandler().errorDialog(context, e);
+        });
+      }break;
 
-    });
+      case 'inactivo': {
+        return showCupertinoDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) {
+              return AlertDialog_usrInactivo();
+            });
+      }break;
+
+      default: {
+        return showCupertinoDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) {
+              return AlertDialog_usrNoRegistrado();
+            });
+      }break;
+
+    }
+
   }
-
 
   //Iniciar sesion con usuario nuevo
   signUp(
@@ -57,7 +90,8 @@ class AuthService extends ChangeNotifier{
       String localidad,
       String especialidad,
       bool esAdministrador,
-      String statusUsuario) {
+      String statusUsuario,
+      context) {
     return firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
@@ -66,46 +100,31 @@ class AuthService extends ChangeNotifier{
 
       manej.crearUsuario(userID, email, nombreCompleto, telefono, localidad,
           especialidad, esAdministrador, statusUsuario);
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog_resgistro();
+          });
+
+    }).catchError((e){
+      ErrorHandler().errorDialog3(context, e);
     });
   }
 
   //Resetear Password
-  resetPasswordLink(String email, context)  {
-
-      firebaseAuth.sendPasswordResetEmail(email: email).then((value) => {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)
-              ),
-              title: Text('Solicitud de nueva contraseña'),
-              content: Text('Infomarcion enviada a $email'),
-
-              actions: [
-                TextButton(
-                  child: Text('Ok',
-                  style: TextStyle(
-                  color: Colores().colorAzul,
-                  fontFamily: 'Trueno',
-                  fontSize: 11.0,
-                  decoration: TextDecoration.underline
-                  )),
-                  onPressed: Navegacion(context).navegarALoginDest,
-                )
-              ],
-            );
-          }
-        )
-          })
-          .catchError((e){
-            print(e);
-        ErrorHandler().errorDialog2(context, e);
-      });
-
+  resetPasswordLink(String email, context) {
+    firebaseAuth
+        .sendPasswordResetEmail(email: email)
+        .then((value) => {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog_resetPass();
+                  })
+            })
+        .catchError((e) {
+      ErrorHandler().errorDialog2(context, e);
+    });
   }
-
-
-
 }

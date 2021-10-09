@@ -83,21 +83,21 @@ class ControladorUsuario {
       }
     }
 
-    Future<String> usuarioEstado(String usuarioActualUID) async {
-      usuario = await obtenerUsuarioLogueado(usuarioActualUID);
-      String std = usuario.statusUsuario;
-      print('obtuve estado de usuario $std');
-      return std;
-    }
 
+    Future<String> obtenerUsuarios(String mail) async{
+      String qwert;
 
-    Future<Usuario> obtenerUsuarios(String mail) async{
-
-       var resultado = await firestore
+         await firestore
           .collection('usuarios')
           .where('correo', isEqualTo: mail )
-          .get()
-           .then((value) => null);
+            .get().then((query) {
+             query.docs.forEach((element) {
+               qwert =  element.get('statusUsuario').toString();
+
+             });
+
+       });
+         return qwert;
 
     }
 
@@ -106,6 +106,8 @@ class ControladorUsuario {
       usuario = await obtenerUsuarioLogueado(usuarioActualUID);
       return usuario.nombreCompleto;
    }
+   
+
 
   }
 

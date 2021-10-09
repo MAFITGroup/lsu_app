@@ -4,6 +4,7 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 
 class ErrorHandler {
+
   //Error Dialogs
   Future<bool> errorDialog(e, BuildContext context) {
     return showCupertinoDialog(
@@ -78,6 +79,46 @@ class ErrorHandler {
                       )),
                   onPressed: Navegacion(context).navegarAResetPassword,
                 )
+              ]
+
+          );
+        }
+    );
+  }
+
+  Future<bool> errorDialog3(BuildContext context, e ) {
+    return showCupertinoDialog(
+      context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)
+              ),
+              title: Text('Usuario registrado'),
+              content: Text('El correo informado se encuentra registrado'),
+              actions: [
+                TextButton(
+                  child: Text('Ok',
+                      style: TextStyle(
+                          color: Colores().colorAzul,
+                          fontFamily: 'Trueno',
+                          fontSize: 11.0,
+                          decoration: TextDecoration.underline
+                      )),
+                  onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+                TextButton(
+                    onPressed: () {
+                      Navegacion(context).navegarAResetPassword();
+                    },
+                    child: Text('Recuperar contraseña',
+                        style: TextStyle(
+                            color: Colores().colorAzul,
+                            fontFamily: 'Trueno',
+                            fontSize: 11.0,
+                            decoration: TextDecoration.underline)))
               ]
 
           );

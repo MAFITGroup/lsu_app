@@ -38,7 +38,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
               itemBuilder: (context) => [
                 PopupMenuItem(
                     value: 0,
-                    child: Text("Cerrar Sesion"))
+                    child: Text("Cerrar Sesión"))
               ],
             ),
           ],

@@ -38,7 +38,7 @@ class Validar {
     RegExp regex = new RegExp(pattern);
 
     if(!regex.hasMatch(value))
-      return "La contraseña debe contener al menos: Una letra mayúscula, Un dígito numérico, Un carácter especial (. ! @ # \$ & * ~)";
+      return "Formato: 1 Mayúsc., 1 num., 1 carácter especial";
     else
       return null;
   }

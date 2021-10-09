@@ -10,7 +10,7 @@ class InicioPage extends StatelessWidget {
       body: Container(
 //        color: Color.fromRGBO(159, 206, 255, 0.5),
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          margin: EdgeInsets.all(20),
+          margin: EdgeInsets.all(10),
           child: Column(
             children: [
               SizedBox(height: 10),
@@ -19,7 +19,7 @@ class InicioPage extends StatelessWidget {
               _infoInicio(),
               SizedBox(height: 10),
               Boton(titulo: 'LOGIN', onTap: Navegacion(context).navegarALogin),
-              SizedBox(height: 10),
+              SizedBox(height: 0),
               Boton(
                   titulo: 'REGISTRARSE',
                   onTap: Navegacion(context).navegarARegistrarse),

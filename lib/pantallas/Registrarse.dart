@@ -1,10 +1,9 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
+
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
-import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
@@ -94,14 +93,27 @@ class _RegistrarseState extends State<Registrarse> {
                   : Validar().validarCelular(value)),
 
           // LOCALIDAD
-          TextFieldTexto(
-              nombre: 'LOCALIDAD',
-              icon: Icon(Icons.location_city_outlined),
-              valor: (value) {
-                this._localidad = value.toUpperCase();
-              },
-              validacion: ((value) =>
-                  value.isEmpty ? 'Campo obligatorio' : null)),
+
+
+                TextFieldTexto(
+                    nombre: 'LOCALIDAD',
+                    icon: Icon(Icons.location_city_outlined),
+                    validacion: ((value) =>
+                    value.isEmpty ? 'Campo obligatorio' : null)
+                ),
+
+               /* DropdownButton<String>(
+
+                  items: <String>['ARTIGAS', 'CANELONES', 'CERRO LARGO'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: this._localidad = value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (_){},
+                  isExpanded: true,
+
+                ),*/
 
           // ESPECIALIDAD
           TextFieldTexto(
@@ -125,35 +137,9 @@ class _RegistrarseState extends State<Registrarse> {
                     //dejo mi UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
 
                     .signUp('', _email, _password, _nombreCompleto, _telefono,
-                        _localidad, _especialidad, false, _statusUsuario)
-                    .then((userCreds) {
-                  // Navigator.of(context).pop();
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Registro realizado'),
-                          content:
-                              Text('Pendiente de aprobacion del administrador'),
-                          actions: [
-                            TextButton(
-                              child: Text('Ok',
-                                  style: TextStyle(
-                                      color: Colores().colorAzul,
-                                      fontFamily: 'Trueno',
-                                      fontSize: 11.0,
-                                      decoration: TextDecoration.underline)),
-                              onPressed: Navegacion(context).navegarALogin,
-                            ),
-                          ],
-                        );
-                      });
-                }).catchError((e) {
-                  ErrorHandler().errorDialog(context, e);
-                });
+                        _localidad, _especialidad, false, _statusUsuario, context);
               }
-            },
-          ),
+              }),
 
           SizedBox(height: 20.0),
         ]),

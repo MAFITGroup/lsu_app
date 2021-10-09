@@ -1,11 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lsu_app/controladores/ControladorUsuario.dart';
+
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
+
 import 'package:lsu_app/servicios/AuthService.dart';
+
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
@@ -14,7 +15,7 @@ import 'package:lsu_app/widgets/card_container.dart';
 
 import 'PaginaInicial.dart';
 
-enum stadoUsuario {pendiente, activo, inactivo}
+enum stadoUsuario { pendiente, activo, inactivo }
 
 class Login extends StatefulWidget {
   @override
@@ -25,8 +26,6 @@ class _LoginState extends State<Login> {
   final formKey = new GlobalKey<FormState>();
   String _email;
   String _password;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -81,19 +80,18 @@ class _LoginState extends State<Login> {
               valor: (value) {
                 this._password = value;
               },
-                validacion: ((value)=> value.isEmpty
-                  ? 'La contraseña es requerida'
-                  : null ),
+              validacion: ((value) =>
+                  value.isEmpty ? 'La contraseña es requerida' : null),
             ),
             SizedBox(height: 30),
             Boton(
                 titulo: 'INGRESAR',
                 onTap: () {
                   Validar().camposVacios(formKey);
+
                   AuthService().signIn(_email, _password, context);
 
-                }
-            ),
+                }),
             SizedBox(height: 10),
             GestureDetector(
                 onTap: Navegacion(context).navegarAResetPassword,
@@ -106,16 +104,10 @@ class _LoginState extends State<Login> {
                                 color: Colores().colorAzul,
                                 fontFamily: 'Trueno',
                                 fontSize: 11.0,
-                                decoration: TextDecoration.underline)
-                        )
-                    )
-                )
-            ),
+                                decoration: TextDecoration.underline))))),
           ],
         ),
       ),
     );
   }
-
-
 }
