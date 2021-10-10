@@ -77,7 +77,10 @@ class ErrorHandler {
                           fontSize: 11.0,
                           decoration: TextDecoration.underline
                       )),
-                  onPressed: Navegacion(context).navegarAResetPassword,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navegacion(context).navegarAResetPassword;
+                  },
                 )
               ]
 

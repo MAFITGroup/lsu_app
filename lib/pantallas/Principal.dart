@@ -3,29 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 
-class InicioPage extends StatelessWidget {
+class Principal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SingleChildScrollView(
+        child: Container(
 //        color: Color.fromRGBO(159, 206, 255, 0.5),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          margin: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              _imageInicio(),
-              SizedBox(height: 10),
-              _infoInicio(),
-              SizedBox(height: 10),
-              Boton(titulo: 'LOGIN', onTap: Navegacion(context).navegarALogin),
-              SizedBox(height: 0),
-              Boton(
-                  titulo: 'REGISTRARSE',
-                  onTap: Navegacion(context).navegarARegistrarse),
-            ],
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            margin: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                _imageInicio(),
+                SizedBox(height: 10),
+                _infoInicio(),
+                SizedBox(height: 10),
+                Boton(titulo: 'LOGIN', onTap: Navegacion(context).navegarALogin),
+                SizedBox(height: 10),
+                Boton(
+                    titulo: 'REGISTRARSE',
+                    onTap: Navegacion(context).navegarARegistrarse),
+              ],
+            ),
           ),
-        ),
+      ),
     );
   }
 
