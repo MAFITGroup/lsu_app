@@ -48,7 +48,7 @@ class _RegistrarseState extends State<Registrarse> {
               nombre: 'CORREO',
               icon: Icon(Icons.alternate_email_rounded),
               valor: (value) {
-                this._email = value;
+                this._email = value.toLowerCase();
               },
               validacion: (value) => value.isEmpty
                   ? 'Campo obligatorio'
@@ -96,8 +96,11 @@ class _RegistrarseState extends State<Registrarse> {
 
 
                 TextFieldTexto(
-                    nombre: 'LOCALIDAD',
+                    nombre: 'DEPARTAMENTO',
                     icon: Icon(Icons.location_city_outlined),
+                    valor: (value) {
+                      this._localidad = value;
+                    },
                     validacion: ((value) =>
                     value.isEmpty ? 'Campo obligatorio' : null)
                 ),

@@ -5,6 +5,7 @@ import 'package:lsu_app/pantallas/Biblioteca.dart';
 import 'package:lsu_app/pantallas/Categorias.dart';
 import 'package:lsu_app/pantallas/GestionUsuarios.dart';
 import 'package:lsu_app/pantallas/Glosario.dart';
+import 'package:lsu_app/pantallas/Principal.dart';
 import 'package:lsu_app/pantallas/Login.dart';
 import 'package:lsu_app/pantallas/Noticias.dart';
 import 'package:lsu_app/pantallas/PaginaInicial.dart';
@@ -132,5 +133,14 @@ class Navegacion {
           builder: (context) => AltaCategoria(),
         ));
   }
+
+  void navegarAPrincipalDest() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Principal(),
+        ));
+  }
+
 
 }

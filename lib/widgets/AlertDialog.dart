@@ -26,7 +26,10 @@ class AlertDialog_resetPass extends StatelessWidget {
                   fontFamily: 'Trueno',
                   fontSize: 11.0,
                   decoration: TextDecoration.underline)),
-          onPressed: Navegacion(context).navegarALoginDest,
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navegacion(context).navegarALoginDest;
+          },
         )
       ],
     );
@@ -192,7 +195,12 @@ class AlertDialog_resgistro extends StatelessWidget {
                   fontFamily: 'Trueno',
                   fontSize: 11.0,
                   decoration: TextDecoration.underline)),
-          onPressed: Navegacion(context).navegarALogin,
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navegacion(context).navegarAPrincipalDest();
+
+          }
         ),
       ],
     );

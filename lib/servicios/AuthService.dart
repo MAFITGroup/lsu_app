@@ -2,12 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
-import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
-import 'package:lsu_app/pantallas/InicioPage.dart';
+import 'package:lsu_app/pantallas/Principal.dart';
 import 'package:lsu_app/pantallas/PaginaInicial.dart';
 import 'package:lsu_app/widgets/AlertDialog.dart';
-import 'package:universal_html/html.dart';
+
 
 import 'ErrorHandler.dart';
 
@@ -23,7 +22,7 @@ class AuthService extends ChangeNotifier {
           if (snapshot.hasData) {
             return PaginaInicial();
           } else {
-            return InicioPage();
+            return Principal();
           }
         });
   }
@@ -35,9 +34,6 @@ class AuthService extends ChangeNotifier {
 
   //Iniciar Sesion
   signIn(String email, String password, context) async {
-
-
-
 
       final stdUsr =
       await manej.obtenerUsuarios(email).then((value) => value.toString());

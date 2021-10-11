@@ -98,7 +98,10 @@ class _LoginState extends State<Login> {
                   print(_email);
                   print(_password);
 
-                  if(_email != null || _password != null){
+                  bool q = _email != null || _password != null;
+                  print(q);
+
+                  if(_email != null && _password != null){
 
                     AuthService().signIn(_email, _password, context);
 
@@ -112,13 +115,15 @@ class _LoginState extends State<Login> {
                         });
                   }
 
-
                 }),
 
             SizedBox(height: 10),
 
             TextButton(
-                onPressed: Navegacion(context).navegarAResetPassword,
+                onPressed:
+
+                  Navegacion(context).navegarAResetPassword
+                ,
                 child: Container(
                     alignment: Alignment.bottomCenter,
                     padding: EdgeInsets.only(top: 15.0, left: 20.0),

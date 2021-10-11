@@ -69,6 +69,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                     PopupMenuItem(
                       value: 1,
                       child: Text("Eliminar Seña"),
+
                       onTap: () {
                         eliminarSenia(
                             senia.nombre, senia.descripcion, senia.categoria)
