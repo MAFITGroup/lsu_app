@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:lsu_app/modelo/Usuario.dart';
 
 class ControladorUsuario {
@@ -85,19 +86,19 @@ class ControladorUsuario {
 
 
     Future<String> obtenerUsuarios(String mail) async{
-      String qwert;
+      String usuarioEstado;
 
          await firestore
           .collection('usuarios')
           .where('correo', isEqualTo: mail )
             .get().then((query) {
              query.docs.forEach((element) {
-               qwert =  element.get('statusUsuario').toString();
+               usuarioEstado =  element.get('statusUsuario').toString();
 
              });
 
        });
-         return qwert;
+         return usuarioEstado;
 
     }
 
@@ -107,6 +108,34 @@ class ControladorUsuario {
       return usuario.nombreCompleto;
    }
    
+   Future<List<Usuario>> obtenerUsuariosPendiente() async {
+
+      List<Usuario> listaUsuariosPendientes = [];
+      
+      await firestore
+          .collection('usuarios')
+          .where('statusUsuario', isEqualTo: 'pendiente')
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+            querySnapshot.docs.forEach((doc) {
+              _nombreCompleto = doc['nombre'];
+              _especialidad = doc['especialidad'];
+              _statusUsuario = doc['statusUsuario'];
+              _esAdministrador = doc['esAdministrador'];
+
+              usuario = new Usuario();
+              usuario.nombreCompleto = _nombreCompleto;
+              usuario.especialidad = _especialidad;
+              usuario.statusUsuario = _statusUsuario;
+              usuario.esAdministrador = _esAdministrador;
+
+              listaUsuariosPendientes.add(usuario);
+
+            });
+      });
+
+      return listaUsuariosPendientes;
+   }
 
 
   }

@@ -2,7 +2,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
 
 class GestionUsuarios extends StatefulWidget {
@@ -15,7 +18,48 @@ class GestionUsuarios extends StatefulWidget {
 
 class _GestionUsuarios extends State<GestionUsuarios> {
 
+  final formKey = new GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Form(key: formKey, child: enConstruccion(context)
+            )
+        )
+    );
+
+  }
+
+  enConstruccion(context){
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            BarraDeNavegacion(
+              titulo: 'BIBLIOTECA',
+            ),
+
+            SizedBox(height: 30),
+
+            Image(
+              image: AssetImage('recursos/EnConstruccion.png'),
+            )
+
+
+          ],
+        ),
+      ),
+    );
+  }
+
+
+/*
   List<String> _tabs = ['ACTIVOS', 'PENDIENTES', 'INACTIVOS'];
+
+  List<Usuario> listaUsuariosQuery = [];
 
   @override
   Widget build(BuildContext context) {
@@ -30,26 +74,39 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                   sliver: SliverAppBar(
                     title: const Text('GESTION DE USUARIOS', style: TextStyle(fontFamily: 'Trueno', fontSize: 16)), // This is the title in the app bar.
                     backgroundColor: Colores().colorAzul,
-                    pinned: true,
+                    pinned: false,
                     expandedHeight: 150.0,
                     forceElevated: innerBoxIsScrolled,
                     bottom: TabBar(
                       tabs: _tabs.map((String name) => Tab(text: name)).toList(),
+                      indicatorColor: Colores().colorBlanco,
                     ),
                   ),
                 ),
               ];
             },
-            body: UsuarioLista()
+            body: TabBarView(
+
+
+            )
             )
             ),
           );
 
   }
 
+  Future<void> usuariosPendientes() async {
+    listaUsuariosQuery = await ControladorUsuario().obtenerUsuariosPendiente();
+  }
+*/
+
+
+
 }
 
 class UsuarioDetalles extends StatefulWidget {
+
+
   const UsuarioDetalles({Key key}) : super(key: key);
 
   @override
@@ -64,7 +121,7 @@ class _UsuarioDetallesState extends State<UsuarioDetalles> {
 }
 
 class UsuarioLista extends StatefulWidget {
-  const UsuarioLista({Key key}) : super(key: key);
+  const UsuarioLista({key}) : super(key: key);
 
   @override
   _UsuarioListaState createState() => _UsuarioListaState();
@@ -104,4 +161,6 @@ class _UsuarioListaState extends State<UsuarioLista> {
       ),
     );
   }
+
+
 }

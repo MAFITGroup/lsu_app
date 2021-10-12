@@ -128,4 +128,69 @@ class ErrorHandler {
         }
     );
   }
+
+  Future<bool> errorDialogTooManyRequest(BuildContext context, e ) {
+    return showCupertinoDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)
+              ),
+              title: Text('Demasiados intentos fallidos'),
+              content: Text('Para acceder, debes restaurar tu contraseña'),
+              actions: [
+                TextButton(
+                  child: Text('Resetear contraseña',
+                      style: TextStyle(
+                          color: Colores().colorAzul,
+                          fontFamily: 'Trueno',
+                          fontSize: 11.0,
+                          decoration: TextDecoration.underline
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navegacion(context).navegarAResetPassword;
+                  },
+                )
+              ]
+
+          );
+        }
+    );
+  }
+
+  Future<bool> errorDialogWrongPassword(BuildContext context, e ) {
+    return showCupertinoDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)
+              ),
+              title: Text('Datos incorrectos'),
+              content: Text('Usuario o contraseña incorrectas'),
+              actions: [
+                TextButton(
+                  child: Text('ok',
+                      style: TextStyle(
+                          color: Colores().colorAzul,
+                          fontFamily: 'Trueno',
+                          fontSize: 11.0,
+                          decoration: TextDecoration.underline
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ]
+
+          );
+        }
+    );
+  }
+
+
 }

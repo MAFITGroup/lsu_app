@@ -79,7 +79,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
                             onTap: Navegacion(context).navegarACategorias,
                             titulo: 'CATEGORIAS'),
                         Boton(
-                            onTap: Navegacion(context)
+                            onTap:
+                            Navegacion(context)
                                 .navegarAPaginaGestionUsuario,
                             titulo: 'GESTIÓN DE USUARIOS'),
                       ],

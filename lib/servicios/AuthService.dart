@@ -38,9 +38,11 @@ class AuthService extends ChangeNotifier {
       final stdUsr =
       await manej.obtenerUsuarios(email).then((value) => value.toString());
 
+      // Accion segund el tipo de usuario que se esta intentado logueando
       switch (stdUsr) {
         case 'pendiente':
           {
+
             return showCupertinoDialog(
                 context: context,
                 barrierDismissible: true,
@@ -52,12 +54,23 @@ class AuthService extends ChangeNotifier {
 
         case 'activo':
           {
+
             firebaseAuth
                 .signInWithEmailAndPassword(email: email, password: password)
                 .then((val) {
               Navegacion(context).navegarAPaginaInicial();
             }).catchError((e) {
-              ErrorHandler().errorDialog(context, e);
+
+              ErrorHandler().errorDialog(e, context);
+              String erro = e.toString();
+              print(erro);
+
+              if(erro.contains('too-many-requests')){
+                ErrorHandler().errorDialogTooManyRequest(e, context);
+              }
+              if(erro.contains('wrong-password')){
+
+              }
             });
           }
           break;

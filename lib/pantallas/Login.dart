@@ -14,9 +14,6 @@ import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:lsu_app/widgets/auth_background.dart';
 import 'package:lsu_app/widgets/card_container.dart';
 
-import 'PaginaInicial.dart';
-
-enum stadoUsuario { pendiente, activo, inactivo }
 
 class Login extends StatefulWidget {
   @override
@@ -94,12 +91,8 @@ class _LoginState extends State<Login> {
             Boton(
                 titulo: 'INGRESAR',
                 onTap: () {
-                  print('valores login');
-                  print(_email);
-                  print(_password);
 
-                  bool q = _email != null || _password != null;
-                  print(q);
+                  print('Ingresa boton Ingresar');
 
                   if(_email != null && _password != null){
 
@@ -107,6 +100,7 @@ class _LoginState extends State<Login> {
 
                   }
                   else{
+
                     return showCupertinoDialog(
                         context: context,
                         barrierDismissible: true,
@@ -129,6 +123,25 @@ class _LoginState extends State<Login> {
                     padding: EdgeInsets.only(top: 15.0, left: 20.0),
                     child: InkWell(
                         child: Text('OLVIDE MI CONTRASEÑA',
+                            style: TextStyle(
+                                color: Colores().colorAzul,
+                                fontFamily: 'Trueno',
+                                fontSize: 11.0,
+                                decoration: TextDecoration.underline)
+                        )
+                    )
+                )
+            ),
+            TextButton(
+                onPressed:
+
+                  Navegacion(context).navegarAPrincipalDest
+                ,
+                child: Container(
+                    alignment: Alignment.bottomCenter,
+                    padding: EdgeInsets.only(top: 15.0, left: 20.0),
+                    child: InkWell(
+                        child: Text('ATRAS',
                             style: TextStyle(
                                 color: Colores().colorAzul,
                                 fontFamily: 'Trueno',
