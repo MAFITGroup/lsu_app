@@ -1,23 +1,16 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lsu_app/controladores/ControladorUsuario.dart';
-import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
-
 
 class GestionUsuarios extends StatefulWidget {
   const GestionUsuarios({Key key}) : super(key: key);
 
   @override
   _GestionUsuarios createState() => _GestionUsuarios();
-
 }
 
 class _GestionUsuarios extends State<GestionUsuarios> {
-
   final formKey = new GlobalKey<FormState>();
 
   @override
@@ -26,35 +19,27 @@ class _GestionUsuarios extends State<GestionUsuarios> {
         body: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: Form(key: formKey, child: enConstruccion(context)
-            )
-        )
-    );
-
+            child: Form(key: formKey, child: enConstruccion(context))));
   }
 
-  enConstruccion(context){
+  enConstruccion(context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             BarraDeNavegacion(
-              titulo: 'BIBLIOTECA',
+              titulo: Text('BIBLIOTECA',
+                  style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
             ),
-
             SizedBox(height: 30),
-
             Image(
               image: AssetImage('recursos/EnConstruccion.png'),
             )
-
-
           ],
         ),
       ),
     );
   }
-
 
 /*
   List<String> _tabs = ['ACTIVOS', 'PENDIENTES', 'INACTIVOS'];
@@ -100,13 +85,9 @@ class _GestionUsuarios extends State<GestionUsuarios> {
   }
 */
 
-
-
 }
 
 class UsuarioDetalles extends StatefulWidget {
-
-
   const UsuarioDetalles({Key key}) : super(key: key);
 
   @override
@@ -128,10 +109,9 @@ class UsuarioLista extends StatefulWidget {
 }
 
 class _UsuarioListaState extends State<UsuarioLista> {
-
   Future getPosts() async {
     var firestore = FirebaseFirestore.instance;
-    
+
     QuerySnapshot qn = await firestore.collection('usuarios').get();
 
     return qn.docs;
@@ -142,25 +122,22 @@ class _UsuarioListaState extends State<UsuarioLista> {
     return Container(
       child: FutureBuilder(
         future: getPosts(),
-        builder: (_, snapshot){
-          if(snapshot.connectionState == ConnectionState.waiting){
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: Text('... Cargando'),
             );
-          }else{
+          } else {
             return ListView.builder(
                 itemCount: snapshot.data.length,
-                itemBuilder: (_, index){
+                itemBuilder: (_, index) {
                   return ListTile(
-                      title: Text(snapshot.data[index].data['correo']),
+                    title: Text(snapshot.data[index].data['correo']),
                   );
-
                 });
           }
         },
       ),
     );
   }
-
-
 }

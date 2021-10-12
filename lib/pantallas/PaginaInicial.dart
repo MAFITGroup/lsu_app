@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +26,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
         body: SingleChildScrollView(
       child: Column(children: [
         BarraDeNavegacion(
-          titulo: 'MENU',
+          titulo: Text("MENU",
+              style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
           listaWidget: [
             PopupMenuButton<int>(
               /*
@@ -35,11 +35,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
               las acciones
                */
               onSelected: (item) => onSelected(context, item),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                    value: 0,
-                    child: Text("Cerrar Sesión"))
-              ],
+              itemBuilder: (context) =>
+                  [PopupMenuItem(value: 0, child: Text("Cerrar Sesión"))],
             ),
           ],
         ),
@@ -91,7 +88,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
   }
 
   void onSelected(BuildContext context, int item) {
-    switch(item){
+    switch (item) {
       case 0:
         AuthService().signOut();
         break;

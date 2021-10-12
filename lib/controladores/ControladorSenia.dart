@@ -25,9 +25,9 @@ class ControladorSenia {
       String categoriaSenia) async {
     await firestore
         .collection('senias')
-        .where('nombre', isEqualTo: nombre)
-        .where('descripcion', isEqualTo: descripcion)
-        .where('categoria', isEqualTo: categoria)
+        .where('nombre', isEqualTo: nombreSenia)
+        .where('descripcion', isEqualTo: descripcionSenia)
+        .where('categoria', isEqualTo: categoriaSenia)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -163,6 +163,7 @@ class ControladorSenia {
       Creo la senia luego de obtener el link de la url
        */
       await firestore.collection("senias").doc(docId).set({
+        'documentID': docId,
         'usuarioAlta': usuarioAlta,
         'nombre': nombre,
         'descripcion': descripcion,

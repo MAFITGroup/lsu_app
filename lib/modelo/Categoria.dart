@@ -3,7 +3,7 @@ class Categoria {
   String _nombre;
 
 
-  Categoria(String name);
+  Categoria();
 
   String get nombre => _nombre;
 

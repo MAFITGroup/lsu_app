@@ -1,7 +1,5 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
@@ -38,7 +36,8 @@ class _RegistrarseState extends State<Registrarse> {
       body: SingleChildScrollView(
         child: Column(children: [
           BarraDeNavegacion(
-            titulo: 'REGISTRARSE',
+            titulo: Text("REGISTRARSE",
+                style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
           ),
 
           SizedBox(height: 30.0),
@@ -94,18 +93,16 @@ class _RegistrarseState extends State<Registrarse> {
 
           // LOCALIDAD
 
+          TextFieldTexto(
+              nombre: 'DEPARTAMENTO',
+              icon: Icon(Icons.location_city_outlined),
+              valor: (value) {
+                this._localidad = value;
+              },
+              validacion: ((value) =>
+                  value.isEmpty ? 'Campo obligatorio' : null)),
 
-                TextFieldTexto(
-                    nombre: 'DEPARTAMENTO',
-                    icon: Icon(Icons.location_city_outlined),
-                    valor: (value) {
-                      this._localidad = value;
-                    },
-                    validacion: ((value) =>
-                    value.isEmpty ? 'Campo obligatorio' : null)
-                ),
-
-               /* DropdownButton<String>(
+          /* DropdownButton<String>(
 
                   items: <String>['ARTIGAS', 'CANELONES', 'CERRO LARGO'].map((String value) {
                     return DropdownMenuItem<String>(
@@ -130,18 +127,27 @@ class _RegistrarseState extends State<Registrarse> {
           SizedBox(height: 50.0),
 
           Boton(
-            titulo: 'REGISTRARSE',
-            onTap: () {
-              String _statusUsuario = 'pendiente';
+              titulo: 'REGISTRARSE',
+              onTap: () {
+                String _statusUsuario = 'pendiente';
 
-              if (Validar().camposVacios(formKey)) {
-                AuthService()
+                if (Validar().camposVacios(formKey)) {
+                  AuthService()
 
-                    //dejo mi UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
+                      //dejo mi UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
 
-                    .signUp('', _email, _password, _nombreCompleto, _telefono,
-                        _localidad, _especialidad, false, _statusUsuario, context);
-              }
+                      .signUp(
+                          '',
+                          _email,
+                          _password,
+                          _nombreCompleto,
+                          _telefono,
+                          _localidad,
+                          _especialidad,
+                          false,
+                          _statusUsuario,
+                          context);
+                }
               }),
 
           SizedBox(height: 20.0),

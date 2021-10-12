@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
@@ -40,7 +41,7 @@ class _AltaSeniaState extends State<AltaSenia> {
   final formKey = new GlobalKey<FormState>();
   String _usuarioUID = FirebaseAuth.instance.currentUser.uid;
 
-  List list;
+  List listaCategorias;
   dynamic _catSeleccionada;
   UploadTask uploadTask;
 
@@ -56,10 +57,11 @@ class _AltaSeniaState extends State<AltaSenia> {
         child: Column(
           children: [
             BarraDeNavegacion(
-              titulo: 'ALTA DE SEÑA',
+              titulo: Text("ALTA DE SEÑA",
+                  style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: Center(
                 /*
                 Los campos estan dentro de un Form para que cuando
@@ -101,29 +103,40 @@ class _AltaSeniaState extends State<AltaSenia> {
                         ),
                         SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
-                        DropdownSearch(
-                          items: list,
-                          onChanged: (value) {
-                            setState(() {
-                              _catSeleccionada = value;
-                            });
-                          },
-                          showSearchBox: true,
-                          clearButton: Icon(Icons.close,
-                              color: Colores().colorSombraBotones),
-                          dropDownButton: Icon(Icons.arrow_drop_down,
-                              color: Colores().colorSombraBotones),
-                          showClearButton: true,
-                          mode: Mode.DIALOG,
-                          hint: "CATEGORIAS",
-                          autoFocusSearchBox: true,
-                          searchBoxDecoration: InputDecoration(
-                            focusColor: Colores().colorSombraBotones,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25, right: 25),
+                          child: DropdownSearch(
+                            items: listaCategorias,
+                            onChanged: (value) {
+                              setState(() {
+                                _catSeleccionada = value;
+                              });
+                            },
+                            showSearchBox: true,
+                            clearButton: Icon(Icons.close,
+                                color: Colores().colorSombraBotones),
+                            dropDownButton: Icon(Icons.arrow_drop_down,
+                                color: Colores().colorSombraBotones),
+                            showClearButton: true,
+                            mode: Mode.DIALOG,
+                            searchBoxDecoration: InputDecoration(
+                              focusColor: Colores().colorSombraBotones,
+                            ),
+                            dropdownSearchDecoration: InputDecoration(
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Trueno',
+                                    fontSize: 12,
+                                    color: Colores().colorSombraBotones),
+                                hintText: "CATEGORIA",
+                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                focusColor: Colores().colorSombraBotones,
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colores().colorSombraBotones),
+                                )),
+                              validator: ((value) =>
+                              value.isEmpty ? 'El nombre es requerido' : null),
                           ),
-                          dropdownSearchDecoration: InputDecoration(
-                            focusColor: Colores().colorSombraBotones,
-                          ),
-                          autoValidateMode: AutovalidateMode.always,
                         ),
                         SizedBox(height: 20.0),
                         Boton(
@@ -141,48 +154,46 @@ class _AltaSeniaState extends State<AltaSenia> {
                                       ? fileWeb != null
                                       : archivoDeVideo != null) &&
                                   _catSeleccionada != null) {
-                                guardarSenia()
-                                  .then((userCreds) {
-                                    /*
+                                guardarSenia().then((userCreds) {
+                                  /*
                                     Luego de guardar la seña,
                                     creo un dialogo de alerta indicando que se
                                     guardo de forma ok
                                      */
-                                    showDialog(
-                                        useRootNavigator: false,
-                                        context: context,
-                                        builder: (BuildContext contexto) {
-                                          return AlertDialog(
-                                            title: Text('Alta de Seña'),
-                                            content: Text(
-                                                'La seña ha sido guardada correctamente'),
-                                            actions: [
-                                              TextButton(
-                                                  child: Text('Ok',
-                                                      style: TextStyle(
-                                                          color: Colores()
-                                                              .colorAzul,
-                                                          fontFamily: 'Trueno',
-                                                          fontSize: 11.0,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline)),
-                                                  onPressed: () {
-                                                    /*Al presionar Ok, cierro la el dialogo y cierro la
+                                  showDialog(
+                                      useRootNavigator: false,
+                                      context: context,
+                                      builder: (BuildContext contextR) {
+                                        return AlertDialog(
+                                          title: Text('Alta de Seña'),
+                                          content: Text(
+                                              'La seña ha sido guardada correctamente'),
+                                          actions: [
+                                            TextButton(
+                                                child: Text('Ok',
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colores().colorAzul,
+                                                        fontFamily: 'Trueno',
+                                                        fontSize: 11.0,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline)),
+                                                onPressed: () {
+                                                  /*Al presionar Ok, cierro la el dialogo y cierro la
                                                    ventana de alta seña
-
                                                      */
-                                                    Navigator.of(context)
-                                                        .popUntil((route) =>
-                                                            route.isFirst);
-                                                  })
-                                            ],
-                                          );
-                                        });
-                                    //TODO mensaje si falla.
-                                  }).catchError((e) {
-                                    ErrorHandler().errorDialog(context, e);
-                                  });
+                                                  Navigator.of(context)
+                                                      .popUntil((route) =>
+                                                  route.isFirst);
+                                                })
+                                          ],
+                                        );
+                                      });
+                                  //TODO mensaje si falla.
+                                }).catchError((e) {
+                                  ErrorHandler().errorDialog(context, e);
+                                });
                               }
                             }),
                       ],
@@ -196,7 +207,6 @@ class _AltaSeniaState extends State<AltaSenia> {
       ),
     );
   }
-
 
   Future guardarSenia() async {
     String urlVideo;
@@ -228,7 +238,6 @@ class _AltaSeniaState extends State<AltaSenia> {
       if (archivoDeVideo == null) {
         return;
       } else {
-
         _controladorSenia.crearYSubirSenia(_nombreSenia, _descripcionSenia,
             _catSeleccionada, nombreUsuario, destino, archivoDeVideo);
       }
@@ -241,8 +250,8 @@ class _AltaSeniaState extends State<AltaSenia> {
     lo saco
      */
     setState(() {
-        archivoDeVideo = null;
-        this._url = null;
+      archivoDeVideo = null;
+      this._url = null;
     });
 
     FilePickerResult result =
@@ -275,7 +284,7 @@ class _AltaSeniaState extends State<AltaSenia> {
     reader.readAsDataUrl(blob.slice(0, blob.size, blob.type));
     reader.onLoadEnd.listen((event) {
       Uint8List data =
-      Base64Decoder().convert(reader.result.toString().split(",").last);
+          Base64Decoder().convert(reader.result.toString().split(",").last);
       fileWeb = data;
     }).onData((data) {
       fileWeb =
@@ -295,6 +304,6 @@ class _AltaSeniaState extends State<AltaSenia> {
   }
 
   Future<void> listarCateogiras() async {
-    list = await ControladorCategoria().listarCategorias();
+    listaCategorias = await ControladorCategoria().listarCategorias();
   }
 }

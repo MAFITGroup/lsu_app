@@ -1,54 +1,115 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
+import 'package:lsu_app/modelo/Categoria.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
-class Categorias extends StatelessWidget {
-  CollectionReference categoriasRef =
-      FirebaseFirestore.instance.collection('categorias');
+class Categorias extends StatefulWidget {
+  @override
+  _CategoriasState createState() => _CategoriasState();
+}
+
+class _CategoriasState extends State<Categorias> {
+  List<Categoria> listaCategorias = [];
+  List<Categoria> listaCategoriasFiltradas = [];
+  bool isSearching = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            BarraDeNavegacion(
-              titulo: 'BUSQUEDA DE CATEGORIAS',
-              // TODO Implementar busqueda de categorias
-            ),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: categoriasRef.snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData)
-                    return new Center(
-                      child: new CircularProgressIndicator(),
-                    );
-                  return new ListView(children: getExpenseItems(snapshot));
-                },
+    return Container(
+      height: 600,
+      width: 600,
+      child: Center(
+        child: Scaffold(
+          body: Column(
+            children: [
+              BarraDeNavegacion(
+                titulo: !isSearching
+                    ? Text("BUSQUEDA DE CATEGORIAS",
+                        style: TextStyle(fontFamily: 'Trueno', fontSize: 14))
+                    : TextField(
+                        onChanged: (valor) {
+                          _filtrarCategorias(valor);
+                        },
+                        style: TextStyle(color: Colores().colorBlanco),
+                        decoration: InputDecoration(
+                            hintText: "BUSCA UNA CATEGORIA",
+                            hintStyle: TextStyle(
+                                fontFamily: 'Trueno',
+                                fontSize: 14,
+                                color: Colores().colorBlanco)),
+                      ),
+                listaWidget: [
+                  IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {
+                      setState(() {
+                        this.isSearching = !isSearching;
+                      });
+                    },
+                  )
+                ],
               ),
-            ),
-          ],
+              Expanded(
+                child: Container(
+                  child: FutureBuilder(
+                    future: listarCategorias(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text("Cargando...");
+                      } else {
+                        return ListView.builder(
+                            itemCount: listaCategorias.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                  child: ListTile(
+                                onTap: () {
+                                  /*
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => VisualizarSenia(
+                                                senia: listaSenias[index],
+                                                isUsuarioAdmin: isUsuarioAdmin,
+                                              )));
+                                              */
+                                },
+                                title: Text(listaCategorias[index].nombre),
+                              ));
+                            });
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+          /*
+          Si es usuario administrador muestro el boton
+           */
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            backgroundColor: Colores().colorAzul,
+            onPressed: Navegacion(context).navegarAAltaCategoria,
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          backgroundColor: Colores().colorAzul,
-          onPressed: Navegacion(context).navegarAAltaCategoria),
     );
   }
 
-  getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.docs
-        .map((doc) => Card(
-                child: new ListTile(
-              title: new Text(doc["nombre"]),
-              onTap: () {},//TODO agregar accion al presionar cat
-            )))
-        .toList();
+  Future<void> listarCategorias() async {
+    listaCategorias = listaCategoriasFiltradas =
+        await ControladorCategoria().obtenerTodasCategorias();
+  }
+
+  void _filtrarCategorias(String valor) {
+    setState(() {
+      listaCategoriasFiltradas = listaCategorias
+          .where((cat) =>
+              cat.toString().startsWith(valor))
+          .toList();
+    });
   }
 }

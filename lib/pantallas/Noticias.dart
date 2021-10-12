@@ -24,31 +24,27 @@ class _NoticiasState extends State<Noticias> {
                 .of(context)
                 .size
                 .width,
-            child: Form(key: formKey, child: enConstruccion(context)
-            )
-        )
-    );
+            child: Form(key: formKey, child: enConstruccion(context))));
   }
 
   enConstruccion(context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            BarraDeNavegacion(
-              titulo: 'BIBLIOTECA',
-            ),
-
-            SizedBox(height: 30),
-
-            Image(
-              image: AssetImage('recursos/EnConstruccion.png'),
-            )
-
-
-          ],
-        ),
-      ),
+          child: Column(
+              children: [
+          BarraDeNavegacion(
+          titulo: Text('BIBLIOTECA',
+              style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
+    ),
+    SizedBox(height: 30),
+    Image(
+    image: AssetImage('recursos/EnConstruccion.png'),
+    )
+    ],
+    )
+    ,
+    )
+    ,
     );
   }
 }

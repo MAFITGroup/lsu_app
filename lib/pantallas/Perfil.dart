@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
-
 class Perfil extends StatefulWidget {
   const Perfil({Key key}) : super(key: key);
 
@@ -11,32 +10,29 @@ class Perfil extends StatefulWidget {
   _PerfilState createState() => _PerfilState();
 }
 
-class _PerfilState extends State<Perfil>{
-
-
+class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
           BarraDeNavegacion(
-            titulo: 'GESTIÓN DE USUARIOS',
+            titulo: Text("GESTION DE USUARIOS",
+                style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
           ),
-              _manejoUsuarios(context),
-
+          _manejoUsuarios(context),
         ],
       ),
     );
   }
 
-  Widget _manejoUsuarios(context){
-
+  Widget _manejoUsuarios(context) {
     int _selectedValue = 1;
 
     final Map<int, Widget> opciones = <int, Widget>{
-      0:  _textStyle('ACTIVOS'),
-      1:  _textStyle('PENDIENTES'),
-      2:  _textStyle('INACTIVOS'),
+      0: _textStyle('ACTIVOS'),
+      1: _textStyle('PENDIENTES'),
+      2: _textStyle('INACTIVOS'),
     };
 
     return CupertinoPageScaffold(
@@ -44,27 +40,21 @@ class _PerfilState extends State<Perfil>{
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-
-            children:<Widget> [
-
+            children: <Widget>[
               CupertinoSegmentedControl<int>(
-
                 borderColor: Colores().colorAzul,
                 selectedColor: Colores().colorAzul,
                 unselectedColor: Colores().colorBlanco,
                 padding: EdgeInsets.all(10),
                 children: opciones,
-
                 groupValue: _selectedValue,
-                onValueChanged: (val){
+                onValueChanged: (val) {
                   print(val);
-                  setState((){
+                  setState(() {
                     _selectedValue = val;
                   });
                 },
-
               ),
-
             ],
           ),
         ),
@@ -73,16 +63,10 @@ class _PerfilState extends State<Perfil>{
   }
 
   Widget _textStyle(String text) => Container(
-    padding: EdgeInsets.all(12),
-    child: Text(
-      text,
-      style: TextStyle(
-          fontFamily: 'Trueno',
-          fontSize: 10
-      ),
-    ),
-  );
-
-
-
+        padding: EdgeInsets.all(12),
+        child: Text(
+          text,
+          style: TextStyle(fontFamily: 'Trueno', fontSize: 10),
+        ),
+      );
 }

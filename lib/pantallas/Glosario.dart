@@ -35,7 +35,8 @@ class _GlosarioState extends State<Glosario> {
           body: Column(
             children: [
               BarraDeNavegacion(
-                titulo: "BUSQUEDA DE SEÑAS",
+                titulo: Text("BUSQUEDA DE SEÑA",
+                    style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               ),
               Expanded(
                 child: Container(
@@ -54,8 +55,10 @@ class _GlosarioState extends State<Glosario> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              VisualizarSenia(senia: listaSenias[index])));
+                                          builder: (context) => VisualizarSenia(
+                                                senia: listaSenias[index],
+                                                isUsuarioAdmin: isUsuarioAdmin,
+                                              )));
                                 },
                                 title: Text(listaSenias[index].nombre),
                               ));

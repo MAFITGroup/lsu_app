@@ -10,25 +10,15 @@ class Biblioteca extends StatefulWidget {
 }
 
 class _BibliotecaState extends State<Biblioteca> {
-
   final formKey = new GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
-            child: Form(key: formKey, child: enConstruccion(context)
-            )
-        )
-    );
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Form(key: formKey, child: enConstruccion(context))));
   }
 
   enConstruccion(context) {
@@ -37,20 +27,16 @@ class _BibliotecaState extends State<Biblioteca> {
         child: Column(
           children: [
             BarraDeNavegacion(
-              titulo: 'BIBLIOTECA',
+              titulo: Text('BIBLIOTECA',
+                  style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
             ),
-
             SizedBox(height: 30),
-
             Image(
               image: AssetImage('recursos/EnConstruccion.png'),
             )
-
-
           ],
         ),
       ),
     );
   }
-
 }

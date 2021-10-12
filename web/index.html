@@ -97,6 +97,7 @@
       loadMainDartJs();
     }
 
+
 </script>
 
 
@@ -108,15 +109,34 @@
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
 
-<script src="./firebaseConfigTest.js"></script>
+<script>
+
+     const firebaseConfig = {
+    apiKey: "AIzaSyCFvLAysrO3XsPlxI409XEFzmSSqieqH1U",
+    authDomain: "plataformalsu-bd176.firebaseapp.com",
+    projectId: "plataformalsu-bd176",
+    storageBucket: "plataformalsu-bd176.appspot.com",
+    messagingSenderId: "1051905371406",
+    appId: "1:1051905371406:web:9602580022090abb1a3b5f",
+    measurementId: "G-GVDQ6NQ78L"
+  };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+
+</script>
+<!--
+<script src="web/js/firebaseConfigTest.js"></script>
 
 <script type="module">
   // Your web app's Firebase configuration
-  import { firebaseConfig } from './firebaseConfigTest.js';
+  import { firebaseConfig } from 'web/js/firebaseConfigTest.js';
   // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+ // firebase.initializeApp(firebaseConfig);
   firebase.analytics();
 </script>
+-->
 
 </body>
 </html>
