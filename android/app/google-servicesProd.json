@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "773491729987",
+    "project_id": "plataformalsuprod-fcd49",
+    "storage_bucket": "plataformalsuprod-fcd49.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773491729987:android:f079c6696afc508a1216f6",
+        "android_client_info": {
+          "package_name": "com.maf.uy.plataforma_lsuProd_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773491729987-euq156skm2mfuugsgekeleo90sgt5uvm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEvhlBPX22M6hgyI2K88IxkVz0hbyoA2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773491729987-euq156skm2mfuugsgekeleo90sgt5uvm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
