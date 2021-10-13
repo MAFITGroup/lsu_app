@@ -45,6 +45,7 @@ class _AltaSeniaState extends State<AltaSenia> {
   dynamic _catSeleccionada;
   UploadTask uploadTask;
 
+
   @override
   void initState() {
     listarCateogiras();

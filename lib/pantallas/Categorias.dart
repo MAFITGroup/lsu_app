@@ -18,11 +18,7 @@ class _CategoriasState extends State<Categorias> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 600,
-      width: 600,
-      child: Center(
-        child: Scaffold(
+        return Scaffold(
           body: Column(
             children: [
               BarraDeNavegacion(
@@ -52,38 +48,39 @@ class _CategoriasState extends State<Categorias> {
                   )
                 ],
               ),
-              Expanded(
-                child: Container(
-                  child: FutureBuilder(
-                    future: listarCategorias(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Cargando...");
-                      } else {
-                        return ListView.builder(
-                            itemCount: listaCategorias.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                  child: ListTile(
-                                onTap: () {
-                                  /*
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => VisualizarSenia(
-                                                senia: listaSenias[index],
-                                                isUsuarioAdmin: isUsuarioAdmin,
-                                              )));
-                                              */
-                                },
-                                title: Text(listaCategorias[index].nombre),
-                              ));
-                            });
-                      }
-                    },
+               Expanded(
+                 child: Container(
+                   height: 600,
+                    child: FutureBuilder(
+                      future: listarCategorias(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Text("Cargando...");
+                        } else {
+                          return ListView.builder(
+                              itemCount: listaCategorias.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                    child: ListTile(
+                                  onTap: () {
+                                    /*
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => VisualizarSenia(
+                                                  senia: listaSenias[index],
+                                                  isUsuarioAdmin: isUsuarioAdmin,
+                                                )));
+                                                */
+                                  },
+                                  title: Text(listaCategorias[index].nombre),
+                                ));
+                              });
+                        }
+                      },
+                    ),
                   ),
-                ),
-              ),
+               ),
             ],
           ),
           /*
@@ -94,9 +91,7 @@ class _CategoriasState extends State<Categorias> {
             backgroundColor: Colores().colorAzul,
             onPressed: Navegacion(context).navegarAAltaCategoria,
           ),
-        ),
-      ),
-    );
+        );
   }
 
   Future<void> listarCategorias() async {

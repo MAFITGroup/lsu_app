@@ -8,6 +8,8 @@ import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
+import 'Categorias.dart';
+
 class AltaCategoria extends StatefulWidget {
   @override
   _AltaCategoria createState() => _AltaCategoria();
@@ -16,6 +18,7 @@ class AltaCategoria extends StatefulWidget {
 class _AltaCategoria extends State<AltaCategoria> {
   String _nombreCategoria;
   final formKey = new GlobalKey<FormState>();
+  TextEditingController _textEditingController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,7 @@ class _AltaCategoria extends State<AltaCategoria> {
             child: Column(children: [
               SizedBox(height: 10),
               TextFieldTexto(
+                controlador: _textEditingController,
                 nombre: 'NOMBRE',
                 icon: Icon(Icons.account_tree_outlined),
                 valor: (value) {
@@ -71,13 +75,14 @@ class _AltaCategoria extends State<AltaCategoria> {
                                             decoration:
                                                 TextDecoration.underline)),
                                     onPressed: () {
-                                      /*Al presionar Ok, cierro la el dialogo y cierro la
-                                                   ventana de alta categorias
-
-                                                     */
-                                      Navigator.of(context)
-                                          .popUntil((route) =>
-                                      route.isFirst);
+                                      /*Al presionar Ok, cierro vuelvo a
+                                      * el alta de categorias */
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                Categorias()),
+                                        ModalRoute.withName('/'),
+                                      );
                                     })
                               ],
                             );

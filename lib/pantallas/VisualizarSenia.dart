@@ -153,7 +153,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                           nombre: 'NOMBRE',
                           icon: Icon(Iconos.hand),
                           botonHabilitado: modoEditar,
-                          textoSeteado: modoEditar
+                          controlador: modoEditar
                               ? null
                               : TextEditingController(text: senia.nombre),
                           valor: (value) {
@@ -169,7 +169,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                           nombre: 'DESCRIPCION',
                           icon: Icon(Icons.description),
                           botonHabilitado: modoEditar,
-                          textoSeteado: modoEditar
+                          controlador: modoEditar
                               ? null
                               : TextEditingController(text: senia.descripcion),
                           valor: (value) {

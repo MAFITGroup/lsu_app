@@ -8,7 +8,11 @@ class TextFieldTexto extends StatefulWidget {
   final Function(String) valor;
   final Function(String) validacion;
   final Icon icon;
-  final TextEditingController textoSeteado;
+  /*
+  Con este controlador, puedo limpiar el textfield,
+  setearle un valor por defecto,etc.
+   */
+  final TextEditingController controlador;
   final bool botonHabilitado;
 
 
@@ -18,7 +22,7 @@ class TextFieldTexto extends StatefulWidget {
     this.valor,
     this.validacion,
     this.icon,
-    this.textoSeteado,
+    this.controlador,
     this.botonHabilitado,
   }) : super(key: key);
 
@@ -36,7 +40,7 @@ class _TextFieldTextoState extends State<TextFieldTexto> {
       padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: TextFormField(
           enabled: widget.botonHabilitado,
-          controller: widget.textoSeteado,
+          controller: widget.controlador,
           //La primera letra siempre mayus
           textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
