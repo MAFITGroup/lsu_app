@@ -15,7 +15,7 @@ class ErrorHandler {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)
               ),
-              title: Text('Campos requeridos'),
+              title: Text('Login'),
               content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -26,7 +26,7 @@ class ErrorHandler {
                         ),
                         child: Center(
                             child: Text(
-                                'Los campos usuario y contraseña son obligatorios'
+                                'Usuario y/o contraseña incorrectas.'
                                 //e.message.toString()
                             )
                         )

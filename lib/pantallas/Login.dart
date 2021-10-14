@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
               nombre: 'CORREO',
               icon: Icon(Icons.alternate_email_rounded),
               valor: (value) {
-                this._email = value;
+                this._email = value.toLowerCase();
               },
               validacion: (value) => value.isEmpty
                   ? 'El correo es requerido'
@@ -91,8 +91,6 @@ class _LoginState extends State<Login> {
             Boton(
                 titulo: 'INGRESAR',
                 onTap: () {
-
-                  print('Ingresa boton Ingresar');
 
                   if(_email != null && _password != null){
 

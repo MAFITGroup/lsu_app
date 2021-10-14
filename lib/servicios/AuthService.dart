@@ -60,16 +60,14 @@ class AuthService extends ChangeNotifier {
                 .then((val) {
               Navegacion(context).navegarAPaginaInicial();
             }).catchError((e) {
-
-              ErrorHandler().errorDialog(e, context);
               String erro = e.toString();
-              print(erro);
+              ErrorHandler().errorDialog(e, context);
 
               if(erro.contains('too-many-requests')){
                 ErrorHandler().errorDialogTooManyRequest(e, context);
               }
               if(erro.contains('wrong-password')){
-
+                ErrorHandler().errorDialogWrongPassword(e, context);
               }
             });
           }
