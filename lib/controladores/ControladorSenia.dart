@@ -172,6 +172,7 @@ class ControladorSenia {
         'descripcion': descripcion,
         'categoria': categoria,
         'videoRef': downloadLink,
+
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
