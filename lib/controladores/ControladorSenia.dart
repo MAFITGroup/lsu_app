@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 
 class ControladorSenia {
@@ -108,12 +109,13 @@ class ControladorSenia {
      */
     UploadTask subida;
     String downloadLink;
-    String docId = nombre.trim() + categoria.trim();
+    String docId = new UniqueKey().toString(); 
     try {
       final ref = FirebaseStorage.instance.ref(destino);
       subida = ref.putFile(archivo);
       downloadLink = await (await subida).ref.getDownloadURL();
 
+      //TODO chequear que el documentID no se va a repetir en las colecciones
       /*
       Creo la senia luego de obtener el link de la url
        */
@@ -130,6 +132,7 @@ class ControladorSenia {
         'descripcion': descripcion,
         'categoria': categoria,
         'videoRef': downloadLink,
+
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
