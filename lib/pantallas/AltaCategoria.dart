@@ -53,7 +53,7 @@ class _AltaCategoria extends State<AltaCategoria> {
                   if (Validar().camposVacios(formKey)) {
                     crearCategoria().then((value) {
                       /*
-                                    Luego de guardar la seña,
+                                    Luego de guardar la categoria,
                                     creo un dialogo de alerta indicando que se
                                     guardo de forma ok
                                      */

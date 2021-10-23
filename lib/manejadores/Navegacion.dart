@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lsu_app/pantallas/AltaCategoria.dart';
+import 'package:lsu_app/pantallas/AltaContenido.dart';
 import 'package:lsu_app/pantallas/AltaSenia.dart';
 import 'package:lsu_app/pantallas/Biblioteca.dart';
 import 'package:lsu_app/pantallas/Categorias.dart';
@@ -139,6 +140,14 @@ class Navegacion {
         context,
         MaterialPageRoute(
           builder: (context) => Principal(),
+        ));
+  }
+
+  void navegarAltaContenido() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AltaContenido(),
         ));
   }
 

@@ -4,7 +4,9 @@ import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
+import 'package:lsu_app/pantallas/VisualizarCategoria.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
+
 
 class Categorias extends StatefulWidget {
   @override
@@ -63,15 +65,15 @@ class _CategoriasState extends State<Categorias> {
                                 return Card(
                                     child: ListTile(
                                   onTap: () {
-                                    /*
+
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => VisualizarSenia(
-                                                  senia: listaSenias[index],
-                                                  isUsuarioAdmin: isUsuarioAdmin,
+                                                builder: (context) => VisualizarCategoria(
+                                                  categoria: listaCategorias[index],
+
                                                 )));
-                                                */
+
                                   },
                                   title: Text(listaCategorias[index].nombre),
                                 ));
