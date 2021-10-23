@@ -162,10 +162,12 @@ class ControladorSenia {
       final ref = FirebaseStorage.instance.ref(destino);
       subida = ref.putData(archivo, SettableMetadata(contentType: 'video/mp4'));
       downloadLink = await (await subida).ref.getDownloadURL();
+
+      //TODO chequear que el documentID no se va a repetir en las colecciones
       /*
       Creo la senia luego de obtener el link de la url
        */
-      await firestore.collection("senias").doc(docId).set({
+      await firestore.collection("seRnias").doc(docId).set({
         'documentID': docId,
         'usuarioAlta': usuarioAlta,
         'nombre': nombre,

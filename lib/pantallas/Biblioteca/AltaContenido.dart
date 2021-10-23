@@ -17,12 +17,11 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
-import 'package:lsu_app/widgets/AlertDialog.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
-import 'package:path/path.dart';
 import 'package:universal_html/html.dart' as html;
 
 class AltaContenido extends StatefulWidget {

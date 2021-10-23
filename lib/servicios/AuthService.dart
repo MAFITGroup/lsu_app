@@ -3,10 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
-import 'package:lsu_app/pantallas/Principal.dart';
-import 'package:lsu_app/pantallas/PaginaInicial.dart';
-import 'package:lsu_app/widgets/AlertDialog.dart';
-
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
+import 'package:lsu_app/pantallas/Login/Principal.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 
 import 'ErrorHandler.dart';
 
@@ -36,68 +35,65 @@ class AuthService extends ChangeNotifier {
 
   //Iniciar Sesion
   signIn(String email, String password, context) async {
+    final estadoUsuario = await manej
+        .obtenerEstadoUsuario(email)
+        .then((value) => value.toString());
 
-      final stdUsr =
-      await manej.obtenerUsuarios(email).then((value) => value.toString());
+    // Accion segund el tipo de usuario que se esta intentado logueando
+    switch (estadoUsuario) {
+      case 'pendiente':
+        {
+          return showCupertinoDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) {
+                return AlertDialog_usrPendiente();
+              });
+        }
+        break;
 
-      // Accion segund el tipo de usuario que se esta intentado logueando
-      switch (stdUsr) {
-        case 'pendiente':
-          {
+      case 'activo':
+        {
+          firebaseAuth
+              .signInWithEmailAndPassword(email: email, password: password)
+              .then((val) {
+            Navegacion(context).navegarAPaginaInicial();
+          }).catchError((e) {
+            String erro = e.toString();
+            ErrorHandler().errorDialog(e, context);
 
-            return showCupertinoDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) {
-                  return AlertDialog_usrPendiente();
-                });
-          }
-          break;
+            if (erro.contains('too-many-requests')) {
+              ErrorHandler().errorDialogTooManyRequest(e, context);
+            }
+            if (erro.contains('wrong-password')) {
+              ErrorHandler().errorDialogWrongPassword(e, context);
+            }
+          });
+        }
+        break;
 
-        case 'activo':
-          {
+      case 'inactivo':
+        {
+          return showCupertinoDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) {
+                return AlertDialog_usrInactivo();
+              });
+        }
+        break;
 
-            firebaseAuth
-                .signInWithEmailAndPassword(email: email, password: password)
-                .then((val) {
-              Navegacion(context).navegarAPaginaInicial();
-            }).catchError((e) {
-              String erro = e.toString();
-              ErrorHandler().errorDialog(e, context);
-
-              if(erro.contains('too-many-requests')){
-                ErrorHandler().errorDialogTooManyRequest(e, context);
-              }
-              if(erro.contains('wrong-password')){
-                ErrorHandler().errorDialogWrongPassword(e, context);
-              }
-            });
-          }
-          break;
-
-        case 'inactivo':
-          {
-            return showCupertinoDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) {
-                  return AlertDialog_usrInactivo();
-                });
-          }
-          break;
-
-        default:
-          {
-            return showCupertinoDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) {
-                  return AlertDialog_usrNoRegistrado();
-                });
-          }
-          break;
-
-      }
+      default:
+        {
+          return showCupertinoDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) {
+                return AlertDialog_usrNoRegistrado();
+              });
+        }
+        break;
+    }
   }
 
   //Iniciar sesion con usuario nuevo
@@ -126,8 +122,7 @@ class AuthService extends ChangeNotifier {
           builder: (BuildContext context) {
             return AlertDialog_resgistro();
           });
-
-    }).catchError((e){
+    }).catchError((e) {
       ErrorHandler().errorDialog3(context, e);
     });
   }
@@ -140,7 +135,11 @@ class AuthService extends ChangeNotifier {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return AlertDialog_resetPass();
+                    return DialogoAlerta(
+                      tituloMensaje: "Solicitud de nueva contraseña",
+                      mensaje: "Link enviado a su casilla de correo",
+                      onPressed: Navegacion(context).navegarALoginDest,
+                    );
                   })
             })
         .catchError((e) {

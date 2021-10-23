@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:lsu_app/modelo/Usuario.dart';
 
 class ControladorUsuario {
@@ -85,50 +84,57 @@ class ControladorUsuario {
       }
     }
 
+  /*
+  Se usa al iniciar sesion, si el usuario.
+  Ver uso en AuthService/ signIn
+   */
+  Future<String> obtenerEstadoUsuario(String mail) async {
+    String usuarioEstado;
 
-    Future<String> obtenerUsuarios(String mail) async{
-      String usuarioEstado;
+    await firestore
+        .collection('usuarios')
+        .where('correo', isEqualTo: mail)
+        .get()
+        .then((query) {
+      query.docs.forEach((element) {
+        usuarioEstado = element.get('statusUsuario').toString();
+      });
+    });
+    return usuarioEstado;
+  }
 
-         await firestore
-          .collection('usuarios')
-          .where('correo', isEqualTo: mail )
-            .get().then((query) {
-             query.docs.forEach((element) {
-               usuarioEstado =  element.get('statusUsuario').toString();
+  Future<String> obtenerNombreUsuario(String usuarioActualUID) async {
+    usuario = await obtenerUsuarioLogueado(usuarioActualUID);
+    return usuario.nombreCompleto;
+  }
 
-             });
+  Future<List<Usuario>> obtenerUsuariosPendiente() async {
+    List<Usuario> listaUsuariosPendientes = [];
 
-       });
-         return usuarioEstado;
+    await firestore
+        .collection('usuarios')
+        .where('statusUsuario', isEqualTo: 'pendiente')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _uid = doc['usuarioUID'];
+        _correo = doc['correo'];
+        _nombreCompleto = doc['nombreCompleto'];
+        _telefono = doc['telefono'];
+        _localidad = doc['localidad'];
+        _especialidad = doc['especialidad'];
+        _esAdministrador = doc['esAdministrador'];
+        _statusUsuario = doc['statusUsuario'];
 
-    }
-
-
-    Future<String> obtenerNombreUsuario(String usuarioActualUID) async {
-      usuario = await obtenerUsuarioLogueado(usuarioActualUID);
-      return usuario.nombreCompleto;
-   }
-
-   Future<List<Usuario>> obtenerUsuariosPendiente() async {
-
-      List<Usuario> listaUsuariosPendientes = [];
-      
-      await firestore
-          .collection('usuarios')
-          .where('statusUsuario', isEqualTo: 'pendiente')
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-            querySnapshot.docs.forEach((doc) {
-              _nombreCompleto = doc['nombre'];
-              _especialidad = doc['especialidad'];
-              _statusUsuario = doc['statusUsuario'];
-              _esAdministrador = doc['esAdministrador'];
-
-              usuario = new Usuario();
-              usuario.nombreCompleto = _nombreCompleto;
-              usuario.especialidad = _especialidad;
-              usuario.statusUsuario = _statusUsuario;
-              usuario.esAdministrador = _esAdministrador;
+        usuario = new Usuario();
+        usuario.uid = _uid;
+        usuario.correo = _correo;
+        usuario.nombreCompleto = _nombreCompleto;
+        usuario.telefono = _telefono;
+        usuario.localidad = _localidad;
+        usuario.especialidad = _especialidad;
+        usuario.esAdministrador = _esAdministrador;
+        usuario.statusUsuario = _statusUsuario;
 
               listaUsuariosPendientes.add(usuario);
 

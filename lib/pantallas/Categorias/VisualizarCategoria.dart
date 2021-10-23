@@ -3,12 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
-import 'package:lsu_app/widgets/AlertDialog.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
 class VisualizarCategoria extends StatefulWidget {

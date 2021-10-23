@@ -4,11 +4,10 @@ import 'package:lsu_app/modelo/Categoria.dart';
 
 class ControladorCategoria {
   String _nombreCategoria;
-  String _documentID;
-
   final categoriasRef = FirebaseFirestore.instance.collection('categorias');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   Categoria categoria;
+  String _documentID;
 
   /*
   Crea la categoría
@@ -18,7 +17,7 @@ class ControladorCategoria {
     //creo mi categoria
     firestore.collection("categorias").doc(docId).set({
       'documentID': docId,
-      'nombre': nombre,
+      'nombre': nombre.trimLeft().trimRight(),
     });
   }
 
@@ -71,15 +70,14 @@ class ControladorCategoria {
   Future<List<Categoria>> obtenerTodasCategorias() async {
     List<Categoria> lista = [];
 
-    await firestore
-        .collection('categorias')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
+    await categoriasRef.get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         _nombreCategoria = doc['nombre'];
+        _documentID = doc['documentID'];
 
         categoria = new Categoria();
         categoria.nombre = _nombreCategoria;
+        categoria.documentID = _documentID;
 
         lista.add(categoria);
       });
@@ -117,24 +115,23 @@ class ControladorCategoria {
     });
   }
 
-  /*obtenerCategoriaExistente(String nombreNuevo) async {
-    List<Categoria> lista = [];
+  Future<bool> existeCategoria(String nombre) async {
+    bool existeCategoria = false;
+    String nombreCat;
 
-    await firestore
-        .collection('categorias')
-        .where('categoria', isEqualTo: nombreNuevo)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        _nombreCategoria = doc['nombre'];
-
-        categoria = new Categoria();
-        categoria.nombre = _nombreCategoria;
-
-        lista.add(categoria);
+    if(nombre != null) {
+      await categoriasRef
+          .where('nombre', isEqualTo: nombre.trimLeft().trimRight())
+          .get()
+          .then((query) {
+        query.docs.forEach((element) {
+          nombreCat = element.get('nombre').toString();
+          if (nombreCat != null) {
+            existeCategoria = true;
+          }
+        });
       });
-    });
-
-    return lista;
-  }*/
+    }
+    return existeCategoria;
+  }
 }

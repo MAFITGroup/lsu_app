@@ -20,6 +20,7 @@ import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/SeleccionadorVideo.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
@@ -43,8 +44,8 @@ class _AltaSeniaState extends State<AltaSenia> {
 
   List listaCategorias;
   dynamic _catSeleccionada;
+  dynamic _SubCatSeleccionada;
   UploadTask uploadTask;
-
 
   @override
   void initState() {
@@ -84,7 +85,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                   ? SeleccionadorVideo(null, _url)
                                   : SeleccionadorVideo(archivoDeVideo, null)),
                         ),
-                        SizedBox(height: 15.0),
+                        SizedBox(height: 8.0),
                         TextFieldTexto(
                           nombre: 'NOMBRE',
                           icon: Icon(Iconos.hand),
@@ -94,15 +95,17 @@ class _AltaSeniaState extends State<AltaSenia> {
                           validacion: ((value) =>
                               value.isEmpty ? 'El nombre es requerido' : null),
                         ),
-                        SizedBox(height: 15.0),
+                        SizedBox(height: 8.0),
                         TextFieldDescripcion(
                           nombre: 'DESCRIPCION',
                           icon: Icon(Icons.description),
                           valor: (value) {
                             this._descripcionSenia = value;
                           },
+                          validacion: ((value) => value.isEmpty
+                              ? 'La descripcion es requerida'
+                              : null),
                         ),
-                        SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
@@ -122,6 +125,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                             mode: Mode.DIALOG,
                             searchBoxDecoration: InputDecoration(
                               focusColor: Colores().colorSombraBotones,
+                              hintText: "Buscar",
                             ),
                             dropdownSearchDecoration: InputDecoration(
                                 hintStyle: TextStyle(
@@ -135,8 +139,55 @@ class _AltaSeniaState extends State<AltaSenia> {
                                   borderSide: BorderSide(
                                       color: Colores().colorSombraBotones),
                                 )),
-                              validator: ((value) =>
-                              value.isEmpty ? 'El nombre es requerido' : null),
+                            validator: (dynamic valor) {
+                              if (valor == null) {
+                                return "La categoria es requerida";
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+
+                        // SUB CATEGORIA
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25, right: 25),
+                          child: DropdownSearch(
+                            items: null,
+                            onChanged: (value) {
+                              setState(() {
+                                _SubCatSeleccionada = value;
+                              });
+                            },
+                            showSearchBox: true,
+                            clearButton: Icon(Icons.close,
+                                color: Colores().colorSombraBotones),
+                            dropDownButton: Icon(Icons.arrow_drop_down,
+                                color: Colores().colorSombraBotones),
+                            showClearButton: true,
+                            mode: Mode.DIALOG,
+                            searchBoxDecoration: InputDecoration(
+                              focusColor: Colores().colorSombraBotones,
+                            ),
+                            dropdownSearchDecoration: InputDecoration(
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Trueno',
+                                    fontSize: 12,
+                                    color: Colores().colorSombraBotones),
+                                hintText: "SUB CATEGORIA",
+                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                focusColor: Colores().colorSombraBotones,
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colores().colorSombraBotones),
+                                )),
+                            validator: (dynamic valor) {
+                              if (valor == null) {
+                                return "La sub categoria es requerida";
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
                         ),
                         SizedBox(height: 20.0),
@@ -147,6 +198,23 @@ class _AltaSeniaState extends State<AltaSenia> {
                         Boton(
                             titulo: 'GUARDAR',
                             onTap: () {
+                              if (kIsWeb
+                                  ? fileWeb == null
+                                  : archivoDeVideo == null) {
+                                return showCupertinoDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (context) {
+                                      return DialogoAlerta(
+                                        tituloMensaje: "Advertencia",
+                                        mensaje:
+                                            "No ha seleccionado un video.",
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      );
+                                    });
+                              }
                               if (Validar().camposVacios(formKey) &&
                                   /*verifico que el archivo de video no sea null dependiendo
                                   si estoy en la web
@@ -186,7 +254,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                                      */
                                                   Navigator.of(context)
                                                       .popUntil((route) =>
-                                                  route.isFirst);
+                                                          route.isFirst);
                                                 })
                                           ],
                                         );
@@ -246,6 +314,7 @@ class _AltaSeniaState extends State<AltaSenia> {
   }
 
   void obtenerVideo() async {
+
     /*
     Si al obtenerVideo, tengo algo cargado
     lo saco
@@ -257,6 +326,28 @@ class _AltaSeniaState extends State<AltaSenia> {
 
     FilePickerResult result =
         await FilePicker.platform.pickFiles(type: FileType.video);
+
+
+    if(result == null) return;
+
+    /*
+    if(){
+      return showCupertinoDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) {
+            return DialogoAlerta(
+              tituloMensaje: "Advertencia",
+              mensaje:
+              "No ha seleccionado un video.",
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            );
+          });
+    }
+
+     */
 
     if (kIsWeb) {
       if (result.files.first != null) {

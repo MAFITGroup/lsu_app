@@ -7,7 +7,7 @@ import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
-import 'package:lsu_app/pantallas/VisualizarContenido.dart';
+import 'package:lsu_app/pantallas/Biblioteca/VisualizarContenido.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
 class Biblioteca extends StatefulWidget {
