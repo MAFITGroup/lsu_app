@@ -102,9 +102,12 @@ class _AltaSeniaState extends State<AltaSenia> {
                           valor: (value) {
                             this._descripcionSenia = value;
                           },
-                          validacion: ((value) => value.isEmpty
+                          //No es necesario escribir una descripcion
+                         /* validacion: ((value) => value.isEmpty
                               ? 'La descripcion es requerida'
                               : null),
+
+                          */
                         ),
                         // Menu desplegable de Categorias
                         Padding(
@@ -181,13 +184,14 @@ class _AltaSeniaState extends State<AltaSenia> {
                                   borderSide: BorderSide(
                                       color: Colores().colorSombraBotones),
                                 )),
-                            validator: (dynamic valor) {
+                          /*  validator: (dynamic valor) {
                               if (valor == null) {
                                 return "La sub categoria es requerida";
                               } else {
                                 return null;
                               }
                             },
+                           */
                           ),
                         ),
                         SizedBox(height: 20.0),
@@ -278,7 +282,6 @@ class _AltaSeniaState extends State<AltaSenia> {
   }
 
   Future guardarSenia() async {
-    String urlVideo;
     final destino = 'Videos/$_nombreSenia';
     String nombreUsuario =
         await _controladorUsuario.obtenerNombreUsuario(_usuarioUID);

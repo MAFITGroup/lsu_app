@@ -167,7 +167,7 @@ class ControladorSenia {
       /*
       Creo la senia luego de obtener el link de la url
        */
-      await firestore.collection("seRnias").doc(docId).set({
+      await firestore.collection("senias").doc(docId).set({
         'documentID': docId,
         'usuarioAlta': usuarioAlta,
         'nombre': nombre,
@@ -202,6 +202,7 @@ class ControladorSenia {
         usuarioAlta = doc['usuarioAlta'];
         categoria = doc['categoria'];
         urlVideo = doc['videoRef'];
+        documentID = doc['documentID'];
 
         senia = new Senia();
 
@@ -210,6 +211,40 @@ class ControladorSenia {
         senia.usuarioAlta = usuarioAlta;
         senia.categoria = categoria;
         senia.urlVideo = urlVideo;
+        senia.documentID = documentID;
+
+        lista.add(senia);
+      });
+    });
+
+    return lista;
+  }
+
+
+  Future<List<Senia>> obtenerSeniasXCategoria(String nombreCategoria) async {
+    List<Senia> lista = [];
+
+    await firestore
+        .collection('senias')
+        .where('categoria', isEqualTo: nombreCategoria.trimLeft().trimRight())
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        nombre = doc['nombre'];
+        descripcion = doc['descripcion'];
+        usuarioAlta = doc['usuarioAlta'];
+        categoria = doc['categoria'];
+        urlVideo = doc['videoRef'];
+        documentID = doc['documentID'];
+
+        senia = new Senia();
+
+        senia.nombre = nombre;
+        senia.descripcion = descripcion;
+        senia.usuarioAlta = usuarioAlta;
+        senia.categoria = categoria;
+        senia.urlVideo = urlVideo;
+        senia.documentID = documentID;
 
         lista.add(senia);
       });

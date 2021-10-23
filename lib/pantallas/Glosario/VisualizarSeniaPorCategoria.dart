@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
-import 'package:lsu_app/modelo/Categoria.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
 import 'VisualizarSenia.dart';
 
 class VisualizarSeniaPorCategoria extends StatefulWidget {
-  final Categoria categoria;
 
-  const VisualizarSeniaPorCategoria({Key key, this.categoria})
+ final String nombreCategoria;
+
+  const VisualizarSeniaPorCategoria({Key key, this.nombreCategoria})
       : super(key: key);
 
   @override
@@ -22,8 +22,9 @@ class VisualizarSeniaPorCategoria extends StatefulWidget {
 
 class _VisualizarSeniaPorCategoriaState
     extends State<VisualizarSeniaPorCategoria> {
-  List<Senia> listaSenias = [];
   bool isUsuarioAdmin;
+  List<Senia> listaSeniaXCategoria = [];
+  ControladorSenia _controladorSenia = new ControladorSenia();
 
   @override
   void initState() {
@@ -32,6 +33,8 @@ class _VisualizarSeniaPorCategoriaState
 
   @override
   Widget build(BuildContext context) {
+
+    String nombreCategoria = widget.nombreCategoria;
     return Container(
       height: 600,
       width: 600,
@@ -43,17 +46,16 @@ class _VisualizarSeniaPorCategoriaState
                 titulo: Text("BUSQUEDA DE SEÑA",
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               ),
-              Text("Senias"),
               Expanded(
                 child: Container(
                   child: FutureBuilder(
-                    future: listarSenias(),
+                    future: listarSeniasXCategorias(nombreCategoria),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Text("Cargando...");
                       } else {
                         return ListView.builder(
-                            itemCount: listaSenias.length,
+                            itemCount: listaSeniaXCategoria.length,
                             itemBuilder: (context, index) {
                               return Card(
                                   child: ListTile(
@@ -62,11 +64,11 @@ class _VisualizarSeniaPorCategoriaState
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => VisualizarSenia(
-                                                senia: listaSenias[index],
+                                                senia: listaSeniaXCategoria[index],
                                                 isUsuarioAdmin: isUsuarioAdmin,
                                               )));
                                 },
-                                title: Text(listaSenias[index].nombre),
+                                title: Text(listaSeniaXCategoria[index].nombre),
                               ));
                             });
                       }
@@ -81,8 +83,8 @@ class _VisualizarSeniaPorCategoriaState
     );
   }
 
-  Future<void> listarSenias() async {
-    listaSenias = await ControladorSenia().obtenerTodasSenias();
+  Future<List<Senia>> listarSeniasXCategorias(String nombreCategoria) async {
+    listaSeniaXCategoria =  await _controladorSenia.obtenerSeniasXCategoria(nombreCategoria);
   }
 
   Future<void> obtenerUsuarioAdministrador() async {

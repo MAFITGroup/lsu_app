@@ -7,6 +7,7 @@ import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
+import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
 import 'VisualizarSeniaPorCategoria.dart';
@@ -18,8 +19,12 @@ class Glosario extends StatefulWidget {
 
 class _GlosarioState extends State<Glosario> {
   List<Categoria> listaCategorias = [];
+  List<Senia> listaSeniaXCategoria = [];
   bool isUsuarioAdmin;
   bool isSearching = false;
+  ControladorUsuario _controladorUsuario = new ControladorUsuario();
+  ControladorCategoria _controladorCategoria = new ControladorCategoria();
+
 
 
   @override
@@ -48,7 +53,6 @@ class _GlosarioState extends State<Glosario> {
                 titulo: Text("GLOSARIO",
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               ),
-              Text("Categorias"),
               Expanded(
                 child: Container(
                   child: FutureBuilder(
@@ -67,7 +71,7 @@ class _GlosarioState extends State<Glosario> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => VisualizarSeniaPorCategoria(
-                                                categoria: listaCategorias[index],
+                                                nombreCategoria: listaCategorias[index].nombre,
                                               )));
                                 },
                                 title: Text(listaCategorias[index].nombre),
@@ -96,12 +100,11 @@ class _GlosarioState extends State<Glosario> {
   }
 
   Future<void> listarCategorias() async {
-    listaCategorias =  await ControladorCategoria().obtenerTodasCategorias();
+    listaCategorias =  await _controladorCategoria.obtenerTodasCategorias();
   }
 
-
   Future<void> obtenerUsuarioAdministrador() async {
-    isUsuarioAdmin = await ControladorUsuario()
+    isUsuarioAdmin = await _controladorUsuario
         .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
