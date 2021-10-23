@@ -30,6 +30,8 @@ class AuthService extends ChangeNotifier {
   //Cerrar sesion
   signOut() {
     firebaseAuth.signOut();
+
+
   }
 
   //Iniciar Sesion

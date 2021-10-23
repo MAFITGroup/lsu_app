@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/pantallas/AltaCategoria.dart';
 import 'package:lsu_app/pantallas/AltaContenido.dart';
 import 'package:lsu_app/pantallas/AltaSenia.dart';
@@ -59,13 +60,14 @@ class Navegacion {
         ));
   }
 
-  void navegarAPerfil() {
+  void navegarAPerfil(Usuario usuario) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Perfil(),
+          builder: (context) => Perfil(usuario: usuario),
         ));
   }
+
 
   void navegarAltaSenia() {
     Navigator.push(
@@ -150,6 +152,7 @@ class Navegacion {
           builder: (context) => AltaContenido(),
         ));
   }
+
 
 
 }

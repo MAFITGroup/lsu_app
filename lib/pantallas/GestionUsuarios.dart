@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
+import 'package:lsu_app/controladores/ControladorUsuario.dart';
+import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/modelo/Usuario.dart';
 
 class GestionUsuarios extends StatefulWidget {
   const GestionUsuarios({Key key}) : super(key: key);
@@ -13,38 +15,15 @@ class GestionUsuarios extends StatefulWidget {
 class _GestionUsuarios extends State<GestionUsuarios> {
   final formKey = new GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Form(key: formKey, child: enConstruccion(context))));
-  }
-
-  enConstruccion(context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            BarraDeNavegacion(
-              titulo: Text('BIBLIOTECA',
-                  style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
-            ),
-            SizedBox(height: 30),
-            Image(
-              image: AssetImage('recursos/EnConstruccion.png'),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-/*
   List<String> _tabs = ['ACTIVOS', 'PENDIENTES', 'INACTIVOS'];
 
   List<Usuario> listaUsuariosQuery = [];
+
+  @override
+  void initState() {
+    UsuarioDetalles();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,19 +50,30 @@ class _GestionUsuarios extends State<GestionUsuarios> {
               ];
             },
             body: TabBarView(
+            children: [
+              UsuarioDetalles(),
+              Text('activos'),
+              Text('inactivos'),
+            ],
+            )
+
+            // TabBarView
+
+
+
 
 
             )
             )
-            ),
-          );
+            );
+
 
   }
 
   Future<void> usuariosPendientes() async {
     listaUsuariosQuery = await ControladorUsuario().obtenerUsuariosPendiente();
   }
-*/
+
 
 }
 
@@ -109,6 +99,9 @@ class UsuarioLista extends StatefulWidget {
 }
 
 class _UsuarioListaState extends State<UsuarioLista> {
+
+  List<Usuario> pendienteUsuarios = [];
+
   Future getPosts() async {
     var firestore = FirebaseFirestore.instance;
 
@@ -121,18 +114,21 @@ class _UsuarioListaState extends State<UsuarioLista> {
   Widget build(BuildContext context) {
     return Container(
       child: FutureBuilder(
-        future: getPosts(),
-        builder: (_, snapshot) {
+        future: usuariosPendientes(),
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: Text('... Cargando'),
+              child: CircularProgressIndicator(),
             );
           } else {
             return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (_, index) {
-                  return ListTile(
-                    title: Text(snapshot.data[index].data['correo']),
+                itemCount: pendienteUsuarios.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                        title: Text(pendienteUsuarios[index].nombreCompleto),
+                      ),
+
                   );
                 });
           }
@@ -140,4 +136,9 @@ class _UsuarioListaState extends State<UsuarioLista> {
       ),
     );
   }
+
+  Future<void> usuariosPendientes() async {
+    pendienteUsuarios = await ControladorUsuario().obtenerUsuariosPendiente();
+  }
+
 }

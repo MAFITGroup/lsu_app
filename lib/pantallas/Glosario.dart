@@ -99,4 +99,5 @@ class _GlosarioState extends State<Glosario> {
       isUsuarioAdmin;
     });
   }
+
 }

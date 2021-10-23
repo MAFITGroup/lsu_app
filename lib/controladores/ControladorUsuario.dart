@@ -40,6 +40,7 @@ class ControladorUsuario {
     }
 
     Future<Usuario> obtenerUsuarioLogueado(String usuarioActualUID) async{
+      String usuarioActualUID = FirebaseAuth.instance.currentUser.uid;
      await firestore
           .collection('usuarios')
           .doc(usuarioActualUID)
@@ -107,7 +108,7 @@ class ControladorUsuario {
       usuario = await obtenerUsuarioLogueado(usuarioActualUID);
       return usuario.nombreCompleto;
    }
-   
+
    Future<List<Usuario>> obtenerUsuariosPendiente() async {
 
       List<Usuario> listaUsuariosPendientes = [];
@@ -137,8 +138,97 @@ class ControladorUsuario {
       return listaUsuariosPendientes;
    }
 
+   void editarPerfil(
+       String correoAnterior,
+       String nombreAnterior,
+       String celularAnterior,
+       String departamentoAnterior,
+       String especialidadAnterior,
+       String correoNuevo,
+       String nombreNuevo,
+       String celularNuevo,
+       String departamentoNuevo,
+       String especialidadNueva,
+       ) async {
+      Usuario usuario = await obtenerUsuarioPerfil(
+          correoAnterior);
 
-  }
+      String usuarioId = usuario.uid;
+      print(usuarioId);
+
+      firestore.collection('usuarios')
+      .doc(usuarioId)
+      .update({
+        'correo' : correoNuevo,
+        'nombreCompleto' : nombreNuevo,
+        'telefono' : celularNuevo,
+        'localidad' : departamentoNuevo,
+        'especialidad' : especialidadNueva,
+
+      }).then((value) => print('Usuario editado correctamente'));
+   }
+
+   Future<Usuario> obtenerUsuarioPerfil(String correo) async {
+      await firestore
+          .collection('usuarios')
+          .where('correo', isEqualTo: correo)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+            querySnapshot.docs.forEach((doc) {
+              _correo = doc['correo'];
+              _nombreCompleto = doc['nombreCompleto'];
+              _telefono = doc['telefono'];
+              _localidad = doc['localidad'];
+              _especialidad = doc['especialidad'];
+              _uid = doc['usuarioUID'];
+
+              usuario = new Usuario();
+              usuario.correo = _correo;
+              usuario.nombreCompleto = _nombreCompleto;
+              usuario.telefono = _telefono;
+              usuario.localidad = _localidad;
+              usuario.especialidad = _especialidad;
+              usuario.uid = _uid;
+            });
+      });
+
+      return usuario;
+   }
+
+   void eliminarUsuarios( String correo) async {
+        Usuario usuario = await obtenerUsuarioPerfil(correo);
+        String docId = usuario.uid;
+
+        // Elimina documento
+        await firestore
+            .collection('usuarios')
+            .doc(docId)
+            .delete()
+            .then((value) => print('Usuario elimiando correctamente'));
+
+        // Elimina del Authentication
+        await firebaseAuth.currentUser.delete();
+
+}
+
+    void inactivarUsuario(
+        String correo
+        ) async {
+      Usuario usuario = await obtenerUsuarioPerfil(correo);
+      String docId = usuario.uid;
+
+      // Pasa el usuario a estado inactivo
+      await firestore
+          .collection('usuarios')
+          .doc(docId)
+          .update({
+        'statusUsuario': 'inactivo'
+      })
+          .then((value) => print('Usuario elimiando correctamente'));
+    }
+
+
+}
 
 
 
