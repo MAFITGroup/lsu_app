@@ -105,21 +105,21 @@ class ControladorCategoria {
         .collection('senias')
         .where('categoria', isEqualTo: nombreAnterior)
         .get()
-        .then((response) =>
-    {
-      response.docs.forEach((doc) =>
-      {
-        firestore.collection('senias').doc(doc.id).update(
-            { 'categoria': nombreNuevo})
-      })
-    });
+        .then((response) => {
+              response.docs.forEach((doc) => {
+                    firestore
+                        .collection('senias')
+                        .doc(doc.id)
+                        .update({'categoria': nombreNuevo})
+                  })
+            });
   }
 
   Future<bool> existeCategoria(String nombre) async {
     bool existeCategoria = false;
     String nombreCat;
 
-    if(nombre != null) {
+    if (nombre != null) {
       await categoriasRef
           .where('nombre', isEqualTo: nombre.trimLeft().trimRight())
           .get()
@@ -133,5 +133,26 @@ class ControladorCategoria {
       });
     }
     return existeCategoria;
+  }
+
+  Future<bool> existeCategoriaenSenia(String nombre) async {
+    bool existeCategoriaEnSenia = false;
+    String nombreCat;
+
+    if (nombre != null) {
+      await firestore
+          .collection('senias')
+          .where('categoria', isEqualTo: nombre)
+          .get()
+          .then((query) {
+        query.docs.forEach((element) {
+          nombreCat = element.get('categoria').toString();
+          if (nombreCat != null) {
+            existeCategoriaEnSenia = true;
+          }
+        });
+      });
+    }
+    return existeCategoriaEnSenia;
   }
 }
