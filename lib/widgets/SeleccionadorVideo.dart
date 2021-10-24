@@ -39,7 +39,8 @@ class SeleccionadorVideoState extends State<SeleccionadorVideo> {
             color: Colors.black,
           ),
           videoPlayerController: _controladorDeVideo =
-              VideoPlayerController.file(widget.file));
+              VideoPlayerController.file(widget.file),
+      );
 
       /*
       Uso tanto para reproductor web, como para visualizador de senias

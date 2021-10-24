@@ -1,24 +1,30 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
-import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Senia.dart';
-import 'package:lsu_app/pantallas/VisualizarSenia.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
-class Glosario extends StatefulWidget {
+import 'VisualizarSenia.dart';
+
+class VisualizarSeniaPorCategoria extends StatefulWidget {
+
+ final String nombreCategoria;
+
+  const VisualizarSeniaPorCategoria({Key key, this.nombreCategoria})
+      : super(key: key);
+
   @override
-  _GlosarioState createState() => _GlosarioState();
+  _VisualizarSeniaPorCategoriaState createState() =>
+      _VisualizarSeniaPorCategoriaState();
 }
 
-class _GlosarioState extends State<Glosario> {
-  List<Senia> listaSenias = [];
+class _VisualizarSeniaPorCategoriaState
+    extends State<VisualizarSeniaPorCategoria> {
   bool isUsuarioAdmin;
-  bool isSearching = false;
+  List<Senia> listaSeniaXCategoria = [];
+  ControladorSenia _controladorSenia = new ControladorSenia();
 
   @override
   void initState() {
@@ -27,6 +33,8 @@ class _GlosarioState extends State<Glosario> {
 
   @override
   Widget build(BuildContext context) {
+
+    String nombreCategoria = widget.nombreCategoria;
     return Container(
       height: 600,
       width: 600,
@@ -41,13 +49,13 @@ class _GlosarioState extends State<Glosario> {
               Expanded(
                 child: Container(
                   child: FutureBuilder(
-                    future: listarSenias(),
+                    future: listarSeniasXCategorias(nombreCategoria),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Text("Cargando...");
                       } else {
                         return ListView.builder(
-                            itemCount: listaSenias.length,
+                            itemCount: listaSeniaXCategoria.length,
                             itemBuilder: (context, index) {
                               return Card(
                                   child: ListTile(
@@ -56,11 +64,11 @@ class _GlosarioState extends State<Glosario> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => VisualizarSenia(
-                                                senia: listaSenias[index],
+                                                senia: listaSeniaXCategoria[index],
                                                 isUsuarioAdmin: isUsuarioAdmin,
                                               )));
                                 },
-                                title: Text(listaSenias[index].nombre),
+                                title: Text(listaSeniaXCategoria[index].nombre),
                               ));
                             });
                       }
@@ -70,23 +78,13 @@ class _GlosarioState extends State<Glosario> {
               ),
             ],
           ),
-          /*
-          Si es usuario administrador muestro el boton
-           */
-          floatingActionButton: isUsuarioAdmin == true
-              ? FloatingActionButton(
-                  child: Icon(Icons.add),
-                  backgroundColor: Colores().colorAzul,
-                  onPressed: Navegacion(context).navegarAltaSenia,
-                )
-              : null,
         ),
       ),
     );
   }
 
-  Future<void> listarSenias() async {
-    listaSenias = await ControladorSenia().obtenerTodasSenias();
+  Future<List<Senia>> listarSeniasXCategorias(String nombreCategoria) async {
+    listaSeniaXCategoria =  await _controladorSenia.obtenerSeniasXCategoria(nombreCategoria);
   }
 
   Future<void> obtenerUsuarioAdministrador() async {

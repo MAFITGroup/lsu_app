@@ -1,5 +1,7 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
@@ -21,6 +23,10 @@ class _RegistrarseState extends State<Registrarse> {
   String _telefono;
   String _localidad;
   String _especialidad;
+  List departamentos = ['ARTIGAS', 'CANELONES', 'CERRO LARGO', 'COLONIA', 'DURAZNO', 'FLORES', 'FLORIDA',
+    'LAVALLEJA', 'MALDONADO', 'MONTEVIDEO', 'PAYSANDU', 'RIO NEGRO', 'RIVERA', 'ROCHA', 'SALTO', 'SORIANO',
+    'SAN JOSE', 'TACUAREMBO', 'TREINTA Y TRES'];
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +98,7 @@ class _RegistrarseState extends State<Registrarse> {
                   : Validar().validarCelular(value)),
 
           // LOCALIDAD
-
+/*
           TextFieldTexto(
               nombre: 'DEPARTAMENTO',
               icon: Icon(Icons.location_city_outlined),
@@ -101,19 +107,42 @@ class _RegistrarseState extends State<Registrarse> {
               },
               validacion: ((value) =>
                   value.isEmpty ? 'Campo obligatorio' : null)),
-
-          /* DropdownButton<String>(
-
-                  items: <String>['ARTIGAS', 'CANELONES', 'CERRO LARGO'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: this._localidad = value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (_){},
-                  isExpanded: true,
-
-                ),*/
+*/
+          Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25),
+            child: DropdownSearch(
+              items: departamentos,
+              onChanged: (value){
+                setState(() {
+                  this._localidad = value;
+                });
+              },
+              showSearchBox: true,
+              clearButton: Icon(Icons.close,
+                  color: Colores().colorSombraBotones),
+              dropDownButton: Icon(Icons.arrow_drop_down,
+                  color: Colores().colorSombraBotones),
+              showClearButton: true,
+              mode: Mode.DIALOG,
+              searchBoxDecoration: InputDecoration(
+                focusColor: Colores().colorSombraBotones,
+              ),
+              dropdownSearchDecoration: InputDecoration(
+                  hintStyle: TextStyle(
+                      fontFamily: 'Trueno',
+                      fontSize: 12,
+                      color: Colores().colorSombraBotones),
+                  hintText: "DEPARTAMENTO",
+                  prefixIcon: Icon(Icons.location_city_outlined),
+                  focusColor: Colores().colorSombraBotones,
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colores().colorSombraBotones),
+                  )),
+              validator: ((value) =>
+              value.isEmpty ? 'Campo obligatorio' : null),
+            ) ,
+          ),
 
           // ESPECIALIDAD
           TextFieldTexto(
@@ -129,7 +158,7 @@ class _RegistrarseState extends State<Registrarse> {
           Boton(
               titulo: 'REGISTRARSE',
               onTap: () {
-                String _statusUsuario = 'pendiente';
+                String _statusUsuario = 'PENDIENTE';
 
                 if (Validar().camposVacios(formKey)) {
                   AuthService()

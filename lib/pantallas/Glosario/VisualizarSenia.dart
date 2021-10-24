@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
-import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
@@ -36,7 +35,6 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
   List listaCategorias;
   bool modoEditar;
   ControladorSenia _controladorSenia = new ControladorSenia();
-  ControladorUsuario _controladorUsuario = new ControladorUsuario();
   final formKey = new GlobalKey<FormState>();
 
   //usadas para editar

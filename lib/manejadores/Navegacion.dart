@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:lsu_app/pantallas/AltaCategoria.dart';
-import 'package:lsu_app/pantallas/AltaSenia.dart';
-import 'package:lsu_app/pantallas/Biblioteca.dart';
-import 'package:lsu_app/pantallas/Categorias.dart';
-import 'package:lsu_app/pantallas/GestionUsuarios.dart';
-import 'package:lsu_app/pantallas/Glosario.dart';
-import 'package:lsu_app/pantallas/Principal.dart';
-import 'package:lsu_app/pantallas/Login.dart';
-import 'package:lsu_app/pantallas/Noticias.dart';
-import 'package:lsu_app/pantallas/PaginaInicial.dart';
-import 'package:lsu_app/pantallas/Perfil.dart';
-import 'package:lsu_app/pantallas/Registrarse.dart';
-import 'package:lsu_app/pantallas/ResetPassword.dart';
+import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/pantallas/Biblioteca/AltaContenido.dart';
+import 'package:lsu_app/pantallas/Biblioteca/Biblioteca.dart';
+import 'package:lsu_app/pantallas/Categorias/AltaCategoria.dart';
+import 'package:lsu_app/pantallas/Categorias/Categorias.dart';
+import 'package:lsu_app/pantallas/Gestion%20de%20Usuario/GestionUsuarios.dart';
+import 'package:lsu_app/pantallas/Gestion%20de%20Usuario/Perfil.dart';
+import 'package:lsu_app/pantallas/Glosario/AltaSenia.dart';
+import 'package:lsu_app/pantallas/Glosario/Glosario.dart';
+import 'package:lsu_app/pantallas/Login/Login.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
+import 'package:lsu_app/pantallas/Login/Principal.dart';
+import 'package:lsu_app/pantallas/Login/Registrarse.dart';
+import 'package:lsu_app/pantallas/Login/ResetPassword.dart';
+import 'package:lsu_app/pantallas/Noticias/Noticias.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 
 /*
@@ -58,13 +60,14 @@ class Navegacion {
         ));
   }
 
-  void navegarAPerfil() {
+  void navegarAPerfil(Usuario usuario) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Perfil(),
+          builder: (context) => Perfil(usuario: usuario),
         ));
   }
+
 
   void navegarAltaSenia() {
     Navigator.push(
@@ -141,6 +144,17 @@ class Navegacion {
           builder: (context) => Principal(),
         ));
   }
+
+  void navegarAltaContenido() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AltaContenido(),
+        ));
+  }
+
+
+
 
 
 }
