@@ -21,7 +21,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
   List<Usuario> inactivoUsuarios = [];
 
   Usuario usuario;
-
+/*
   @override
   void initState() {
     inactivoUsuarios.clear();
@@ -33,7 +33,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
     usuariosInactivos();
     super.initState();
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
