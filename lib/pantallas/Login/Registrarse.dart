@@ -158,7 +158,7 @@ class _RegistrarseState extends State<Registrarse> {
           Boton(
               titulo: 'REGISTRARSE',
               onTap: () {
-                String _statusUsuario = 'pendiente';
+                String _statusUsuario = 'PENDIENTE';
 
                 if (Validar().camposVacios(formKey)) {
                   AuthService()

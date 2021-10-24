@@ -41,7 +41,7 @@ class AuthService extends ChangeNotifier {
 
     // Accion segund el tipo de usuario que se esta intentado logueando
     switch (estadoUsuario) {
-      case 'pendiente':
+      case 'PENDIENTE':
         {
           return showCupertinoDialog(
               context: context,
@@ -52,7 +52,7 @@ class AuthService extends ChangeNotifier {
         }
         break;
 
-      case 'activo':
+      case 'ACTIVO':
         {
           firebaseAuth
               .signInWithEmailAndPassword(email: email, password: password)
@@ -72,7 +72,7 @@ class AuthService extends ChangeNotifier {
         }
         break;
 
-      case 'inactivo':
+      case 'INACTIVO':
         {
           return showCupertinoDialog(
               context: context,

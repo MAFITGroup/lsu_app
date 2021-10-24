@@ -13,5 +13,6 @@ class Colores{
   HexColor colorSombraBotones = HexColor("#4a79b2");
   HexColor colorTextos = HexColor("#84b6f4");
   HexColor colorBlanco = HexColor("#fcffff");
+  HexColor colorCeleste = HexColor('#c4dafa');
 
 }
