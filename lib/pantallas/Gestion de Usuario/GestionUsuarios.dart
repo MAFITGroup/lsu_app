@@ -21,19 +21,19 @@ class _GestionUsuarios extends State<GestionUsuarios> {
   List<Usuario> inactivoUsuarios = [];
 
   Usuario usuario;
-/*
+
   @override
   void initState() {
     inactivoUsuarios.clear();
+    activoUsuarios.clear();
+    pendienteUsuarios.clear();
     listPendientes();
     listInactivos();
     listActivos();
-    usuariosPendientes();
-    usuariosActivos();
-    usuariosInactivos();
+
     super.initState();
   }
-*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,12 +81,60 @@ class _GestionUsuarios extends State<GestionUsuarios> {
   Widget listPendientes() {
 
     return Scaffold(
-      body: FutureBuilder(builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else {
+      body: Container(
+        child: FutureBuilder(
+            future: usuariosPendientes(),
+            builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else {
+            return ListView.builder(
+                itemCount: pendienteUsuarios.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colores().colorBlanco,
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 15,
+                              offset: Offset(0, 0))
+                        ]),
+                    child: ListTile(
+                      title: Text(pendienteUsuarios[index].nombreCompleto),
+                      subtitle: Text('usuario pendiente'),
+                      onTap: () {
+
+                        String nombre = pendienteUsuarios[index].nombreCompleto;
+                        String correo = pendienteUsuarios[index].correo;
+                        String estado = pendienteUsuarios[index].statusUsuario;
+                        bool esAdmin = pendienteUsuarios[index].esAdministrador;
+
+                        adminUsuario(nombre, correo, estado, esAdmin);
+
+                      },
+                    ),
+                  );
+                });
+          }
+        }),
+      ),
+    );
+  }
+
+  Widget listActivos() {
+    return Scaffold(
+        body: Container(
+          child: FutureBuilder(
+            future: usuariosActivos(),
+              builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+      } else {
           return ListView.builder(
-              itemCount: pendienteUsuarios.length,
+              itemCount: activoUsuarios.length,
               itemBuilder: (context, index) {
                 return Container(
                   margin: EdgeInsets.all(5),
@@ -100,91 +148,82 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                             offset: Offset(0, 0))
                       ]),
                   child: ListTile(
-                    title: Text(pendienteUsuarios[index].nombreCompleto),
-                    subtitle: Text('usuario pendiente'),
-                    onTap: () {
+                      title: Text(activoUsuarios[index].nombreCompleto),
+                      subtitle: Text('usuario activo'),
+                      onTap: () {
+                        String nombre = activoUsuarios[index].nombreCompleto;
+                        String correo = activoUsuarios[index].correo;
+                        String estado = activoUsuarios[index].statusUsuario;
+                        bool esAdmin = activoUsuarios[index].esAdministrador;
 
-                      String nombre = pendienteUsuarios[index].nombreCompleto;
-                      String correo = activoUsuarios[index].correo;
+                        adminUsuario(nombre, correo, estado, esAdmin);
 
-                      adminUsuario(nombre, correo);
-                    },
-                  ),
+
+                      }),
                 );
               });
-        }
-      }),
-    );
-  }
-
-  Widget listActivos() {
-    return Scaffold(
-        body: FutureBuilder(builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator();
-      } else {
-        return ListView.builder(
-            itemCount: activoUsuarios.length,
-            itemBuilder: (context, index) {
-              return Container(
-                margin: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colores().colorBlanco,
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 15,
-                          offset: Offset(0, 0))
-                    ]),
-                child: ListTile(
-                    title: Text(activoUsuarios[index].nombreCompleto),
-                    subtitle: Text('usuario activo'),
-                    onTap: () {}),
-              );
-            });
       }
-    }));
+    }),
+        ));
   }
 
   Widget listInactivos() {
     return Scaffold(
-        body: FutureBuilder(builder: (context, snapshot) {
+        body: Container(
+          child: FutureBuilder(
+              future: usuariosInactivos(),
+              builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator();
+          return CircularProgressIndicator();
       } else {
-        return ListView.builder(
-            itemCount: inactivoUsuarios.length,
-            itemBuilder: (context, index) {
-              return Container(
-                margin: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colores().colorBlanco,
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 15,
-                          offset: Offset(0, 0))
-                    ]),
-                child: ListTile(
-                  title: Text(inactivoUsuarios[index].nombreCompleto),
-                  subtitle: Text('usuario inactivo'),
-                  onTap: () {
+          return ListView.builder(
+              itemCount: inactivoUsuarios.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colores().colorBlanco,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 15,
+                            offset: Offset(0, 0))
+                      ]),
+                  child: ListTile(
+                    title: Text(inactivoUsuarios[index].nombreCompleto),
+                    subtitle: Text('usuario inactivo'),
+                    onTap: () {
 
-                  },
-                ),
-              );
-            });
+                      String nombre = inactivoUsuarios[index].nombreCompleto;
+                      String correo = inactivoUsuarios[index].correo;
+                      String estado = inactivoUsuarios[index].statusUsuario;
+                      bool esAdmin = inactivoUsuarios[index].esAdministrador;
+
+                      adminUsuario(nombre, correo, estado, esAdmin);
+
+
+                    },
+                  ),
+                );
+              });
       }
-    }));
+    }),
+        ));
   }
 
-  Widget adminUsuario(String nombre, String correo) {
+  Widget adminUsuario(String nombre, String correo, String estadoU, bool esAdmin) {
 
-    bool esAdministrador = false;
-    bool estado = false;
-    String estadoUsuario = 'INACTIVO';
+    bool esAdministrador = esAdmin;
+    bool estado;
+    String estadoUsuario = estadoU;
+
+    if(estadoU == 'PENDIENTE' || estadoU == 'INACTIVO'){
+      estado = false;
+    }
+    if(estadoU == 'ACTIVO' ){
+      estado = true;
+    }
 
     showCupertinoDialog(
       barrierDismissible: true,
@@ -199,7 +238,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
               title: Text('Usuario'),
               content: Column(
                 children: [
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                   ListTile(
                     leading: Icon(Icons.account_circle),
                     title: Text('Nombre: $nombre'),
@@ -208,87 +247,114 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(Icons.group_add_rounded),
-                      SizedBox(height: 20.0),
-                      Text('Es adminsitrador?'),
-                      SizedBox(height: 20.0),
-                      Switch(
-                        value: esAdministrador,
-                        onChanged: (value) {
-                          setState(() {
-                            esAdministrador = value;
-                          });
-                        },
-                        activeTrackColor: Colores().colorAzul,
-                        activeColor: Colores().colorCeleste,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: Icon(Icons.group_add_rounded)
+                          ),
+                          Expanded(
+                              child: Text('Es adminsitrador?')
+                          ),
+                          Expanded(
+                            child:Switch(
+                              value: esAdministrador,
+                              onChanged: (value) {
+                                setState(() {
+                                  esAdministrador = value;
+                                });
+                              },
+                              activeTrackColor: Colores().colorAzul,
+                              activeColor: Colores().colorCeleste,
+                            ),
+                          )
+                        ],
                       ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: Icon(Icons.supervised_user_circle_outlined)
+                          ),
+                          Expanded(
+                              child: Text('Es un usuario activo')
+                          ),
+                          Expanded(
+                            child: Switch(
+                              value: estado,
+                              onChanged: (value) {
+                                estado = value;
+                                setState(() {
+                                  if(estado) {
+                                    estadoUsuario = 'ACTIVO';
+                                  }
+                                  else{
+                                    estadoUsuario = 'INACTIVO';
+                                  }
+
+                                });
+                              },
+                              activeTrackColor: Colores().colorAzul,
+                              activeColor: Colores().colorCeleste,
+                            ),
+                          )
+
+                        ],
+                      )
                     ],
                   ),
-                  SizedBox(height: 20),
+
+                  SizedBox(height: 40),
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(Icons.supervised_user_circle_outlined),
-                      SizedBox(height: 20.0),
-                      Text('Es un usuario activo'),
-                      SizedBox(height: 20.0),
-                      Switch(
-                        value: estado,
-                        onChanged: (value) {
-                          estado = value;
-                          setState(() {
-                            if(estado) {
-                              estadoUsuario = 'activo';
-                            }
-                            else{
-                              estadoUsuario = 'inactivo';
-                            }
+                      Boton(
+                        titulo: 'Guardar',
+                        onTap: () {
+                          Navigator.of(context).pop();
 
-                          });
+                          ControladorUsuario().administrarUsuario(correo, estadoUsuario, esAdministrador);
+
+                          showCupertinoDialog(
+                              barrierDismissible: true,
+                              context: context,
+                              builder: (context){
+                                return AlertDialog(
+                                  contentPadding: const EdgeInsets.all(10.0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0)),
+                                  title: Text('El usuario $nombre, ha sido actualizado.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: (){
+
+                                        Navigator.of(context).pop();
+                                        Navegacion(context).navegarAPaginaGestionUsuarioDest();
+                                      },
+                                      child: Text('Ok',
+                                          style: TextStyle(
+                                              color: Colores().colorAzul,
+                                              fontFamily: 'Trueno',
+                                              fontSize: 11.0,
+                                              decoration: TextDecoration.underline)),
+                                    )
+                                  ],
+                                );
+                              }
+                          );
+
                         },
-                        activeTrackColor: Colores().colorAzul,
-                        activeColor: Colores().colorCeleste,
-                      ),
+                      )
+
+
+
+
                     ],
                   ),
-                  SizedBox(height: 20),
-                  Boton(
-                    titulo: 'Guardar',
-                    onTap: () {
 
 
-                      ControladorUsuario().administrarUsuario(correo, estadoUsuario, esAdministrador);
-
-                      showCupertinoDialog(
-                        barrierDismissible: true,
-                        context: context,
-                        builder: (context){
-                          return AlertDialog(
-                            contentPadding: const EdgeInsets.all(10.0),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            title: Text('El usuario $nombre, ha sido actualizado.'),
-                            actions: [
-                              TextButton(
-                                  onPressed: (){
-
-                                    Navigator.of(context).pop();
-                                    Navegacion(context).navegarAPaginaGestionUsuario();
-                                  },
-                                  child: Text('Ok',
-                                      style: TextStyle(
-                                          color: Colores().colorAzul,
-                                          fontFamily: 'Trueno',
-                                          fontSize: 11.0,
-                                          decoration: TextDecoration.underline)),
-                              )
-                            ],
-                          );
-                        }
-                      );
-
-                    },
-                  )
                 ],
               ),
             );
@@ -308,5 +374,6 @@ class _GestionUsuarios extends State<GestionUsuarios> {
 
   Future<void> usuariosInactivos() async {
     inactivoUsuarios = await ControladorUsuario().obtenerUsuariosInactivos();
+
   }
 }

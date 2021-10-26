@@ -63,6 +63,7 @@ class _PerfilState extends State<Perfil> {
   void initState() {
     setState(() {
       modoEditar = false;
+
     });
   }
 
@@ -221,6 +222,7 @@ class _PerfilState extends State<Perfil> {
                                       ? Boton(
                                       titulo: 'Guardar',
                                       onTap: () {
+
                                         if (correoNuevo == null) {
                                           correoNuevo = usuario.correo;
                                         }
@@ -274,21 +276,19 @@ class _PerfilState extends State<Perfil> {
                                                                     TextDecoration
                                                                         .underline)),
                                                             onPressed: () {
-                                                              /*Al presionar Ok, cierro la el dialogo y cierro la
-                                                       ventana de alta seña
 
-                                                         */
-                                                              Navigator.of(
-                                                                  context)
-                                                                  .popUntil((route) =>
-                                                              route
-                                                                  .isFirst);
+
+                                                              Navigator.of(context).pop();
+                                                              Navegacion(context).navegarAPaginaInicialDest();
                                                             })
                                                       ],
                                                     );
                                                   });
-                                            });
+                                            }
+
+                                            );
                                         }
+
                                       })
                                       : Container(),
                                 ],

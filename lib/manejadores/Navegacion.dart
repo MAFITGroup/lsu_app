@@ -121,6 +121,21 @@ class Navegacion {
         ));
   }
 
+  void navegarAPerfilDest(Usuario usuario) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Perfil(usuario: usuario),
+        ));
+  }
+  void navegarAPaginaGestionUsuarioDest() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GestionUsuarios(),
+        ));
+  }
+
   void navegarAPaginaGestionUsuario() {
     Navigator.push(
         context,

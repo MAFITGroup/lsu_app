@@ -113,7 +113,7 @@ class ControladorUsuario {
 
     await firestore
         .collection('usuarios')
-        .where('statusUsuario', isEqualTo: 'pendiente')
+        .where('statusUsuario', isEqualTo: 'PENDIENTE')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -149,7 +149,7 @@ class ControladorUsuario {
 
     await firestore
         .collection('usuarios')
-        .where('statusUsuario', isEqualTo: 'activo')
+        .where('statusUsuario', isEqualTo: 'ACTIVO')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -185,7 +185,7 @@ class ControladorUsuario {
 
     await firestore
         .collection('usuarios')
-        .where('statusUsuario', isEqualTo: 'inactivo')
+        .where('statusUsuario', isEqualTo: 'INACTIVO')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
