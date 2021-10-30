@@ -79,51 +79,6 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                           PopupMenuItem(
                             value: 1,
                             child: Text("Eliminar Seña"),
-                            onTap: () {
-                              eliminarSenia(senia.nombre, senia.descripcion,
-                                  senia.categoria)
-                                ..then((userCreds) {
-                                  /*
-                                    Luego de eliminar la seña,
-                                    creo un dialogo de alerta indicando que se
-                                    elimino de forma ok
-                                     */
-                                  showDialog(
-                                      useRootNavigator: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text('Eliminacion de Seña'),
-                                          content: Text(
-                                              'La seña ha sido eliminada correctamente'),
-                                          actions: [
-                                            TextButton(
-                                                child: Text('Ok',
-                                                    style: TextStyle(
-                                                        color:
-                                                            Colores().colorAzul,
-                                                        fontFamily: 'Trueno',
-                                                        fontSize: 11.0,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline)),
-                                                onPressed: () {
-                                                  /*Al presionar Ok, cierro la el dialogo y cierro la
-                                                   ventana de visualizacion seña
-
-                                                     */
-                                                  Navigator.of(context)
-                                                      .popUntil((route) =>
-                                                          route.isFirst);
-                                                })
-                                          ],
-                                        );
-                                      });
-                                  //TODO mensaje si falla.
-                                }).catchError((e) {
-                                  ErrorHandler().errorDialog(context, e);
-                                });
-                            },
                           )
                         ],
                       ),
@@ -342,6 +297,92 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
       case 0:
         !modoEditar ? editarSenia() : canelarEditar();
         break;
+      case 1:
+        showDialog(
+            useRootNavigator: false,
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Eliminacion de Seña'),
+                content: Text(
+                    '¿Está seguro que desea eliminar la seña?'),
+                actions: [
+                  TextButton(
+                      child: Text('OK',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration
+                                  .underline)),
+                      onPressed: () {
+                        eliminarSenia(
+                            widget.senia.nombre,
+                            widget.senia.descripcion,
+                            widget.senia.categoria)
+                          ..then((userCreds) {
+                            /*
+                                    Luego de eliminar la seña,
+                                    creo un dialogo de alerta indicando que se
+                                    elimino de forma ok
+                                     */
+                            showDialog(
+                                useRootNavigator: false,
+                                context: context,
+                                builder: (BuildContext
+                                context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                        'Eliminacion de Seña'),
+                                    content: Text(
+                                        'La seña ha sido eliminada correctamente'),
+                                    actions: [
+                                      TextButton(
+                                          child: Text(
+                                              'Ok',
+                                              style: TextStyle(
+                                                  color: Colores()
+                                                      .colorAzul,
+                                                  fontFamily:
+                                                  'Trueno',
+                                                  fontSize:
+                                                  11.0,
+                                                  decoration:
+                                                  TextDecoration.underline)),
+                                          onPressed: () {
+                                            /*Al presionar Ok, cierro la el dialogo y cierro la
+                                                   ventana de visualizacion seña
+
+                                                     */
+                                            Navigator.of(
+                                                context)
+                                                .popUntil(
+                                                    (route) =>
+                                                route.isFirst);
+                                          })
+                                    ],
+                                  );
+                                });
+                            //TODO mensaje si falla.
+                          }).catchError((e) {
+                            ErrorHandler()
+                                .errorDialog(context, e);
+                          });
+                      }),
+                  TextButton(
+                      child: Text('CANCELAR',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration
+                                  .underline)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })
+                ],
+              );
+            });
     }
   }
 }

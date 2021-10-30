@@ -90,7 +90,7 @@ class ControladorSenia {
     await eliminarVideoSenia(senia.urlVideo);
   }
 
-  Future eliminarVideoSenia(String linkVideoRef) async{
+  Future eliminarVideoSenia(String linkVideoRef) async {
     await storage
         .refFromURL(linkVideoRef)
         .delete()
@@ -109,7 +109,7 @@ class ControladorSenia {
      */
     UploadTask subida;
     String downloadLink;
-    String docId = new UniqueKey().toString(); 
+    String docId = new UniqueKey().toString();
     try {
       final ref = FirebaseStorage.instance.ref(destino);
       subida = ref.putFile(archivo);
@@ -130,9 +130,11 @@ class ControladorSenia {
         'usuarioAlta': usuarioAlta,
         'nombre': nombre,
         'descripcion': descripcion,
+        /*
+        Con esto me aseguro que no queden espacios y que se guarde en Mayus
+         */
         'categoria': categoria,
         'videoRef': downloadLink,
-
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
@@ -158,9 +160,10 @@ class ControladorSenia {
     UploadTask subida;
     String downloadLink;
     String docId = new UniqueKey().toString();
+
     try {
       final ref = FirebaseStorage.instance.ref(destino);
-      subida = ref.putData(archivo, SettableMetadata(contentType: 'video/mp4'));
+      subida = ref.putData(archivo, SettableMetadata(contentType: "video/mp4"));
       downloadLink = await (await subida).ref.getDownloadURL();
 
       //TODO chequear que el documentID no se va a repetir en las colecciones
@@ -174,7 +177,6 @@ class ControladorSenia {
         'descripcion': descripcion,
         'categoria': categoria,
         'videoRef': downloadLink,
-
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
@@ -219,7 +221,6 @@ class ControladorSenia {
 
     return lista;
   }
-
 
   Future<List<Senia>> obtenerSeniasXCategoria(String nombreCategoria) async {
     List<Senia> lista = [];

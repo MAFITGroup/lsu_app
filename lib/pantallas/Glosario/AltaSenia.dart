@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,9 +25,14 @@ import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/SeleccionadorVideo.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
+import 'package:path/path.dart' as p;
 import 'package:universal_html/html.dart' as html;
 
 class AltaSenia extends StatefulWidget {
+  final List listaCategorias;
+
+  const AltaSenia({Key key, this.listaCategorias}) : super(key: key);
+
   @override
   _AltaSeniaState createState() => _AltaSeniaState();
 }
@@ -41,15 +47,19 @@ class _AltaSeniaState extends State<AltaSenia> {
   Uint8List fileWeb;
   final formKey = new GlobalKey<FormState>();
   String _usuarioUID = FirebaseAuth.instance.currentUser.uid;
-
+  String fileExtension;
+  FirebaseFirestore firestore;
   List listaCategorias;
+  List<dynamic> listaSubCategorias;
   dynamic _catSeleccionada;
-  dynamic _SubCatSeleccionada;
+  dynamic _subCatSeleccionada;
   UploadTask uploadTask;
+  CollectionReference categoriasRef;
 
   @override
   void initState() {
     listarCateogiras();
+    listarSubCateogiras();
   }
 
   @override
@@ -103,13 +113,13 @@ class _AltaSeniaState extends State<AltaSenia> {
                             this._descripcionSenia = value;
                           },
                           //No es necesario escribir una descripcion
-                         /* validacion: ((value) => value.isEmpty
+                          /* validacion: ((value) => value.isEmpty
                               ? 'La descripcion es requerida'
                               : null),
 
                           */
                         ),
-                        // Menu desplegable de Categorias
+                        // CATEGORIA
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: DropdownSearch(
@@ -156,10 +166,10 @@ class _AltaSeniaState extends State<AltaSenia> {
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: DropdownSearch(
-                            items: null,
+                            items: listaSubCategorias,
                             onChanged: (value) {
                               setState(() {
-                                _SubCatSeleccionada = value;
+                                _subCatSeleccionada = value;
                               });
                             },
                             showSearchBox: true,
@@ -184,7 +194,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                   borderSide: BorderSide(
                                       color: Colores().colorSombraBotones),
                                 )),
-                          /*  validator: (dynamic valor) {
+                            /*  validator: (dynamic valor) {
                               if (valor == null) {
                                 return "La sub categoria es requerida";
                               } else {
@@ -211,8 +221,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                     builder: (context) {
                                       return DialogoAlerta(
                                         tituloMensaje: "Advertencia",
-                                        mensaje:
-                                            "No ha seleccionado un video.",
+                                        mensaje: "No ha seleccionado un video.",
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -300,6 +309,7 @@ class _AltaSeniaState extends State<AltaSenia> {
       ya que es el tipo de archivo que se puede reproducir
       con el widget de reproductor de video.
        */
+
         _controladorSenia.crearYSubirSeniaBytes(_nombreSenia, _descripcionSenia,
             _catSeleccionada, nombreUsuario, destino, fileWeb);
       }
@@ -317,7 +327,6 @@ class _AltaSeniaState extends State<AltaSenia> {
   }
 
   void obtenerVideo() async {
-
     /*
     Si al obtenerVideo, tengo algo cargado
     lo saco
@@ -330,44 +339,40 @@ class _AltaSeniaState extends State<AltaSenia> {
     FilePickerResult result =
         await FilePicker.platform.pickFiles(type: FileType.video);
 
-
-    if(result == null) return;
-
-    /*
-    if(){
-      return showCupertinoDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (context) {
-            return DialogoAlerta(
-              tituloMensaje: "Advertencia",
-              mensaje:
-              "No ha seleccionado un video.",
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            );
-          });
-    }
-
-     */
+    if (result == null) return;
 
     if (kIsWeb) {
       if (result.files.first != null) {
         var fileBytes = result.files.first.bytes;
         var fileName = result.files.first.name;
         final blob = html.Blob([fileBytes]);
+        //guardo fileWeb como bytes.
+       fileWeb = fileBytes;
+
+        // con esta URL reproduzco el video en la web
         this._url = html.Url.createObjectUrlFromBlob(blob);
         html.File file = html.File(fileBytes, fileName);
-        //metodo que hace que el video web se pueda reproducir
-        await _getHtmlFileContent(file);
+
+        if (fileName != null) {
+          fileExtension = p.extension(fileName);
+          if (verificarFormatoVideo(fileExtension)) {
+            //metodo que hace que se pueda reproducir el video a traves de la URL
+            //tambien ya con esa url guardo seteo la variable del archivo.
+            await _getHtmlFileContent(file);
+          }
+        }
       }
     } else {
       if (result != null) {
         File file = File(result.files.single.path);
         if (file != null) {
           setState(() {
-            archivoDeVideo = file;
+            if (file.path != null) {
+              fileExtension = p.extension(file.path);
+              if (verificarFormatoVideo(fileExtension)) {
+                archivoDeVideo = file;
+              }
+            }
           });
         }
       }
@@ -375,30 +380,62 @@ class _AltaSeniaState extends State<AltaSenia> {
   }
 
   Future<Uint8List> _getHtmlFileContent(html.File blob) async {
+    Uint8List file;
     final reader = html.FileReader();
     reader.readAsDataUrl(blob.slice(0, blob.size, blob.type));
     reader.onLoadEnd.listen((event) {
       Uint8List data =
           Base64Decoder().convert(reader.result.toString().split(",").last);
-      fileWeb = data;
-    }).onData((data) {
-      fileWeb =
-          Base64Decoder().convert(reader.result.toString().split(",").last);
-      return fileWeb;
+      file = data;
     });
-    while (fileWeb == null) {
+
+    while (file == null) {
       await new Future.delayed(const Duration(milliseconds: 1));
-      if (fileWeb != null) {
+      if (file != null) {
         break;
       }
     }
     setState(() {
-      archivoDeVideo = File.fromRawPath(fileWeb);
+      archivoDeVideo = File.fromRawPath(file);
     });
-    return fileWeb;
+    return file;
   }
 
-  Future<void> listarCateogiras() async {
-    listaCategorias = await ControladorCategoria().listarCategorias();
+  bool verificarFormatoVideo(String fileExtension) {
+    /*
+    Chequeo extensiones para verificar que el archivo que me suban no sea de otro formato.
+     */
+    if (fileExtension != ".mp4" &&
+        fileExtension != ".avi" &&
+        fileExtension != ".wmv" &&
+        fileExtension != ".mov") {
+      showCupertinoDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) {
+            return DialogoAlerta(
+              tituloMensaje: "Formato Incorrecto",
+              mensaje: "El formato del archivo seleccionado no es correcto."
+                  "\nEl formato debe ser: mp4, avi, wmv, mov.",
+              onPressed: () {
+                Navigator.of(context).pop();
+                archivoDeVideo = null;
+                this._url = null;
+              },
+            );
+          });
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  void listarCateogiras() async {
+    listaCategorias = widget.listaCategorias;
+  }
+
+  Future<void> listarSubCateogiras() async {
+    listaSubCategorias = await ControladorCategoria()
+        .listarSubCategoriasxCategoria("CATEGORIA SUB");
   }
 }

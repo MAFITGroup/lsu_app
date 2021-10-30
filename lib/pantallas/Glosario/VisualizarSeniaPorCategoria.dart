@@ -9,8 +9,7 @@ import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'VisualizarSenia.dart';
 
 class VisualizarSeniaPorCategoria extends StatefulWidget {
-
- final String nombreCategoria;
+  final String nombreCategoria;
 
   const VisualizarSeniaPorCategoria({Key key, this.nombreCategoria})
       : super(key: key);
@@ -33,7 +32,6 @@ class _VisualizarSeniaPorCategoriaState
 
   @override
   Widget build(BuildContext context) {
-
     String nombreCategoria = widget.nombreCategoria;
     return Container(
       height: 600,
@@ -64,7 +62,8 @@ class _VisualizarSeniaPorCategoriaState
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => VisualizarSenia(
-                                                senia: listaSeniaXCategoria[index],
+                                                senia:
+                                                    listaSeniaXCategoria[index],
                                                 isUsuarioAdmin: isUsuarioAdmin,
                                               )));
                                 },
@@ -84,7 +83,8 @@ class _VisualizarSeniaPorCategoriaState
   }
 
   Future<List<Senia>> listarSeniasXCategorias(String nombreCategoria) async {
-    listaSeniaXCategoria =  await _controladorSenia.obtenerSeniasXCategoria(nombreCategoria);
+    listaSeniaXCategoria =
+        await _controladorSenia.obtenerSeniasXCategoria(nombreCategoria);
   }
 
   Future<void> obtenerUsuarioAdministrador() async {

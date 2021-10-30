@@ -1,23 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
+import 'package:lsu_app/modelo/SubCategoria.dart';
 
 class ControladorCategoria {
   String _nombreCategoria;
   final categoriasRef = FirebaseFirestore.instance.collection('categorias');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   Categoria categoria;
+  SubCategoria subCategoria;
   String _documentID;
 
   /*
   Crea la categoría
    */
-  void crearCategoria(String nombre) {
-    String docId = new UniqueKey().toString();
+  void crearCategoria(String nombre, List<String> listaDeSubs) {
+    /*
+    Pido al menos una subCategoria, sino tengo no dejo guardar.
+     */
+    // if (listaDeSubs == null || listaDeSubs.isEmpty) {
+    //  return;
+    // }
+    String docId = new UniqueKey().toString(); //Clase que genera un id unico
+    int index = 0;
+    Map<String, String> subCategorias =
+        new Map<String, String>(); //map para armar las subCategorias
+
+    for (String nombre in listaDeSubs) {
+      index++;
+      subCategorias.putIfAbsent("nombreSub_$index", () => nombre);
+    }
+
     //creo mi categoria
     firestore.collection("categorias").doc(docId).set({
       'documentID': docId,
-      'nombre': nombre.trimLeft().trimRight(),
+      'nombre': nombre.toUpperCase().trimLeft().trimRight(),
+      'subCategorias': subCategorias,
     });
   }
 
@@ -99,8 +117,32 @@ class ControladorCategoria {
     return listaCategorias;
   }
 
+  /*
+  Retorna una lista de categorias solo con el nombre,
+  en este caso, lo uso para listar categorias
+  en el combo de categorias
+   */
+  Future<List> listarSubCategoriasxCategoria(String nombreCategoria) async {
+    List subCategorias;
+    List dataSubCat;
+    int index = 0;
+    QuerySnapshot querySnapshot =
+        await categoriasRef.where('nombre', isEqualTo: nombreCategoria).get();
+    dataSubCat = querySnapshot.docs.map((doc) => doc["subCategorias"]).toList();
+
+    Map<String, dynamic> mapSubCategorias =
+        new Map<String, dynamic>(); //map para armar las subCategorias
+    for (mapSubCategorias in dataSubCat) {
+      String nombreSubCategoria;
+      index++;
+      mapSubCategorias.putIfAbsent(
+          "nombreSub_$index", () => nombreSubCategoria);
+    }
+
+    return subCategorias;
+  }
+
   void obtenerSeniaModifCat(String nombreAnterior, String nombreNuevo) async {
-    var batch = FirebaseFirestore.instance.batch();
     await firestore
         .collection('senias')
         .where('categoria', isEqualTo: nombreAnterior)
@@ -121,7 +163,8 @@ class ControladorCategoria {
 
     if (nombre != null) {
       await categoriasRef
-          .where('nombre', isEqualTo: nombre.trimLeft().trimRight())
+          .where('nombre',
+              isEqualTo: nombre.toUpperCase().trimLeft().trimRight())
           .get()
           .then((query) {
         query.docs.forEach((element) {

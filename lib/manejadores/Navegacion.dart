@@ -69,11 +69,11 @@ class Navegacion {
   }
 
 
-  void navegarAltaSenia() {
+  void navegarAltaSenia(List listaCategorias) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => AltaSenia(),
+          builder: (context) => AltaSenia(listaCategorias: listaCategorias),
         ));
   }
 

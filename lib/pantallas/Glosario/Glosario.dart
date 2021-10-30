@@ -2,7 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
+import 'package:lsu_app/buscadores/BuscadorSenias.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
+import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
@@ -19,17 +22,20 @@ class Glosario extends StatefulWidget {
 
 class _GlosarioState extends State<Glosario> {
   List<Categoria> listaCategorias = [];
+  List listaCategoriasParaAlta = [];
   List<Senia> listaSeniaXCategoria = [];
+  List<Senia> listaSenias = [];
   bool isUsuarioAdmin;
   bool isSearching = false;
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
   ControladorCategoria _controladorCategoria = new ControladorCategoria();
-
-
+  ControladorSenia _controladorSenia = new ControladorSenia();
 
   @override
   void initState() {
+    listarCateogirasParaAlta();
     obtenerUsuarioAdministrador();
+    listarSenias();
   }
 
   /*
@@ -52,6 +58,16 @@ class _GlosarioState extends State<Glosario> {
               BarraDeNavegacion(
                 titulo: Text("GLOSARIO",
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
+                listaWidget: [
+                  IconButton(
+                      onPressed: () {
+                        showSearch(
+                            context: context,
+                            delegate: BuscadorSenias(
+                                listaSenias, listaSenias, isUsuarioAdmin));
+                      },
+                      icon: Icon(Icons.search)),
+                ],
               ),
               Expanded(
                 child: Container(
@@ -70,8 +86,11 @@ class _GlosarioState extends State<Glosario> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => VisualizarSeniaPorCategoria(
-                                                nombreCategoria: listaCategorias[index].nombre,
+                                          builder: (context) =>
+                                              VisualizarSeniaPorCategoria(
+                                                nombreCategoria:
+                                                    listaCategorias[index]
+                                                        .nombre,
                                               )));
                                 },
                                 title: Text(listaCategorias[index].nombre),
@@ -91,16 +110,25 @@ class _GlosarioState extends State<Glosario> {
               ? FloatingActionButton(
                   child: Icon(Icons.add),
                   backgroundColor: Colores().colorAzul,
-                  onPressed: Navegacion(context).navegarAltaSenia,
-                )
+                  onPressed: () {
+                    Navegacion(context)
+                        .navegarAltaSenia(listaCategoriasParaAlta);
+                  })
               : null,
         ),
       ),
     );
   }
 
+  /*
+  Se listan las categorias para mostrar el glosario, devuelve Categoria
+   */
   Future<void> listarCategorias() async {
-    listaCategorias =  await _controladorCategoria.obtenerTodasCategorias();
+    listaCategorias = await _controladorCategoria.obtenerTodasCategorias();
+  }
+
+  void listarCateogirasParaAlta() async {
+    listaCategoriasParaAlta = await _controladorCategoria.listarCategorias();
   }
 
   Future<void> obtenerUsuarioAdministrador() async {
@@ -114,4 +142,10 @@ class _GlosarioState extends State<Glosario> {
     });
   }
 
+  /*
+Lista de señas para el buscador.
+ */
+  Future<void> listarSenias() async {
+    listaSenias = await _controladorSenia.obtenerTodasSenias();
+  }
 }
