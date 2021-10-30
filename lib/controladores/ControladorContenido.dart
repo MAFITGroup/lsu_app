@@ -6,6 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
 
+
+
 class ControladorContenido {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
@@ -169,7 +171,7 @@ class ControladorContenido {
         'titulo': titulo,
         'descripcion': descripcion,
         'categoria': categoria,
-        'ArchivoRef': downloadLink,
+        'archivoRef': downloadLink,
 
       });
     } on FirebaseException catch (e) {
@@ -178,12 +180,12 @@ class ControladorContenido {
     }
   }
 
-  String obtenerVideoDownloadLink(String url) {
+  /*String obtenerVideoDownloadLink(String url) {
     if (url.isNotEmpty) {
       urlarchivo = url;
     }
     return urlarchivo;
-  }
+  }*/
 
   Future<List<Contenido>> obtenerTodosContenido() async {
     List<Contenido> lista = [];
@@ -197,7 +199,8 @@ class ControladorContenido {
         descripcion = doc['descripcion'];
         usuarioAlta = doc['usuarioAlta'];
         categoria = doc['categoria'];
-        urlarchivo = doc['ArchivoRef'];
+        urlarchivo = doc['archivoRef'];
+        documentID = doc['documentID'];
 
         contenido = new Contenido();
 
@@ -206,6 +209,7 @@ class ControladorContenido {
         contenido.usuarioAlta = usuarioAlta;
         contenido.categoria = categoria;
         contenido.urlarchivo = urlarchivo;
+        contenido.documentID = documentID;
 
         lista.add(contenido);
       });
@@ -213,6 +217,7 @@ class ControladorContenido {
 
     return lista;
   }
+
 
 
 }

@@ -45,6 +45,7 @@ class _BibliotecaState extends State<Biblioteca> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Text("Cargando...");
+
                       } else {
                         return ListView.builder(
                             itemCount: listaContenido.length,
@@ -60,7 +61,9 @@ class _BibliotecaState extends State<Biblioteca> {
                                                 isUsuarioAdmin: isUsuarioAdmin,
                                               )));
                                     },
-                                    title: Text(listaContenido[index].titulo),
+
+                                    title: Text("Titulo: " + listaContenido[index].titulo),
+                                    subtitle: Text ('Categoría: ' + listaContenido[index].categoria + "\nAutor: " + listaContenido[index].descripcion),
                                   ));
                             });
                       }

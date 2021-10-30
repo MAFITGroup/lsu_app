@@ -96,6 +96,9 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                         ? Boton(
                             titulo: 'GUARDAR',
                             onTap: () {
+                              if (nuevoNombreCategoria == null) {
+                                nuevoNombreCategoria = categoria.nombre;
+                              }
                               if (Validar().camposVacios(formKey)) {
                                 if (!isCategoriaExistente) {
                                   showDialog(

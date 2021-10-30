@@ -192,7 +192,7 @@ class _AltaContenidoState extends State<AltaContenido> {
 
   Future guardarContenido() async {
     String url;
-    final destino = 'Files/$_tituloContenido';
+    final destino = 'Biblioteca/$_tituloContenido';
     String nombreUsuario =
     await _controladorUsuario.obtenerNombreUsuario(_usuarioUID);
 

@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -18,11 +16,16 @@ import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
+import 'VisualizarPDF.dart';
+
+
 class VisualizarContenido extends StatefulWidget {
   final Contenido contenido;
   final bool isUsuarioAdmin;
+  final String archivoRef;
+  final String titulo;
 
-  const VisualizarContenido({Key key, this.contenido, this.isUsuarioAdmin})
+  const VisualizarContenido({Key key, this.contenido, this.isUsuarioAdmin, this.archivoRef, this.titulo })
       : super(key: key);
 
   @override
@@ -30,13 +33,17 @@ class VisualizarContenido extends StatefulWidget {
 }
 
 class _VisualizarContenidoState extends State<VisualizarContenido> {
-  File archivo;
-  Uint8List fileWeb;
-  List listaCategorias;
+  List _categorias = [
+    'Papers',
+    'Tesis',
+    'Investigaciones',
+    'Otros'
+  ]; // Lista de las categorias dentro de biblioteca. Hardcodeadas xq son únicas.
   bool modoEditar;
   ControladorContenido _controladorContenido = new ControladorContenido();
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
   final formKey = new GlobalKey<FormState>();
+  String pdfFilePath;
 
   //usadas para editar
   dynamic nuevoTituloContenido;
@@ -45,7 +52,6 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
 
   @override
   void initState() {
-    listarCateogiras();
     setState(() {
       modoEditar = false;
     });
@@ -64,27 +70,27 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
               titulo: Text('CONTENIDO' + " - " + contenido.titulo.toUpperCase(),
                   style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               listaWidget: isUsuarioAdmin
-              ? [
-              PopupMenuButton<int>(
-                /*
+                  ? [
+                      PopupMenuButton<int>(
+                        /*
               Agregar en el metodo on Selected
               las acciones
                */
-                onSelected: (item) => onSelected(context, item),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                      value: 0,
-                      child: Text(!modoEditar
-                          ? "Editar Contenido"
-                          : "Cancelar Editar")),
-                  PopupMenuItem(
-                    value: 1,
-                    child: Text("Eliminar Contenido"),
-                  )
-                ],
-              ),
-              ]
-              : [],
+                        onSelected: (item) => onSelected(context, item),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                              value: 0,
+                              child: Text(!modoEditar
+                                  ? "Editar Contenido"
+                                  : "Cancelar Editar")),
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text("Eliminar Contenido"),
+                          )
+                        ],
+                      ),
+                    ]
+                  : [],
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -108,7 +114,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             });
                           },
                           validacion: ((value) =>
-                          value.isEmpty ? 'El titulo es requerido' : null),
+                              value.isEmpty ? 'El titulo es requerido' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
@@ -117,7 +123,8 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                           botonHabilitado: modoEditar,
                           controlador: modoEditar
                               ? null
-                              : TextEditingController(text: contenido.descripcion),
+                              : TextEditingController(
+                                  text: contenido.descripcion),
                           valor: (value) {
                             setState(() {
                               nuevaDescripcionContenido = value;
@@ -129,7 +136,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: DropdownSearch(
-                            items: listaCategorias,
+                            items: _categorias,
                             enabled: modoEditar,
                             selectedItem: contenido.categoria,
                             onChanged: (value) {
@@ -162,78 +169,94 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             autoValidateMode: AutovalidateMode.always,
                           ),
                         ),
+                        SizedBox(height: 20.0),
+                        Boton(
+                          titulo: 'VER ARCHIVO',
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VisualizarPDF(
+                                      archivoRef : contenido.urlarchivo,
+                                     titulo: contenido.titulo,
+                                    )));
 
+                          },
+                        ),
                         SizedBox(height: 20.0),
                         modoEditar
                             ? Boton(
-                            titulo: 'GUARDAR',
-                            onTap: () {
-                              /*
+                                titulo: 'GUARDAR',
+                                onTap: () {
+                                  /*
                           Si presiono guardar y no modifique ningun campo
                           los valores son nullos, por lo tanto les seteo
                           el valor que tienen.
                            */
-                              if (nuevoTituloContenido == null) {
-                                nuevoTituloContenido = contenido.titulo;
-                              }
-                              if (nuevaDescripcionContenido == null) {
-                                nuevaDescripcionContenido = contenido.descripcion;
-                              }
-                              if (nuevaCategoriaContenido == null) {
-                                nuevaCategoriaContenido = contenido.categoria;
-                              }
-                              if (Validar().camposVacios(formKey)) {
-                                guardarEdicion(
-                                    contenido.titulo,
-                                    contenido.descripcion,
-                                    contenido.categoria,
-                                    nuevoTituloContenido,
-                                    nuevaDescripcionContenido,
-                                    nuevaCategoriaContenido)
-                                  ..then((userCreds) {
-                                    /*
+                                  if (nuevoTituloContenido == null) {
+                                    nuevoTituloContenido = contenido.titulo;
+                                  }
+                                  if (nuevaDescripcionContenido == null) {
+                                    nuevaDescripcionContenido =
+                                        contenido.descripcion;
+                                  }
+                                  if (nuevaCategoriaContenido == null) {
+                                    nuevaCategoriaContenido =
+                                        contenido.categoria;
+                                  }
+                                  if (Validar().camposVacios(formKey)) {
+                                    guardarEdicion(
+                                        contenido.titulo,
+                                        contenido.descripcion,
+                                        contenido.categoria,
+                                        nuevoTituloContenido,
+                                        nuevaDescripcionContenido,
+                                        nuevaCategoriaContenido)
+                                      ..then((userCreds) {
+                                        /*
                                         Luego de editar el contenido,
                                         creo un dialogo de alerta indicando que se
                                         guardo de forma ok
                                          */
-                                    showDialog(
-                                        useRootNavigator: false,
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('Edicion de Contenido'),
-                                            content: Text(
-                                                'El contenido ha sido modificado correctamente'),
-                                            actions: [
-                                              TextButton(
-                                                  child: Text('Ok',
-                                                      style: TextStyle(
-                                                          color: Colores()
-                                                              .colorAzul,
-                                                          fontFamily:
-                                                          'Trueno',
-                                                          fontSize: 11.0,
-                                                          decoration:
-                                                          TextDecoration
-                                                              .underline)),
-                                                  onPressed: () {
-                                                    /*Al presionar Ok, cierro la el dialogo y cierro la
+                                        showDialog(
+                                            useRootNavigator: false,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                    'Edicion de Contenido'),
+                                                content: Text(
+                                                    'El contenido ha sido modificado correctamente'),
+                                                actions: [
+                                                  TextButton(
+                                                      child: Text('Ok',
+                                                          style: TextStyle(
+                                                              color: Colores()
+                                                                  .colorAzul,
+                                                              fontFamily:
+                                                                  'Trueno',
+                                                              fontSize: 11.0,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline)),
+                                                      onPressed: () {
+                                                        /*Al presionar Ok, cierro la el dialogo y cierro la
                                                        ventana de alta contenido
 
                                                          */
-                                                    Navigator.of(context)
-                                                        .popUntil((route) =>
-                                                    route.isFirst);
-                                                  })
-                                            ],
-                                          );
-                                        });
-                                    //TODO mensaje si falla.
-                                  }).catchError((e) {
-                                    ErrorHandler().errorDialog(context, e);
-                                  });
-                              }
-                            })
+                                                        Navigator.of(context)
+                                                            .popUntil((route) =>
+                                                                route.isFirst);
+                                                      })
+                                                ],
+                                              );
+                                            });
+                                        //TODO mensaje si falla.
+                                      }).catchError((e) {
+                                        ErrorHandler().errorDialog(context, e);
+                                      });
+                                  }
+                                })
                             : Container(),
                       ],
                     ),
@@ -247,9 +270,6 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
     );
   }
 
-  Future<void> listarCateogiras() async {
-    listaCategorias = await ControladorCategoria().listarCategorias();
-  }
 
   void editarContenido() {
     setState(() {
@@ -297,33 +317,28 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Eliminacion de Contenido'),
-                content: Text(
-                    'El Contenido ha sido eliminado correctamente'),
+                content: Text('El Contenido ha sido eliminado correctamente'),
                 actions: [
                   TextButton(
                       child: Text('Ok',
                           style: TextStyle(
-                              color:
-                              Colores().colorAzul,
+                              color: Colores().colorAzul,
                               fontFamily: 'Trueno',
                               fontSize: 11.0,
-                              decoration:
-                              TextDecoration
-                                  .underline)),
+                              decoration: TextDecoration.underline)),
                       onPressed: () {
                         /*Al presionar Ok, cierro la el dialogo y cierro la
                                                    ventana de visualizacion contenido
 
                                                      */
                         Navigator.of(context)
-                            .popUntil((route) =>
-                        route.isFirst);
+                            .popUntil((route) => route.isFirst);
                       })
                 ],
               );
             });
 
-          /*eliminarContenido(contenido.titulo, contenido.descripcion,
+        /*eliminarContenido(contenido.titulo, contenido.descripcion,
               contenido.categoria)
             ..then((userCreds) {
               /*
