@@ -97,17 +97,7 @@ class _RegistrarseState extends State<Registrarse> {
                   ? 'Campo obligatorio'
                   : Validar().validarCelular(value)),
 
-          // LOCALIDAD
-/*
-          TextFieldTexto(
-              nombre: 'DEPARTAMENTO',
-              icon: Icon(Icons.location_city_outlined),
-              valor: (value) {
-                this._localidad = value;
-              },
-              validacion: ((value) =>
-                  value.isEmpty ? 'Campo obligatorio' : null)),
-*/
+          // DEPARTAMENTO
           Padding(
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: DropdownSearch(
@@ -117,6 +107,14 @@ class _RegistrarseState extends State<Registrarse> {
                   this._localidad = value;
                 });
               },
+              validator: ((dynamic value) {
+                if (value == null) {
+                  return "Campo obligatorio";
+                } else {
+                  return null;
+                }
+              }
+                  ),
               showSearchBox: true,
               clearButton: Icon(Icons.close,
                   color: Colores().colorSombraBotones),
@@ -139,8 +137,7 @@ class _RegistrarseState extends State<Registrarse> {
                     borderSide: BorderSide(
                         color: Colores().colorSombraBotones),
                   )),
-              validator: ((value) =>
-              value.isEmpty ? 'Campo obligatorio' : null),
+
             ) ,
           ),
 

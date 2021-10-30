@@ -172,6 +172,13 @@ class _PerfilState extends State<Perfil> {
                                           departamentoNuevo = value.toUpperCase();
                                         });
                                       },
+                                      validator: ((dynamic value) {
+                                        if (value == null) {
+                                          return "Campo obligatorio";
+                                        } else {
+                                          return null;
+                                        }
+                                      }),
                                       showSearchBox: true,
                                       clearButton: Icon(Icons.close,
                                           color: Colores().colorSombraBotones),

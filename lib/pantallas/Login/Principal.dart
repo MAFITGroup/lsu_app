@@ -68,9 +68,11 @@ class Principal extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-              subtitle: Text(
-                  'Única plataforma Uruguaya para intérpretes de Lengua de Señas donde encontrarás, con un solo clic, la información que requieras para tu cotidianidad',
-                  textAlign: TextAlign.justify)),
+              subtitle: Center(
+                child: Text(
+                    'Única plataforma Uruguaya para intérpretes de Lengua de Señas donde encontrarás, con un solo clic, la información que requieras para tu cotidianidad',
+                    ),
+              )),
         ],
       ),
     );

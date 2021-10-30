@@ -42,7 +42,10 @@ class _LoginState extends State<Login> {
                         color: Colores().colorAzul),
                   ),
                   SizedBox(height: 30),
-                  Form(key: formKey, child: loginForm(context)),
+                  Form(
+                      key: formKey,
+                      child: loginForm(context)
+                  ),
                 ],
               ),
             ),
@@ -54,6 +57,7 @@ class _LoginState extends State<Login> {
   }
 
   loginForm(context) {
+    String a,b;
     return Container(
       child: Form(
         child: Column(
@@ -62,10 +66,12 @@ class _LoginState extends State<Login> {
               nombre: 'CORREO',
               icon: Icon(Icons.alternate_email_rounded),
               valor: (value) {
-                this._email = value.toLowerCase();
+                a = value.toLowerCase();
+                b= a.trim();
+                this._email = b;
               },
               validacion: (value) => value.isEmpty
-                  ? 'El correo es requerido'
+                  ? 'Campo obligatorio'
                   : Validar().validarCorreo(value)
             ),
 
@@ -112,6 +118,7 @@ class _LoginState extends State<Login> {
                 onPressed:
 
                   Navegacion(context).navegarAResetPassword
+
                 ,
                 child: Container(
                     alignment: Alignment.bottomCenter,

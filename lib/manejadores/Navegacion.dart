@@ -13,6 +13,7 @@ import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/pantallas/Login/Principal.dart';
 import 'package:lsu_app/pantallas/Login/Registrarse.dart';
 import 'package:lsu_app/pantallas/Login/ResetPassword.dart';
+import 'package:lsu_app/pantallas/Noticias/AltaNoticias.dart';
 import 'package:lsu_app/pantallas/Noticias/Noticias.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 
@@ -168,7 +169,21 @@ class Navegacion {
         ));
   }
 
+  void navegarAltaNoticia() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AltaNoticias(),
+        ));
+  }
 
+  void navegarANoticiasDest() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Noticias(),
+        ));
+  }
 
 
 

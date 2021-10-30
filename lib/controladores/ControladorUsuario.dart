@@ -28,7 +28,7 @@ class ControladorUsuario {
       //creo mi nuevo usuario
       firestore.collection("usuarios").doc(firebaseAuth.currentUser.uid).set({
         'usuarioUID': uid,
-        'correo': email,
+        'correo': email.trim(),
         'nombreCompleto': nombreCompleto,
         'telefono': telefono,
         'localidad': localidad,

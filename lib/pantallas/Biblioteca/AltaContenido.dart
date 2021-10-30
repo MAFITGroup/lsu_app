@@ -267,6 +267,7 @@ class _AltaContenidoState extends State<AltaContenido> {
       }
     }
   }
+
   Future<Uint8List> _getHtmlFileContent(html.File blob) async {
     final reader = html.FileReader();
     reader.readAsDataUrl(blob.slice(0, blob.size, blob.type));

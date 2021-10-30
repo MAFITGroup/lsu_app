@@ -1,9 +1,20 @@
+
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
+import 'package:lsu_app/manejadores/Navegacion.dart';
+import 'package:lsu_app/manejadores/Validar.dart';
+import 'package:lsu_app/modelo/Noticia.dart';
+import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
+import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
+import 'package:lsu_app/widgets/TextFieldTexto.dart';
+import 'package:path/path.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Noticias extends StatefulWidget {
   const Noticias({key}) : super(key: key);
@@ -14,15 +25,26 @@ class Noticias extends StatefulWidget {
 
 class _NoticiasState extends State<Noticias> {
 
+  List<Noticia> listaNoticias = [];
+  List<Noticia> listaLlamados = [];
+
   final formKey = new GlobalKey<FormState>();
 
   bool isUsuarioAdmin;
-
+  
+  
   List<String> _tabs = ['NOTICIAS', 'LLAMADOS'];
 
   @override
   void initState() {
     obtenerUsuarioAdministrador();
+    listaNoticias.clear();
+    listaLlamados.clear();
+    listNoticias();
+    listLlamados();
+
+    super.initState();
+
   }
 
   @override
@@ -54,17 +76,442 @@ class _NoticiasState extends State<Noticias> {
                         ),
                       ),
                     ),
+
                   ];
                 },
                 body: TabBarView(
                   children: [
+                    listNoticias(),
+                    listLlamados(),
 
                   ],
-                )
+                ),
+
 
               // TabBarView
 
-            )));
+            )
+        ),
+      floatingActionButton: isUsuarioAdmin == true
+          ? FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Colores().colorAzul,
+        onPressed: Navegacion(context).navegarAltaNoticia,
+      )
+          : null,
+    );
+  }
+
+  Widget listLlamados(){
+    return Scaffold(
+      body: Container(
+        child: FutureBuilder(
+          future: obtenerLlamados(),
+          builder: (context, snapshot){
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return CircularProgressIndicator();
+            }else {
+              return ListView.builder(
+                itemCount: listaLlamados.length,
+                itemBuilder: (context, index){
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colores().colorBlanco,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 15,
+                          offset: Offset(0,0)
+                        )
+                      ]
+                    ),
+                    child: ListTile(
+                      title: Text('Titulo: ' + listaLlamados[index].titulo),
+                      subtitle: Text(
+                          'Descripción: ' + listaLlamados[index].descripcion +
+                              '\nLink: ' + listaLlamados[index].link
+                      ),
+                      onTap: (){
+
+                        String link = listaLlamados[index].link;
+
+                        if(link != null){
+                          navegarALink(link, context);
+                        }else{
+                          DialogoAlerta(
+                            tituloMensaje: 'Navegacion',
+                            mensaje: 'La noticia no tiene un link asociado.',
+                            onPressed: (){
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        }
+
+
+                      },
+
+                      onLongPress: (){
+
+                        String tipo = listaLlamados[index].tipo;
+                        String tit = listaLlamados[index].titulo;
+                        String desc = listaLlamados[index].descripcion;
+                        String link = listaLlamados[index].link;
+
+                        accionNoticia(tipo, tit, desc, link, context);
+
+                      },
+                    ),
+                  );
+                }
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget listNoticias(){
+    return Scaffold(
+      body: Container(
+        child: FutureBuilder(
+          future: obtenerNoticias(),
+          builder: (context, snapshot){
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return CircularProgressIndicator();
+            }else {
+              return ListView.builder(
+                itemCount: listaNoticias.length,
+                itemBuilder: (context, index){
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colores().colorBlanco,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 15,
+                          offset: Offset(0,0)
+                        )
+                      ]
+                    ),
+                    child: ListTile(
+
+                      title: Text('Titulo: ' + listaNoticias[index].titulo),
+                      subtitle: Text(
+                          'Descripción: ' + listaNoticias[index].descripcion +
+                        '\nLink: ' + listaNoticias[index].link
+                      ),
+                      onTap: (){
+
+                        String link = listaNoticias[index].link;
+
+                        if(link != null){
+                          navegarALink(link, context);
+                        }else{
+                          DialogoAlerta(
+                            tituloMensaje: 'Navegacion',
+                            mensaje: 'La noticia no tiene un link asociado.',
+                            onPressed: (){
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        }
+
+
+                      },
+                      onLongPress: (){
+                        String tipo = listaNoticias[index].tipo;
+                        String tit = listaNoticias[index].titulo;
+                        String desc = listaNoticias[index].descripcion;
+                        String link = listaNoticias[index].link;
+
+                        accionNoticia(tipo, tit, desc, link, context);
+                      },
+                    ),
+                  );
+                }
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget navegarALink(String link, BuildContext context){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: const Text('Navegar al link'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  Text('Uds esta prestes a visitar un sitio web fuera de la app,'),
+                  SizedBox(height: 10.0),
+                  Text('¿Desea continuar?'),
+                ],
+              ),
+            ),
+            actions: <Widget> [
+              Column(
+                children: <Widget>[
+                  Boton(
+                    titulo: 'Confirmar',
+                    onTap: (){
+
+                      lanzarLink(link);
+                      Navigator.of(context).pop();
+
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  TextButton(
+                      onPressed: (){
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('ATRAS')
+                  )
+
+                ],
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  Widget accionNoticia(String tipo, String titulo, String descripcion, String link, BuildContext context){
+
+    List _tipo = [ 'NOTICIAS', 'LLAMADOS' ];
+
+    dynamic _tipoSeleccionadoNuevo;
+    dynamic _tituloNoticiaNuevo;
+    dynamic _descripcionNoticiaNueva;
+    dynamic _linkNoticiaNueva;
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text('Editar Noticia'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+
+                  SizedBox(height: 15.0),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25, right: 25),
+                    child: DropdownSearch(
+                      selectedItem: tipo,
+                      items: _tipo,
+                      onChanged: (value) {
+                        setState(() {
+                          _tipoSeleccionadoNuevo = value;
+                        });
+                      },
+                      validator: ((dynamic value) {
+                        if( value == null){
+                          return 'Campo obligatorio';
+                        }else{
+                          return null;
+                        }
+                      }),
+                      showSearchBox: true,
+                      clearButton: Icon(Icons.close,
+                          color: Colores().colorSombraBotones),
+                      dropDownButton: Icon(Icons.arrow_drop_down,
+                          color: Colores().colorSombraBotones),
+                      showClearButton: true,
+                      mode: Mode.DIALOG,
+                      searchBoxDecoration: InputDecoration(
+                        focusColor: Colores().colorSombraBotones,
+                      ),
+                      dropdownSearchDecoration: InputDecoration(
+                          hintStyle: TextStyle(
+                              fontFamily: 'Trueno',
+                              fontSize: 12,
+                              color: Colores().colorSombraBotones),
+                          hintText: "TIPO",
+                          prefixIcon: Icon(Icons.account_tree_outlined),
+                          focusColor: Colores().colorSombraBotones,
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colores().colorSombraBotones),
+                          )),
+                    ),
+                  ),
+                  SizedBox(height: 15.0),
+                  TextFieldTexto(
+                    nombre: 'TITULO',
+                    icon: Icon(Icons.title),
+                    controlador: TextEditingController(
+                      text: titulo
+                    ),
+                    valor: (value) {
+                      _tituloNoticiaNuevo = value;
+                    },
+                    validacion: ((value) =>
+                    value.isEmpty
+                        ? 'El título es requerido'
+                        : null
+                    ),
+                  ),
+                  SizedBox(height: 15.0),
+                  TextFieldDescripcion(
+                    nombre: 'DESCRIPCION',
+                    icon: Icon(Icons.description),
+                    controlador: TextEditingController(
+                        text: descripcion
+                    ),
+                    valor: (value) {
+                      _descripcionNoticiaNueva = value;
+                    },
+                    validacion: ((value) =>
+                    value.isEmpty
+                        ? 'La descripción es requerida'
+                        : null
+                    ),
+                  ),
+                  SizedBox(height: 15.0),
+                  TextFieldTexto(
+                    nombre: 'Link',
+                    icon: Icon(Icons.link),
+                    controlador: TextEditingController(
+                        text: link
+                    ),
+                    valor: (value) {
+                      if(value.contains('https')){
+                        _linkNoticiaNueva = value;
+                      }else{
+                        _linkNoticiaNueva = 'https://$value';
+                      }
+                    },
+                    validacion: ((value) =>
+                    value.isEmpty ? 'El link es requerido' : null),
+                  ),
+                  SizedBox(height: 20.0),
+
+                ],
+              ),
+            ),
+            actions: <Widget> [
+              Column(
+                children: <Widget>[
+                  Boton(
+                    titulo: 'GUARDAR',
+                    onTap: (){
+
+                      if(_tipoSeleccionadoNuevo == null){
+                        _tipoSeleccionadoNuevo = tipo;
+                      }
+                      if(_tituloNoticiaNuevo == null){
+                        _tituloNoticiaNuevo = titulo;
+                      }
+                      if(_descripcionNoticiaNueva == null){
+                        _descripcionNoticiaNueva = descripcion;
+                      }
+                      if(_linkNoticiaNueva == null){
+                        _linkNoticiaNueva = link;
+                      }
+
+                        guardarEdicionNoticia(
+                            tipo,
+                            titulo,
+                            descripcion,
+                            link,
+                            _tipoSeleccionadoNuevo,
+                            _tituloNoticiaNuevo,
+                            _descripcionNoticiaNueva,
+                            _linkNoticiaNueva
+                        )..then((userCreds) {
+                          showDialog(
+                              useRootNavigator: false,
+                              context: context,
+                              builder: (BuildContext context){
+                                return DialogoAlerta(
+                                  tituloMensaje: 'Editar Noticia',
+                                  mensaje: 'Los datos han sido guardados correctamente',
+                                  onPressed: (){
+                                    TextButton(
+                                      child: Text('OK'),
+                                      onPressed: (){
+                                        Navigator.of(context).pop();
+                                        Navegacion(context).navegarANoticiasDest();
+
+                                      },
+                                    );
+                                  },
+                                );
+                              }
+                          );
+                        });
+
+                    },
+                  ),
+                  SizedBox(height: 10),
+
+                  TextButton(
+                      onPressed: (){
+
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('ATRAS')
+                  )
+
+                ],
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  lanzarLink(String link) async {
+    String url = link;
+      if(await canLaunch(url)){
+        await launch(
+            url,
+            forceWebView: true,
+            webOnlyWindowName: '_blank'
+        );
+      }else{
+        throw AlertDialog().title;
+
+    }
+
+
+  }
+
+  Future<void> obtenerNoticias() async {
+    listaNoticias = await ControladorNoticia().obtenerNoticias();
+  }
+  Future<void> obtenerLlamados() async {
+    listaLlamados = await ControladorNoticia().obtenerLlamados();
+  }
+
+  Future guardarEdicionNoticia(
+      String tipoAnterior,
+      String tituloAnterior,
+      String descripcionAnterior,
+      String linkAnterior,
+      String tipoNuevo,
+      String tituloNuevo,
+      String descripcionNueva,
+      String linkNuevo
+      ) async {
+    ControladorNoticia().editarNoticia(
+        tipoAnterior,
+        tituloAnterior,
+        descripcionAnterior,
+        linkAnterior,
+        tipoNuevo,
+        tituloNuevo,
+        descripcionNueva,
+        linkNuevo);
   }
 
   Future<void> obtenerUsuarioAdministrador() async {

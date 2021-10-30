@@ -103,6 +103,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
     switch (item) {
       case 0:
         AuthService().signOut();
+        Navegacion(context).navegarAPrincipalDest();
         break;
       case 1:
         Navegacion(context).navegarAPerfil(usuario);
