@@ -110,3 +110,4 @@ class _CategoriasState extends State<Categorias> {
     });
   }
 }
+
