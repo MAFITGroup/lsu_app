@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
@@ -43,7 +42,7 @@ class AuthService extends ChangeNotifier {
     switch (estadoUsuario) {
       case 'PENDIENTE':
         {
-          return showCupertinoDialog(
+          return showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {
@@ -74,7 +73,7 @@ class AuthService extends ChangeNotifier {
 
       case 'INACTIVO':
         {
-          return showCupertinoDialog(
+          return showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {
@@ -85,7 +84,7 @@ class AuthService extends ChangeNotifier {
 
       default:
         {
-          return showCupertinoDialog(
+          return showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {

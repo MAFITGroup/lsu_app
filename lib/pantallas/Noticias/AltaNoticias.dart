@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,9 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
-import 'package:lsu_app/modelo/Noticia.dart';
 import 'package:lsu_app/pantallas/Noticias/Noticias.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
@@ -36,7 +32,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
 
   final formKey = new GlobalKey<FormState>();
 
-  List _tipo = [ 'NOTICIAS', 'LLAMADOS' ];
+  List _tipo = [ 'CHARLAS', 'LLAMADOS' ];
 
   String _usuarioUID = FirebaseAuth.instance.currentUser.uid;
 
@@ -152,7 +148,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                     _descripcionNoticia,
                                     _linkNoticia,
                                 ).catchError((e){
-                                  print(e);
+                                  ErrorHandler().errorDialog(e, context);
                                 });
 
                                 showDialog(
@@ -175,7 +171,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                     });
 
                               } else {
-                                showCupertinoDialog(
+                                showDialog(
                                     context: context,
                                     barrierDismissible: true,
                                     builder: (context) {

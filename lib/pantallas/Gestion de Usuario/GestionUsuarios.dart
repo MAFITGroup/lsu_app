@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -86,7 +85,9 @@ class _GestionUsuarios extends State<GestionUsuarios> {
             future: usuariosPendientes(),
             builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(
+              child:  Image.asset('recursos/logo-carga.gif'),
+            );
           } else {
             return ListView.builder(
                 itemCount: pendienteUsuarios.length,
@@ -104,7 +105,10 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                         ]),
                     child: ListTile(
                       title: Text(pendienteUsuarios[index].nombreCompleto),
-                      subtitle: Text('usuario pendiente'),
+                      subtitle: Text('Correo : ' + pendienteUsuarios[index].correo +
+                          '\nCelular: ' + pendienteUsuarios[index].telefono  +
+                          '\nDepartamento: ' + pendienteUsuarios[index].localidad +
+                          '\nEspecialidad: ' + pendienteUsuarios[index].especialidad),
                       onTap: () {
 
                         String nombre = pendienteUsuarios[index].nombreCompleto;
@@ -131,7 +135,9 @@ class _GestionUsuarios extends State<GestionUsuarios> {
             future: usuariosActivos(),
               builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child:  Image.asset('recursos/logo-carga.gif'),
+          );
       } else {
           return ListView.builder(
               itemCount: activoUsuarios.length,
@@ -149,7 +155,10 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                       ]),
                   child: ListTile(
                       title: Text(activoUsuarios[index].nombreCompleto),
-                      subtitle: Text('usuario activo'),
+                      subtitle: Text('Correo : ' + activoUsuarios[index].correo +
+                      '\nCelular: ' + activoUsuarios[index].telefono  +
+                      '\nDepartamento: ' + activoUsuarios[index].localidad +
+                      '\nEspecialidad: ' + activoUsuarios[index].especialidad),
                       onTap: () {
                         String nombre = activoUsuarios[index].nombreCompleto;
                         String correo = activoUsuarios[index].correo;
@@ -174,7 +183,9 @@ class _GestionUsuarios extends State<GestionUsuarios> {
               future: usuariosInactivos(),
               builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(
+            child:  Image.asset('recursos/logo-carga.gif'),
+          );
       } else {
           return ListView.builder(
               itemCount: inactivoUsuarios.length,
@@ -192,7 +203,10 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                       ]),
                   child: ListTile(
                     title: Text(inactivoUsuarios[index].nombreCompleto),
-                    subtitle: Text('usuario inactivo'),
+                    subtitle: Text('Correo : ' + inactivoUsuarios[index].correo +
+                        '\nCelular: ' + inactivoUsuarios[index].telefono  +
+                        '\nDepartamento: ' + inactivoUsuarios[index].localidad +
+                        '\nEspecialidad: ' + inactivoUsuarios[index].especialidad),
                     onTap: () {
 
                       String nombre = inactivoUsuarios[index].nombreCompleto;
@@ -225,18 +239,17 @@ class _GestionUsuarios extends State<GestionUsuarios> {
       estado = true;
     }
 
-    showCupertinoDialog(
+    showDialog(
       barrierDismissible: true,
       context: context,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              contentPadding: const EdgeInsets.all(10.0),
-              shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              insetPadding: EdgeInsets.all(2.0),
               title: Text('Usuario'),
-              content: Column(
+              content: SingleChildScrollView(
+                child: Column(
                 children: [
                   SizedBox(height: 20),
                   ListTile(
@@ -254,7 +267,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                               child: Icon(Icons.group_add_rounded)
                           ),
                           Expanded(
-                              child: Text('Es adminsitrador?')
+                              child: Text('Administrador')
                           ),
                           Expanded(
                             child:Switch(
@@ -278,7 +291,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                               child: Icon(Icons.supervised_user_circle_outlined)
                           ),
                           Expanded(
-                              child: Text('Es un usuario activo')
+                              child: Text('Activo')
                           ),
                           Expanded(
                             child: Switch(
@@ -317,7 +330,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
 
                           ControladorUsuario().administrarUsuario(correo, estadoUsuario, esAdministrador);
 
-                          showCupertinoDialog(
+                          showDialog(
                               barrierDismissible: true,
                               context: context,
                               builder: (context){
@@ -346,17 +359,20 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                           );
 
                         },
-                      )
-
-
-
-
+                      ),
+                      TextButton(
+                        child: const Text('ATRAS'),
+                        onPressed: (){
+                          Navigator.of(context).pop();
+                        },
+                      ),
                     ],
                   ),
 
 
                 ],
               ),
+            ),
             );
         },
         );

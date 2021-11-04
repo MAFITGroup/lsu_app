@@ -18,8 +18,6 @@ class _ResetPasswordState extends State<ResetPassword> {
   String _email;
   List<String> listaCorreos = [];
 
-
-  //To check fields during submit
   checkFields() {
     final form = formKey.currentState;
     if (form.validate()) {
@@ -29,7 +27,6 @@ class _ResetPasswordState extends State<ResetPassword> {
     return false;
   }
 
-  //To Validate email
   String validarCorreo(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -57,52 +54,35 @@ class _ResetPasswordState extends State<ResetPassword> {
           TextFieldTexto(
             nombre: 'EMAIL',
             icon: Icon(Icons.alternate_email_rounded),
-            valor: (value){
+            valor: (value) {
               this._email = value;
             },
             validacion: (value) => value.isEmpty
-              ? 'Campo obligatorio'
-              : Validar().validarCorreo(value),
+                ? 'Campo obligatorio'
+                : Validar().validarCorreo(value),
           ),
-
           SizedBox(height: 50.0),
           Boton(
-              titulo: 'CONFIRMAR',
+            titulo: 'CONFIRMAR',
             onTap: () {
               if (checkFields()) {
-
-                AuthService()
-                    .resetPasswordLink(_email, context);
-
-
-
+                AuthService().resetPasswordLink(_email, context);
               } // if(checkField)
             }, // onTap
-
-           /* child: Boton(
-                titulo: 'CONFIRMAR',
-                )*/
-
-
           ),
           SizedBox(height: 20.0),
           TextButton(
-              onPressed: (){ Navegacion(context).navegarALogin();},
+              onPressed: () {
+                Navegacion(context).navegarALogin();
+              },
               child: Container(
                 child: Text('ATRAS',
-                  style: TextStyle(
-                    color: Colores().colorAzul,
-                    fontFamily: 'Trueno',
-                    fontSize: 11.0,
-                    decoration: TextDecoration.underline
-                  )
-
-                ),
-              )
-          )
-        ]
-        )
-    );
+                    style: TextStyle(
+                        color: Colores().colorAzul,
+                        fontFamily: 'Trueno',
+                        fontSize: 11.0,
+                        decoration: TextDecoration.underline)),
+              ))
+        ]));
   }
-
 }

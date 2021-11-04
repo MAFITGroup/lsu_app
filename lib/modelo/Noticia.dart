@@ -5,6 +5,7 @@ class Noticia {
   String _usuarioAlta;
   String _link;
   String _documentID;
+  String _fechaSubida;
 
   Noticia();
 
@@ -14,6 +15,7 @@ class Noticia {
   String get usuarioAlta => _usuarioAlta;
   String get link        => _link;
   String get documentID  => _documentID;
+  String get fechaSubida => _fechaSubida;
 
 
   set titulo(String value) {
@@ -38,5 +40,9 @@ class Noticia {
 
   set documentID(String value) {
     _documentID = value;
+  }
+
+  set fechaSubida(String value){
+    _fechaSubida = value;
   }
 }

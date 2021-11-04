@@ -8,48 +8,57 @@ import 'package:lsu_app/modelo/Noticia.dart';
 
 class ControladorNoticia {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final FirebaseStorage storage = FirebaseStorage.instance;
 
   String _tipo;
   String _titulo;
   String _descripcion;
   String _link;
   String _uid;
-
+  String _fechaSubida;
   String _usuarioAlta;
 
   Noticia noticia;
 
-  Future<Noticia> obtenerNoticia(String tipoNoticia, String tituloNoticia, String descripcionNoticia,
-       String linkNoticia) async {
+  Future<Noticia> obtenerNoticia(
+      String tipoNoticia,
+      String tituloNoticia,
+      String descripcionNoticia,
+      String linkNoticia
+      ) async {
+
     await firestore
         .collection('noticias')
+        .where('tipo', isEqualTo: tipoNoticia)
         .where('titulo', isEqualTo: tituloNoticia)
         .where('descripcion', isEqualTo: descripcionNoticia)
-        .where('tipo', isEqualTo: tipoNoticia)
         .where('link', isEqualTo: linkNoticia)
         .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        _titulo      = doc['titulo'];
-        _descripcion = doc['descripcion'];
-        _usuarioAlta = doc['usuarioAlta'];
-        _tipo        = doc['categoria'];
-        _link        = doc['link'];
-        _uid         = doc['documentID'];
+        .then(
+        (QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            _tipo = doc['tipo'];
+            _titulo = doc['titulo'];
+            _descripcion = doc['descripcion'];
+            _link = doc['link'];
+            _usuarioAlta = doc['usuarioAlta'];
+            _uid = doc['documentID'];
+            _fechaSubida = doc['fechaSubida'];
 
-        noticia             = new Noticia();
-        noticia.titulo      = _titulo;
-        noticia.descripcion = _descripcion;
-        noticia.usuarioAlta = _usuarioAlta;
-        noticia.tipo        = _tipo;
-        noticia.link        = _link;
-        noticia.documentID  = _uid;
-      });
-      return noticia;
-    });
+            noticia = new Noticia();
+            noticia.tipo = _tipo;
+            noticia.titulo = _titulo;
+            noticia.descripcion = _descripcion;
+            noticia.link = _link;
+            noticia.usuarioAlta = _usuarioAlta;
+            noticia.documentID = _uid;
+            noticia.fechaSubida = _fechaSubida;
 
+          });
+
+        });
+    return noticia;
   }
+
   
   void crearNoticia(
       String tipo,
@@ -58,14 +67,16 @@ class ControladorNoticia {
       String link,
       String usuarioAlta
       ){
+    String fechaSubida = DateTime.now().toString();
     String docId = new UniqueKey().toString();
     firestore.collection('noticias').doc(docId).set({
       'tipo'       : tipo,
       'titulo'     : titulo.trim(),
       'descripcion': descripcion,
-      'link'       : link.trim(),
+      'link'       : link.trim().toLowerCase(),
       'usuarioAlta': usuarioAlta,
       'documentID' : docId,
+      'fechaSubida': fechaSubida,
     });
   }
 
@@ -78,6 +89,7 @@ class ControladorNoticia {
       String tituloNuevo,
       String descripcionNueva,
       String linkNuevo) async {
+
     Noticia noticia = await obtenerNoticia(
         tipoAnterior,
         tituloAnterior,
@@ -92,17 +104,17 @@ class ControladorNoticia {
       'titulo': tituloNuevo,
       'descripcion': descripcionNueva,
       'tipo': tipoNuevo,
-      'link': linkNuevo,
+      'link': linkNuevo.toLowerCase(),
     }).then((value) => print("Noticia Editado correctamente"));
   }
 
   void eliminarNoticia(
+      String tipo,
       String titulo,
       String descripcion,
-      String tipo,
       String link
       ) async {
-    Noticia noticia = await obtenerNoticia(titulo, descripcion, tipo, link);
+    Noticia noticia = await obtenerNoticia(tipo, titulo, descripcion, link);
     String docId = noticia.documentID;
 
     // primero elimino la senia
@@ -114,12 +126,12 @@ class ControladorNoticia {
     
   }
   
-  Future<List<Noticia>> obtenerNoticias() async {
-    List<Noticia> listaNoticias = [];
+  Future<List<Noticia>> obtenerCharlas() async {
+    List<Noticia> listaCharlas = [];
 
     await firestore
         .collection('noticias')
-        .where('tipo', isEqualTo: 'NOTICIAS')
+        .where('tipo', isEqualTo: 'CHARLAS')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -128,6 +140,7 @@ class ControladorNoticia {
         _descripcion = doc['descripcion'];
         _link = doc['link'];
         _usuarioAlta = doc['usuarioAlta'];
+        _fechaSubida = doc['fechaSubida'];
         
         noticia = new Noticia();
 
@@ -136,15 +149,15 @@ class ControladorNoticia {
         noticia.descripcion = _descripcion;
         noticia.link = _link;
         noticia.usuarioAlta = _usuarioAlta;
+        noticia.fechaSubida = _fechaSubida;
 
-
-        listaNoticias.add(noticia);
+        listaCharlas.add(noticia);
 
       });
 
     });
 
-    return listaNoticias;
+    return listaCharlas;
   }
 
   Future<List<Noticia>> obtenerLlamados() async {
@@ -161,6 +174,7 @@ class ControladorNoticia {
         _descripcion = doc['descripcion'];
         _link = doc['link'];
         _usuarioAlta = doc['usuarioAlta'];
+        _fechaSubida = doc['fechaSubida'];
         
         noticia = new Noticia();
 
@@ -169,6 +183,7 @@ class ControladorNoticia {
         noticia.descripcion = _descripcion;
         noticia.link = _link;
         noticia.usuarioAlta = _usuarioAlta;
+        noticia.fechaSubida = _fechaSubida;
         
         listaLlamados.add(noticia);
 
@@ -177,5 +192,38 @@ class ControladorNoticia {
     });
 
     return listaLlamados;
+  }
+
+  Future<List<Noticia>> obtenerNoticias() async {
+    List<Noticia> listaNoticias = [];
+
+    await firestore
+        .collection('noticias')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _tipo = doc['tipo'];
+        _titulo = doc['titulo'];
+        _descripcion = doc['descripcion'];
+        _link = doc['link'];
+        _usuarioAlta = doc['usuarioAlta'];
+        _fechaSubida = doc['fechaSubida'];
+
+        noticia = new Noticia();
+
+        noticia.tipo = _tipo;
+        noticia.titulo = _titulo;
+        noticia.descripcion = _descripcion;
+        noticia.link = _link;
+        noticia.usuarioAlta = _usuarioAlta;
+        noticia.fechaSubida = _fechaSubida;
+
+        listaNoticias.add(noticia);
+
+      });
+
+    });
+
+    return listaNoticias;
   }
 }
