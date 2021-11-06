@@ -186,9 +186,6 @@ class _PerfilState extends State<Perfil> {
                                           color: Colores().colorSombraBotones),
                                       showClearButton: true,
                                       mode: Mode.DIALOG,
-                                      searchBoxDecoration: InputDecoration(
-                                        focusColor: Colores().colorSombraBotones,
-                                      ),
                                       dropdownSearchDecoration: InputDecoration(
                                           hintStyle: TextStyle(
                                               fontFamily: 'Trueno',

@@ -43,11 +43,6 @@ class SeleccionadorCategoriasState extends State<SeleccionadorCategorias> {
             color: Colores().colorSombraBotones),
         showClearButton: true,
         mode: Mode.DIALOG,
-        hint: nombre,
-        autoFocusSearchBox: true,
-        searchBoxDecoration: InputDecoration(
-          focusColor: Colores().colorSombraBotones,
-        ),
         dropdownSearchDecoration: InputDecoration(
           focusColor: Colores().colorSombraBotones,
         ),

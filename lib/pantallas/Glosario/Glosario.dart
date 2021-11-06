@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:lsu_app/buscadores/BuscadorSenias.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
@@ -13,7 +12,7 @@ import 'package:lsu_app/modelo/Categoria.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
-import 'VisualizarSeniaPorCategoria.dart';
+import 'VisualizarSeniasPorCategoria.dart';
 
 class Glosario extends StatefulWidget {
   @override
@@ -23,6 +22,7 @@ class Glosario extends StatefulWidget {
 class _GlosarioState extends State<Glosario> {
   List<Categoria> listaCategorias = [];
   List listaCategoriasParaAlta = [];
+  List listaSubCategoriasParaAlta = [];
   List<Senia> listaSeniaXCategoria = [];
   List<Senia> listaSenias = [];
   bool isUsuarioAdmin;
@@ -75,7 +75,9 @@ class _GlosarioState extends State<Glosario> {
                     future: listarCategorias(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Cargando...");
+                        return Center(
+                          child:  Image.asset('recursos/logo-carga.gif'),
+                        );
                       } else {
                         return ListView.builder(
                             itemCount: listaCategorias.length,
@@ -121,6 +123,13 @@ class _GlosarioState extends State<Glosario> {
   }
 
   /*
+Lista de señas para el buscador.
+ */
+  Future<void> listarSenias() async {
+    listaSenias = await _controladorSenia.obtenerTodasSenias();
+  }
+
+  /*
   Se listan las categorias para mostrar el glosario, devuelve Categoria
    */
   Future<void> listarCategorias() async {
@@ -129,6 +138,11 @@ class _GlosarioState extends State<Glosario> {
 
   void listarCateogirasParaAlta() async {
     listaCategoriasParaAlta = await _controladorCategoria.listarCategorias();
+  }
+
+  void listarSubCateogirasParaAlta() async {
+    listaSubCategoriasParaAlta =
+        await _controladorCategoria.listarSubCategorias();
   }
 
   Future<void> obtenerUsuarioAdministrador() async {
@@ -140,12 +154,5 @@ class _GlosarioState extends State<Glosario> {
     setState(() {
       isUsuarioAdmin;
     });
-  }
-
-  /*
-Lista de señas para el buscador.
- */
-  Future<void> listarSenias() async {
-    listaSenias = await _controladorSenia.obtenerTodasSenias();
   }
 }

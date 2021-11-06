@@ -41,7 +41,7 @@ class _VisualizarSeniaPorCategoriaState
           body: Column(
             children: [
               BarraDeNavegacion(
-                titulo: Text("BUSQUEDA DE SEÑA",
+                titulo: Text("SEÑAS " + "- CATEGORIA: " + widget.nombreCategoria,
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               ),
               Expanded(
@@ -50,7 +50,11 @@ class _VisualizarSeniaPorCategoriaState
                     future: listarSeniasXCategorias(nombreCategoria),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Cargando...");
+                        return Center(
+                          child:  Image.asset('recursos/logo-carga.gif'),
+                        );
+                      } else if (listaSeniaXCategoria.length <= 0) {
+                        return Text("NO EXISTEN SEÑAS DENTRO DE LA CATEGORIA: "+ widget.nombreCategoria);
                       } else {
                         return ListView.builder(
                             itemCount: listaSeniaXCategoria.length,

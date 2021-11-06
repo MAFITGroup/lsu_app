@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 
 class ControladorSenia {
@@ -12,11 +11,100 @@ class ControladorSenia {
   final FirebaseStorage storage = FirebaseStorage.instance;
   String nombre;
   String categoria;
+  String subCategoria;
   String usuarioAlta;
   String descripcion;
   String urlVideo;
   Senia senia;
   String documentID;
+
+  Future<UploadTask> crearYSubirSenia(
+      String idSenia,
+      String nombre,
+      String descripcion,
+      String categoria,
+      String subCategoria,
+      String usuarioAlta,
+      String destino,
+      File archivo) async {
+    /*
+    Primero subo el archivo
+     */
+    UploadTask subida;
+    String downloadLink;
+    try {
+      final ref = FirebaseStorage.instance.ref(destino);
+      subida = ref.putFile(archivo);
+      downloadLink = await (await subida).ref.getDownloadURL();
+
+      //TODO chequear que el documentID no se va a repetir en las colecciones
+      /*
+      Creo la senia luego de obtener el link de la url
+       */
+      await firestore.collection("senias").doc(idSenia).set({
+        /*
+        guardo el docId porque me sirve para luego
+        al editar, matchear el documento con el id
+        correspondiente a la coleccion para saber identificar
+        el doc a editar.
+         */
+        'documentID': idSenia,
+        'usuarioAlta': usuarioAlta,
+        'nombre': nombre,
+        'descripcion': descripcion,
+        'categoria': categoria,
+        'subCategoria': subCategoria,
+        'videoRef': downloadLink,
+      });
+    } on FirebaseException catch (e) {
+      print('error al subir archivo ');
+      return null;
+    }
+  }
+
+  /*
+  Este metodo se usa para la subida de la seña
+  desde la web, ya que el reproductor de video es null en la web
+  por lo tanto se pasa como @param un tipo de dato Uint8List
+   */
+  Future<UploadTask> crearYSubirSeniaWeb(
+      String idSenia,
+      String nombre,
+      String descripcion,
+      String categoria,
+      String subCategoria,
+      String usuarioAlta,
+      String destino,
+      Uint8List archivo) async {
+    /*
+    Primero subo el archivo
+     */
+    UploadTask subida;
+    String downloadLink;
+
+    try {
+      final ref = FirebaseStorage.instance.ref(destino);
+      subida = ref.putData(archivo, SettableMetadata(contentType: "video/mp4"));
+      downloadLink = await (await subida).ref.getDownloadURL();
+
+      //TODO chequear que el documentID no se va a repetir en las colecciones
+      /*
+      Creo la senia luego de obtener el link de la url
+       */
+      await firestore.collection("senias").doc(idSenia).set({
+        'documentID': idSenia,
+        'usuarioAlta': usuarioAlta,
+        'nombre': nombre,
+        'descripcion': descripcion,
+        'categoria': categoria,
+        'subCategoria': subCategoria,
+        'videoRef': downloadLink,
+      });
+    } on FirebaseException catch (e) {
+      print('error al subir archivo ');
+      return null;
+    }
+  }
 
   /*
   Se usa para obtener el objeto Senia
@@ -36,6 +124,7 @@ class ControladorSenia {
         descripcion = doc['descripcion'];
         usuarioAlta = doc['usuarioAlta'];
         categoria = doc['categoria'];
+        subCategoria = doc['subCategoria'];
         urlVideo = doc['videoRef'];
         documentID = doc['documentID'];
 
@@ -44,6 +133,7 @@ class ControladorSenia {
         senia.descripcion = descripcion;
         senia.usuarioAlta = usuarioAlta;
         senia.categoria = categoria;
+        senia.subCategoria = subCategoria;
         senia.urlVideo = urlVideo;
         senia.documentID = documentID;
       });
@@ -56,9 +146,11 @@ class ControladorSenia {
       String nombreAnterior,
       String descripcionAnterior,
       String categoriaAnterior,
+      String subCategoriaAnterior,
       String nombreNuevo,
       String descripcionNueva,
-      String categoriaNueva) async {
+      String categoriaNueva,
+      String subCategoriaNueva) async {
     Senia senia = await obtenerSenia(
         nombreAnterior, descripcionAnterior, categoriaAnterior);
     String docId = senia.documentID;
@@ -97,100 +189,6 @@ class ControladorSenia {
         .then((value) => print("Archivo eliminado correctamente"));
   }
 
-  Future<UploadTask> crearYSubirSenia(
-      String nombre,
-      String descripcion,
-      String categoria,
-      String usuarioAlta,
-      String destino,
-      File archivo) async {
-    /*
-    Primero subo el archivo
-     */
-    UploadTask subida;
-    String downloadLink;
-    String docId = new UniqueKey().toString();
-    try {
-      final ref = FirebaseStorage.instance.ref(destino);
-      subida = ref.putFile(archivo);
-      downloadLink = await (await subida).ref.getDownloadURL();
-
-      //TODO chequear que el documentID no se va a repetir en las colecciones
-      /*
-      Creo la senia luego de obtener el link de la url
-       */
-      await firestore.collection("senias").doc(docId).set({
-        /*
-        guardo el docId porque me sirve para luego
-        al editar, matchear el documento con el id
-        correspondiente a la coleccion para saber identificar
-        el doc a editar.
-         */
-        'documentID': docId,
-        'usuarioAlta': usuarioAlta,
-        'nombre': nombre,
-        'descripcion': descripcion,
-        /*
-        Con esto me aseguro que no queden espacios y que se guarde en Mayus
-         */
-        'categoria': categoria,
-        'videoRef': downloadLink,
-      });
-    } on FirebaseException catch (e) {
-      print('error al subir archivo ');
-      return null;
-    }
-  }
-
-  /*
-  Este metodo se usa para la subida de la seña
-  desde la web, ya que el reproductor de video es null en la web
-  por lo tanto se pasa como @param un tipo de dato Uint8List
-   */
-  Future<UploadTask> crearYSubirSeniaBytes(
-      String nombre,
-      String descripcion,
-      String categoria,
-      String usuarioAlta,
-      String destino,
-      Uint8List archivo) async {
-    /*
-    Primero subo el archivo
-     */
-    UploadTask subida;
-    String downloadLink;
-    String docId = new UniqueKey().toString();
-
-    try {
-      final ref = FirebaseStorage.instance.ref(destino);
-      subida = ref.putData(archivo, SettableMetadata(contentType: "video/mp4"));
-      downloadLink = await (await subida).ref.getDownloadURL();
-
-      //TODO chequear que el documentID no se va a repetir en las colecciones
-      /*
-      Creo la senia luego de obtener el link de la url
-       */
-      await firestore.collection("senias").doc(docId).set({
-        'documentID': docId,
-        'usuarioAlta': usuarioAlta,
-        'nombre': nombre,
-        'descripcion': descripcion,
-        'categoria': categoria,
-        'videoRef': downloadLink,
-      });
-    } on FirebaseException catch (e) {
-      print('error al subir archivo ');
-      return null;
-    }
-  }
-
-  String obtenerVideoDownloadLink(String url) {
-    if (url.isNotEmpty) {
-      urlVideo = url;
-    }
-    return urlVideo;
-  }
-
   Future<List<Senia>> obtenerTodasSenias() async {
     List<Senia> lista = [];
 
@@ -203,6 +201,7 @@ class ControladorSenia {
         descripcion = doc['descripcion'];
         usuarioAlta = doc['usuarioAlta'];
         categoria = doc['categoria'];
+        subCategoria = doc['subCategoria'];
         urlVideo = doc['videoRef'];
         documentID = doc['documentID'];
 
@@ -212,11 +211,19 @@ class ControladorSenia {
         senia.descripcion = descripcion;
         senia.usuarioAlta = usuarioAlta;
         senia.categoria = categoria;
+        senia.subCategoria = subCategoria;
         senia.urlVideo = urlVideo;
         senia.documentID = documentID;
 
         lista.add(senia);
       });
+    });
+
+    /*
+    Ordeno por nombre
+     */
+    lista.sort((a, b) {
+      return a.nombre.toString().compareTo(b.nombre.toString());
     });
 
     return lista;
@@ -227,7 +234,7 @@ class ControladorSenia {
 
     await firestore
         .collection('senias')
-        .where('categoria', isEqualTo: nombreCategoria.trimLeft().trimRight())
+        .where('categoria', isEqualTo: nombreCategoria)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -235,6 +242,7 @@ class ControladorSenia {
         descripcion = doc['descripcion'];
         usuarioAlta = doc['usuarioAlta'];
         categoria = doc['categoria'];
+        subCategoria = doc['subCategoria'];
         urlVideo = doc['videoRef'];
         documentID = doc['documentID'];
 
@@ -244,11 +252,19 @@ class ControladorSenia {
         senia.descripcion = descripcion;
         senia.usuarioAlta = usuarioAlta;
         senia.categoria = categoria;
+        senia.subCategoria = subCategoria;
         senia.urlVideo = urlVideo;
         senia.documentID = documentID;
 
         lista.add(senia);
       });
+    });
+
+    /*
+    Ordeno por nombre
+     */
+    lista.sort((a, b) {
+      return a.nombre.toString().compareTo(b.nombre.toString());
     });
 
     return lista;

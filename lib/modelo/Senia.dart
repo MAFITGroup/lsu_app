@@ -3,6 +3,7 @@ class Senia {
   String _nombre;
   String _descripcion;
   String _categoria;
+  String _subCategoria;
   String _urlVideo;
   String _documentID;
 
@@ -16,6 +17,8 @@ class Senia {
   String get descripcion => _descripcion;
 
   String get categoria => _categoria;
+
+  String get subCategoria => _subCategoria;
 
   String get urlVideo => _urlVideo;
 
@@ -37,6 +40,10 @@ class Senia {
 
   set categoria(String value) {
     _categoria = value;
+  }
+
+  set subCategoria(String value) {
+    _subCategoria = value;
   }
 
   set urlVideo(String value) {

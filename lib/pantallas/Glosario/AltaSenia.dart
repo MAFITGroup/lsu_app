@@ -46,6 +46,8 @@ class _AltaSeniaState extends State<AltaSenia> {
   String _url;
   Uint8List fileWeb;
   final formKey = new GlobalKey<FormState>();
+  final subCategoriaKey = new GlobalKey<DropdownSearchState>();
+  final categoriaKey = new GlobalKey<DropdownSearchState>();
   String _usuarioUID = FirebaseAuth.instance.currentUser.uid;
   String fileExtension;
   FirebaseFirestore firestore;
@@ -55,11 +57,13 @@ class _AltaSeniaState extends State<AltaSenia> {
   dynamic _subCatSeleccionada;
   UploadTask uploadTask;
   CollectionReference categoriasRef;
+  bool isCategoriaSeleccionada;
+  String _idSenia;
 
   @override
   void initState() {
     listarCateogiras();
-    listarSubCateogiras();
+    isCategoriaSeleccionada = false;
   }
 
   @override
@@ -123,10 +127,20 @@ class _AltaSeniaState extends State<AltaSenia> {
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: DropdownSearch(
+                            key: categoriaKey,
                             items: listaCategorias,
-                            onChanged: (value) {
+                            onChanged: (value) async{
+                              await listarSubCateogiras(value);
+                              subCategoriaKey.currentState.clear();
                               setState(() {
                                 _catSeleccionada = value;
+                                if (value != null) {
+                                  isCategoriaSeleccionada = true;
+                                  subCategoriaKey.currentState.clear();
+                                } else {
+                                  isCategoriaSeleccionada = false;
+                                  subCategoriaKey.currentState.clear();
+                                }
                               });
                             },
                             showSearchBox: true,
@@ -136,10 +150,6 @@ class _AltaSeniaState extends State<AltaSenia> {
                                 color: Colores().colorSombraBotones),
                             showClearButton: true,
                             mode: Mode.DIALOG,
-                            searchBoxDecoration: InputDecoration(
-                              focusColor: Colores().colorSombraBotones,
-                              hintText: "Buscar",
-                            ),
                             dropdownSearchDecoration: InputDecoration(
                                 hintStyle: TextStyle(
                                     fontFamily: 'Trueno',
@@ -166,6 +176,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: DropdownSearch(
+                            key: subCategoriaKey,
+                            enabled: isCategoriaSeleccionada,
                             items: listaSubCategorias,
                             onChanged: (value) {
                               setState(() {
@@ -179,9 +191,6 @@ class _AltaSeniaState extends State<AltaSenia> {
                                 color: Colores().colorSombraBotones),
                             showClearButton: true,
                             mode: Mode.DIALOG,
-                            searchBoxDecoration: InputDecoration(
-                              focusColor: Colores().colorSombraBotones,
-                            ),
                             dropdownSearchDecoration: InputDecoration(
                                 hintStyle: TextStyle(
                                     fontFamily: 'Trueno',
@@ -194,14 +203,13 @@ class _AltaSeniaState extends State<AltaSenia> {
                                   borderSide: BorderSide(
                                       color: Colores().colorSombraBotones),
                                 )),
-                            /*  validator: (dynamic valor) {
+                            validator: (dynamic valor) {
                               if (valor == null) {
                                 return "La sub categoria es requerida";
                               } else {
                                 return null;
                               }
                             },
-                           */
                           ),
                         ),
                         SizedBox(height: 20.0),
@@ -291,7 +299,8 @@ class _AltaSeniaState extends State<AltaSenia> {
   }
 
   Future guardarSenia() async {
-    final destino = 'Videos/$_nombreSenia';
+    _idSenia = new UniqueKey().toString();
+    final destino = 'Videos/$_idSenia';
     String nombreUsuario =
         await _controladorUsuario.obtenerNombreUsuario(_usuarioUID);
 
@@ -310,8 +319,15 @@ class _AltaSeniaState extends State<AltaSenia> {
       con el widget de reproductor de video.
        */
 
-        _controladorSenia.crearYSubirSeniaBytes(_nombreSenia, _descripcionSenia,
-            _catSeleccionada, nombreUsuario, destino, fileWeb);
+        _controladorSenia.crearYSubirSeniaWeb(
+            _idSenia,
+            _nombreSenia,
+            _descripcionSenia,
+            _catSeleccionada,
+            _subCatSeleccionada,
+            nombreUsuario,
+            destino,
+            fileWeb);
       }
     } else {
       /*
@@ -320,8 +336,15 @@ class _AltaSeniaState extends State<AltaSenia> {
       if (archivoDeVideo == null) {
         return;
       } else {
-        _controladorSenia.crearYSubirSenia(_nombreSenia, _descripcionSenia,
-            _catSeleccionada, nombreUsuario, destino, archivoDeVideo);
+        _controladorSenia.crearYSubirSenia(
+            _idSenia,
+            _nombreSenia,
+            _descripcionSenia,
+            _catSeleccionada,
+            _subCatSeleccionada,
+            nombreUsuario,
+            destino,
+            archivoDeVideo);
       }
     }
   }
@@ -333,6 +356,7 @@ class _AltaSeniaState extends State<AltaSenia> {
      */
     setState(() {
       archivoDeVideo = null;
+      fileWeb = null;
       this._url = null;
     });
 
@@ -347,7 +371,7 @@ class _AltaSeniaState extends State<AltaSenia> {
         var fileName = result.files.first.name;
         final blob = html.Blob([fileBytes]);
         //guardo fileWeb como bytes.
-       fileWeb = fileBytes;
+        fileWeb = fileBytes;
 
         // con esta URL reproduzco el video en la web
         this._url = html.Url.createObjectUrlFromBlob(blob);
@@ -418,9 +442,10 @@ class _AltaSeniaState extends State<AltaSenia> {
               mensaje: "El formato del archivo seleccionado no es correcto."
                   "\nEl formato debe ser: mp4, avi, wmv, mov.",
               onPressed: () {
-                Navigator.of(context).pop();
                 archivoDeVideo = null;
+                fileWeb = null;
                 this._url = null;
+                Navigator.of(context).pop();
               },
             );
           });
@@ -434,8 +459,8 @@ class _AltaSeniaState extends State<AltaSenia> {
     listaCategorias = widget.listaCategorias;
   }
 
-  Future<void> listarSubCateogiras() async {
+  Future<void> listarSubCateogiras(String nombreCategoria) async {
     listaSubCategorias = await ControladorCategoria()
-        .listarSubCategoriasxCategoria("CATEGORIA SUB");
+        .listarSubCategoriasPorCategoria(nombreCategoria);
   }
 }

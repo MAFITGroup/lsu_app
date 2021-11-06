@@ -44,7 +44,7 @@ class BuscadorSenias extends SearchDelegate {
           return Card(
               child: ListTile(
             title: Text(todasSenias[index].nombre),
-            subtitle: Text(todasSenias[index].categoria),
+            subtitle: Text("CATEGORIA " + todasSenias[index].categoria),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(
@@ -72,7 +72,7 @@ class BuscadorSenias extends SearchDelegate {
           return Card(
               child: ListTile(
             title: Text(seniasSugeridas[index].nombre),
-            subtitle: Text(seniasSugeridas[index].categoria),
+            subtitle: Text("CATEGORIA: " + seniasSugeridas[index].categoria),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(

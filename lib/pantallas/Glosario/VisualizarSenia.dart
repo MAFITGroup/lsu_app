@@ -21,8 +21,10 @@ import 'package:lsu_app/widgets/TextFieldTexto.dart';
 class VisualizarSenia extends StatefulWidget {
   final Senia senia;
   final bool isUsuarioAdmin;
+  final List subCategorias;
 
-  const VisualizarSenia({Key key, this.senia, this.isUsuarioAdmin})
+  const VisualizarSenia(
+      {Key key, this.senia, this.isUsuarioAdmin, this.subCategorias})
       : super(key: key);
 
   @override
@@ -32,18 +34,25 @@ class VisualizarSenia extends StatefulWidget {
 class _VisualizarSeniaState extends State<VisualizarSenia> {
   File archivoDeVideo;
   Uint8List fileWeb;
-  List listaCategorias;
+  List listaCategorias = [];
+  List listaSubCategorias = [];
   bool modoEditar;
   ControladorSenia _controladorSenia = new ControladorSenia();
   final formKey = new GlobalKey<FormState>();
+  final subCategoriaKey = new GlobalKey<DropdownSearchState>();
+  final categoriaKey = new GlobalKey<DropdownSearchState>();
+  bool isSubCategoriaSeleccionada;
+  TextEditingController _textEditingController;
 
   //usadas para editar
-  dynamic nuevoNombreSenia;
-  dynamic nuevaDescripcionSenia;
-  dynamic nuevaCategoriaSenia;
+  String nuevoNombreSenia;
+  String nuevaDescripcionSenia;
+  String nuevaCategoriaSenia;
+  String nuevaSubCategoriaSenia;
 
   @override
   void initState() {
+    isSubCategoriaSeleccionada = true;
     listarCateogiras();
     setState(() {
       modoEditar = false;
@@ -136,24 +145,33 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: DropdownSearch(
+                            key: categoriaKey,
                             items: listaCategorias,
                             enabled: modoEditar,
                             selectedItem: senia.categoria,
-                            onChanged: (value) {
+                            onChanged: (value) async {
+                              await listarSubCateogiras(value);
+                              subCategoriaKey.currentState.clear();
                               setState(() {
                                 nuevaCategoriaSenia = value;
+                                if (value != null) {
+                                  isSubCategoriaSeleccionada = true;
+                                  subCategoriaKey.currentState.clear();
+                                } else {
+                                  isSubCategoriaSeleccionada = false;
+                                  subCategoriaKey.currentState.clear();
+                                }
                               });
                             },
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,
                                 color: Colores().colorSombraBotones),
-                            dropDownButton: Icon(Icons.arrow_drop_down,
-                                color: Colores().colorSombraBotones),
-                            showClearButton: true,
+                            dropDownButton: modoEditar
+                                ? Icon(Icons.arrow_drop_down,
+                                    color: Colores().colorSombraBotones)
+                                : Container(),
+                            showClearButton: modoEditar ? true : false,
                             mode: Mode.DIALOG,
-                            searchBoxDecoration: InputDecoration(
-                              focusColor: Colores().colorSombraBotones,
-                            ),
                             dropdownSearchDecoration: InputDecoration(
                                 hintStyle: TextStyle(
                                     fontFamily: 'Trueno',
@@ -166,7 +184,58 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                   borderSide: BorderSide(
                                       color: Colores().colorSombraBotones),
                                 )),
-                            autoValidateMode: AutovalidateMode.always,
+                            validator: (dynamic valor) {
+                              if (valor == null) {
+                                return "La categoria es requerida";
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+
+                        // Menu desplegable de SubCategorias
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25, right: 25),
+                          child: DropdownSearch(
+                            key: subCategoriaKey,
+                            items: listaSubCategorias,
+                            enabled: modoEditar && isSubCategoriaSeleccionada,
+                            selectedItem: senia.subCategoria,
+                            onChanged: (value) {
+                              setState(() {
+                                nuevaSubCategoriaSenia = value;
+                              });
+                            },
+                            dropdownBuilderSupportsNullItem: true,
+                            showSearchBox: true,
+                            clearButton: Icon(Icons.close,
+                                color: Colores().colorSombraBotones),
+                            dropDownButton: modoEditar
+                                ? Icon(Icons.arrow_drop_down,
+                                    color: Colores().colorSombraBotones)
+                                : Container(),
+                            showClearButton: modoEditar ? true : false,
+                            mode: Mode.DIALOG,
+                            dropdownSearchDecoration: InputDecoration(
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Trueno',
+                                    fontSize: 12,
+                                    color: Colores().colorSombraBotones),
+                                hintText: "SUB CATEGORIA",
+                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                focusColor: Colores().colorSombraBotones,
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colores().colorSombraBotones),
+                                )),
+                            validator: (dynamic valor) {
+                              if (valor == null) {
+                                return "La sub categoria es requerida";
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
                         ),
 
@@ -189,14 +258,19 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                   if (nuevaCategoriaSenia == null) {
                                     nuevaCategoriaSenia = senia.categoria;
                                   }
+                                  if (nuevaSubCategoriaSenia == null) {
+                                    nuevaSubCategoriaSenia = senia.subCategoria;
+                                  }
                                   if (Validar().camposVacios(formKey)) {
                                     guardarEdicion(
                                         senia.nombre,
                                         senia.descripcion,
                                         senia.categoria,
+                                        senia.subCategoria,
                                         nuevoNombreSenia,
                                         nuevaDescripcionSenia,
-                                        nuevaCategoriaSenia)
+                                        nuevaCategoriaSenia,
+                                        nuevaSubCategoriaSenia)
                                       ..then((userCreds) {
                                         /*
                                         Luego de editar la seña,
@@ -258,6 +332,11 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
     listaCategorias = await ControladorCategoria().listarCategorias();
   }
 
+  Future<void> listarSubCateogiras(String nombreCategoria) async {
+    listaSubCategorias = await ControladorCategoria()
+        .listarSubCategoriasPorCategoria(nombreCategoria);
+  }
+
   void editarSenia() {
     setState(() {
       modoEditar = true;
@@ -285,11 +364,20 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
       String nombreAnterior,
       String descripcionAnterior,
       String categoriaAnterior,
+      String subCategoriaAnterior,
       String nombreNuevo,
       String descripcionNueva,
-      String categoriaNueva) async {
-    _controladorSenia.editarSenia(nombreAnterior, descripcionAnterior,
-        categoriaAnterior, nombreNuevo, descripcionNueva, categoriaNueva);
+      String categoriaNueva,
+      String subCategoriaNueva) async {
+    _controladorSenia.editarSenia(
+        nombreAnterior,
+        descripcionAnterior,
+        categoriaAnterior,
+        subCategoriaAnterior,
+        nombreNuevo,
+        descripcionNueva,
+        categoriaNueva,
+        subCategoriaNueva);
   }
 
   void onSelected(BuildContext context, int item) {
@@ -304,8 +392,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Eliminacion de Seña'),
-                content: Text(
-                    '¿Está seguro que desea eliminar la seña?'),
+                content: Text('¿Está seguro que desea eliminar la seña?'),
                 actions: [
                   TextButton(
                       child: Text('OK',
@@ -313,13 +400,10 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                               color: Colores().colorAzul,
                               fontFamily: 'Trueno',
                               fontSize: 11.0,
-                              decoration: TextDecoration
-                                  .underline)),
+                              decoration: TextDecoration.underline)),
                       onPressed: () {
-                        eliminarSenia(
-                            widget.senia.nombre,
-                            widget.senia.descripcion,
-                            widget.senia.categoria)
+                        eliminarSenia(widget.senia.nombre,
+                            widget.senia.descripcion, widget.senia.categoria)
                           ..then((userCreds) {
                             /*
                                     Luego de eliminar la seña,
@@ -329,44 +413,34 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                             showDialog(
                                 useRootNavigator: false,
                                 context: context,
-                                builder: (BuildContext
-                                context) {
+                                builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text(
-                                        'Eliminacion de Seña'),
+                                    title: Text('Eliminacion de Seña'),
                                     content: Text(
                                         'La seña ha sido eliminada correctamente'),
                                     actions: [
                                       TextButton(
-                                          child: Text(
-                                              'Ok',
+                                          child: Text('Ok',
                                               style: TextStyle(
-                                                  color: Colores()
-                                                      .colorAzul,
-                                                  fontFamily:
-                                                  'Trueno',
-                                                  fontSize:
-                                                  11.0,
-                                                  decoration:
-                                                  TextDecoration.underline)),
+                                                  color: Colores().colorAzul,
+                                                  fontFamily: 'Trueno',
+                                                  fontSize: 11.0,
+                                                  decoration: TextDecoration
+                                                      .underline)),
                                           onPressed: () {
                                             /*Al presionar Ok, cierro la el dialogo y cierro la
                                                    ventana de visualizacion seña
 
                                                      */
-                                            Navigator.of(
-                                                context)
-                                                .popUntil(
-                                                    (route) =>
-                                                route.isFirst);
+                                            Navigator.of(context).popUntil(
+                                                (route) => route.isFirst);
                                           })
                                     ],
                                   );
                                 });
                             //TODO mensaje si falla.
                           }).catchError((e) {
-                            ErrorHandler()
-                                .errorDialog(context, e);
+                            ErrorHandler().errorDialog(context, e);
                           });
                       }),
                   TextButton(
@@ -375,8 +449,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                               color: Colores().colorAzul,
                               fontFamily: 'Trueno',
                               fontSize: 11.0,
-                              decoration: TextDecoration
-                                  .underline)),
+                              decoration: TextDecoration.underline)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       })
