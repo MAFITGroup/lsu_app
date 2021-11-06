@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -16,13 +15,12 @@ import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
-import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
-import 'package:universal_html/html.dart' as html;
+import 'package:path/path.dart' as p;
 
 class AltaContenido extends StatefulWidget {
   @override
@@ -40,13 +38,16 @@ class _AltaContenidoState extends State<AltaContenido> {
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
   String _tituloContenido;
   String _descripcionContenido;
+  String _autorContenido;
   File archivo;
   String _url;
+  String fileExtension;
   Uint8List fileWeb;
   final formKey = new GlobalKey<FormState>();
   String _usuarioUID = FirebaseAuth.instance.currentUser.uid;
   dynamic _catSeleccionada;
   UploadTask uploadTask;
+  String archivoNombre = 'Seleccione un archivo en formato pdf';
 
   @override
   void initState() {
@@ -96,6 +97,16 @@ class _AltaContenidoState extends State<AltaContenido> {
                           value.isEmpty ? 'La descripción es requerida' : null),
                         ),
                         SizedBox(height: 15.0),
+                        TextFieldTexto(
+                          nombre: 'AUTOR',
+                          icon: Icon(Iconos.hand),
+                          valor: (value) {
+                            this._autorContenido = value;
+                          },
+                          validacion: ((value) =>
+                          value.isEmpty ? 'El autor es requerido' : null),
+                        ),
+                        SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
@@ -136,20 +147,36 @@ class _AltaContenidoState extends State<AltaContenido> {
                         Boton(
                           titulo: 'SELECCIONAR ARCHIVO',
                           onTap: () {
-                            obtenerArchivo()
-                              ..then((userCreds) {
-                                showCupertinoDialog(
-                                    context: context,
-                                    barrierDismissible: true,
-                                    builder: (context) {
-                                      return AlertDialog_cargaArchivo();
-                                    });
-                              });
+                            obtenerArchivo();
                           },
                         ),
+                        Text(
+                            archivoNombre,
+                            style: TextStyle(
+                                color: Colores().colorAzul,
+                                fontFamily: 'Trueno',
+                                fontSize: 11.0,
+                                decoration: TextDecoration.underline
+                            )),
                         Boton(
                             titulo: 'GUARDAR',
                             onTap: () {
+                              if (kIsWeb
+                                  ? fileWeb == null
+                                  : archivo == null) {
+                                return showCupertinoDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (context) {
+                                      return DialogoAlerta(
+                                        tituloMensaje: "Advertencia",
+                                        mensaje: "No ha seleccionado un archivo.",
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      );
+                                    });
+                              }
                               if (Validar().camposVacios(formKey) &&
                                   /*verifico que el archivo no sea null dependiendo
                                   si estoy en la web
@@ -157,24 +184,40 @@ class _AltaContenidoState extends State<AltaContenido> {
                                   (kIsWeb
                                       ? fileWeb != null
                                       : archivo != null) &&
-                                  _catSeleccionada != null) {
+                                  _catSeleccionada != null && verificarFormato(fileExtension)) {
                                 guardarContenido().then((userCreds) {
                                   showCupertinoDialog(
+                                      useRootNavigator: false,
                                       context: context,
-                                      barrierDismissible: true,
-                                      builder: (context) {
-                                        return AlertDialog_altaConfirmacion();
-                                      }); //TODO mensaje si falla.
-                                }).catchError((e) {
-                                  ErrorHandler().errorDialog(context, e);
+                                      builder: (BuildContext contextR){
+                                        return AlertDialog(
+                                          title: Text('Alta de Contenido'),
+                                          content: Text(
+                                              'El contenido ha sido guardado correctamente'),
+                                          actions: [
+                                            TextButton(
+                                                child: Text('Ok',
+                                                    style: TextStyle(
+                                                        color:
+                                                        Colores().colorAzul,
+                                                        fontFamily: 'Trueno',
+                                                        fontSize: 11.0,
+                                                        decoration:
+                                                        TextDecoration
+                                                            .underline)),
+                                                onPressed: () {
+                                                  /*Al presionar Ok, cierro la el dialogo y cierro la
+                                                   ventana de alta contenido
+                                                     */
+                                                  Navigator.of(context)
+                                                      .popUntil((route) =>
+                                                  route.isFirst);
+                                                })
+                                          ],
+                                        );
+                                      }
+                                  );
                                 });
-                              } else {
-                                showCupertinoDialog(
-                                    context: context,
-                                    barrierDismissible: true,
-                                    builder: (context) {
-                                      return AlertDialog_validarAltaContenido();
-                                    });
                               }
                             }
                         ),
@@ -191,7 +234,6 @@ class _AltaContenidoState extends State<AltaContenido> {
   }
 
   Future guardarContenido() async {
-    String url;
     final destino = 'Biblioteca/$_tituloContenido';
     String nombreUsuario =
     await _controladorUsuario.obtenerNombreUsuario(_usuarioUID);
@@ -204,13 +246,12 @@ class _AltaContenidoState extends State<AltaContenido> {
       } else {
         /*GUARDA EL ARCHIVO WEB WEB
 
-      Si la plataforma es web, guarda el archivo en byte,
-      ya que es el tipo de archivo que se puede reproducir
-      con el widget de reproductor de video.*/
+      Si la plataforma es web, guarda el archivo en byte.*/
 
         _controladorContenido.crearYSubirContenidoBytes(
             _tituloContenido,
             _descripcionContenido,
+            _autorContenido,
             _catSeleccionada,
             nombreUsuario,
             destino,
@@ -224,6 +265,7 @@ class _AltaContenidoState extends State<AltaContenido> {
       } else {
         _controladorContenido.crearYSubirContenido(
             _tituloContenido,
+            _autorContenido,
             _descripcionContenido,
             _catSeleccionada,
             nombreUsuario,
@@ -246,49 +288,75 @@ class _AltaContenidoState extends State<AltaContenido> {
     FilePickerResult result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf']); //te permite cargar pdf
+    if (result == null) return;
 
     if (kIsWeb) {
       if (result.files.first != null) {
         var fileBytes = result.files.first.bytes;
         var fileName = result.files.first.name;
-        final blob = html.Blob([fileBytes]);
-        this._url = html.Url.createObjectUrlFromBlob(blob);
-        html.File file = html.File(fileBytes, fileName);
-        await _getHtmlFileContent(file);
+        //guardo fileWeb como bytes.
+        fileWeb = fileBytes;
+
+        if (fileName != null) {
+          archivoNombre = p.basename(fileName);
+          fileExtension = p.extension(fileName);
+          verificarFormato(fileExtension);
+          setState(() {
+            archivoNombre;
+          });
+
+        }
+
       }
     } else {
       if (result != null) {
         File file = File(result.files.single.path);
         if (file != null) {
           setState(() {
-            archivo = file;
+            if (file.path != null) {
+              fileExtension = p.extension(file.path);
+              archivoNombre = p.basename(file.path);
+              if (verificarFormato(fileExtension)) {
+                archivo = file;
+                setState(() {
+                  archivoNombre;
+                });
+              }
+            }
           });
         }
       }
     }
   }
 
-  Future<Uint8List> _getHtmlFileContent(html.File blob) async {
-    final reader = html.FileReader();
-    reader.readAsDataUrl(blob.slice(0, blob.size, blob.type));
-    reader.onLoadEnd.listen((event) {
-      Uint8List data =
-          Base64Decoder().convert(reader.result.toString().split(",").last);
-      fileWeb = data;
-    }).onData((data) {
-      fileWeb =
-          Base64Decoder().convert(reader.result.toString().split(",").last);
-      return fileWeb;
-    });
-    while (fileWeb == null) {
-      await new Future.delayed(const Duration(milliseconds: 1));
-      if (fileWeb != null) {
-        break;
-      }
+  bool verificarFormato(String fileExtension) {
+    /*
+    Chequeo extensiones para verificar que el archivo que me suban no sea de otro formato.
+     */
+    if (fileExtension != ".pdf") {
+      showCupertinoDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) {
+            return DialogoAlerta(
+              tituloMensaje: "Formato Incorrecto",
+              mensaje: "El formato del archivo seleccionado no es correcto."
+                  "\nEl formato debe ser: pdf",
+              onPressed: () {
+                setState(() {
+                  archivoNombre = 'Seleccione un archivo en formato pdf';
+                });
+                Navigator.of(context).pop();
+
+              },
+            );
+          });
+      archivo = null;
+      this._url = null;
+      return false;
+
+    } else {
+      return true;
     }
-    setState(() {
-      archivo = File.fromRawPath(fileWeb);
-    });
-    return fileWeb;
   }
 }

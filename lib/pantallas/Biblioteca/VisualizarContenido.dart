@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -8,24 +6,31 @@ import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Iconos.dart';
+import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
 import 'VisualizarPDF.dart';
-
 
 class VisualizarContenido extends StatefulWidget {
   final Contenido contenido;
   final bool isUsuarioAdmin;
   final String archivoRef;
   final String titulo;
+  final String autor;
 
-  const VisualizarContenido({Key key, this.contenido, this.isUsuarioAdmin, this.archivoRef, this.titulo })
+  const VisualizarContenido(
+      {Key key,
+      this.contenido,
+      this.isUsuarioAdmin,
+      this.archivoRef,
+      this.titulo, this.autor})
       : super(key: key);
 
   @override
@@ -43,11 +48,11 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
   ControladorContenido _controladorContenido = new ControladorContenido();
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
   final formKey = new GlobalKey<FormState>();
-  String pdfFilePath;
 
   //usadas para editar
   dynamic nuevoTituloContenido;
   dynamic nuevaDescripcionContenido;
+  dynamic nuevoAutorContenido;
   dynamic nuevaCategoriaContenido;
 
   @override
@@ -130,6 +135,24 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                               nuevaDescripcionContenido = value;
                             });
                           },
+                          validacion: ((value) =>
+                          value.isEmpty ? 'La descrpición es requerida' : null),
+                        ),
+                        SizedBox(height: 15.0),
+                        TextFieldTexto(
+                          nombre: 'AUTOR',
+                          icon: Icon(Iconos.hand),
+                          botonHabilitado: modoEditar,
+                          controlador: modoEditar
+                              ? null
+                              : TextEditingController(text: contenido.autor),
+                          valor: (value) {
+                            setState(() {
+                              nuevoAutorContenido = value;
+                            });
+                          },
+                          validacion: ((value) =>
+                          value.isEmpty ? 'El autor es requerido' : null),
                         ),
                         SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
@@ -144,6 +167,8 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                 nuevaCategoriaContenido = value;
                               });
                             },
+                            validator: ((value) =>
+                            value == null ? 'La categoría es requerida' : null),
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,
                                 color: Colores().colorSombraBotones),
@@ -170,18 +195,19 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                           ),
                         ),
                         SizedBox(height: 20.0),
-                        Boton(
-                          titulo: 'VER ARCHIVO',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VisualizarPDF(
-                                      archivoRef : contenido.urlarchivo,
-                                     titulo: contenido.titulo,
-                                    )));
-
-                          },
+                        Visibility(
+                          visible: !modoEditar,
+                          child: Boton(
+                              titulo: 'VER ARCHIVO',
+                              onTap: ()   {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => visualizarPDF(
+                                          archivoRef : contenido.urlarchivo,
+                                          titulo: contenido.titulo,
+                                        )));
+                              }),
                         ),
                         SizedBox(height: 20.0),
                         modoEditar
@@ -196,6 +222,9 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                   if (nuevoTituloContenido == null) {
                                     nuevoTituloContenido = contenido.titulo;
                                   }
+                                  if (nuevoAutorContenido == null) {
+                                    nuevoAutorContenido = contenido.autor;
+                                  }
                                   if (nuevaDescripcionContenido == null) {
                                     nuevaDescripcionContenido =
                                         contenido.descripcion;
@@ -209,9 +238,11 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                         contenido.titulo,
                                         contenido.descripcion,
                                         contenido.categoria,
+                                        contenido.autor,
                                         nuevoTituloContenido,
                                         nuevaDescripcionContenido,
-                                        nuevaCategoriaContenido)
+                                        nuevaCategoriaContenido,
+                                        nuevoAutorContenido)
                                       ..then((userCreds) {
                                         /*
                                         Luego de editar el contenido,
@@ -240,7 +271,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                                                   TextDecoration
                                                                       .underline)),
                                                       onPressed: () {
-                                                        /*Al presionar Ok, cierro la el dialogo y cierro la
+                                                        /*Al presionar Ok, cierro el dialogo y cierro la
                                                        ventana de alta contenido
 
                                                          */
@@ -270,7 +301,6 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
     );
   }
 
-
   void editarContenido() {
     setState(() {
       modoEditar = true;
@@ -283,9 +313,10 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
     });
   }
 
+
   Future eliminarContenido(
-      String titulo, String descripcion, String categoria) async {
-    _controladorContenido.eliminarContenido(titulo, descripcion, categoria);
+      String titulo, String descripcion, String categoria, String autor) async {
+    _controladorContenido.eliminarContenido(titulo, descripcion, categoria, autor);
   }
 
   /*
@@ -294,15 +325,17 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
   el identificador del documento ya existente
   y setear los nuevos valores.
    */
-  Future guardarEdicion(
-      String tituloAnterior,
+  Future guardarEdicion(String tituloAnterior,
       String descripcionAnterior,
       String categoriaAnterior,
+      String autorAnterior,
       String tituloNuevo,
       String descripcionNueva,
-      String categoriaNueva) async {
+      String categoriaNueva,
+      String autorNuevo
+      ) async {
     _controladorContenido.editarContenido(tituloAnterior, descripcionAnterior,
-        categoriaAnterior, tituloNuevo, descripcionNueva, categoriaNueva);
+        categoriaAnterior, autorAnterior, tituloNuevo, descripcionNueva, categoriaNueva, autorNuevo );
   }
 
   void onSelected(BuildContext context, int item) {
@@ -317,7 +350,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Eliminacion de Contenido'),
-                content: Text('El Contenido ha sido eliminado correctamente'),
+                content: Text('¿Confirma que desea eliminar el contenido seleccionado?'),
                 actions: [
                   TextButton(
                       child: Text('Ok',
@@ -327,62 +360,35 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                               fontSize: 11.0,
                               decoration: TextDecoration.underline)),
                       onPressed: () {
-                        /*Al presionar Ok, cierro la el dialogo y cierro la
-                                                   ventana de visualizacion contenido
-
-                                                     */
-                        Navigator.of(context)
-                            .popUntil((route) => route.isFirst);
+                        Navigator.of(context).pop();
+                        eliminarContenido(widget.contenido.titulo, widget.contenido.descripcion, widget.contenido.categoria, widget.contenido.autor);
+                        showCupertinoDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) {
+                              return DialogoAlerta(
+                                tituloMensaje: "Contenido Eliminado",
+                                mensaje:
+                                "El contenido ha sido eliminado correctamente.",
+                                onPressed: () {
+                                  Navegacion(context).navegarABiblioteca();
+                                },
+                              );
+                            });
+                      }),
+                  TextButton(
+                      child: Text('Cancelar',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration.underline)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
                       })
                 ],
               );
             });
-
-        /*eliminarContenido(contenido.titulo, contenido.descripcion,
-              contenido.categoria)
-            ..then((userCreds) {
-              /*
-                                    Luego de eliminar el contenido,
-                                    creo un dialogo de alerta indicando que se
-                                    elimino de forma ok
-                                     */
-              showDialog(
-                  useRootNavigator: false,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Eliminacion de Contenido'),
-                      content: Text(
-                          'El Contenido ha sido eliminado correctamente'),
-                      actions: [
-                        TextButton(
-                            child: Text('Ok',
-                                style: TextStyle(
-                                    color:
-                                    Colores().colorAzul,
-                                    fontFamily: 'Trueno',
-                                    fontSize: 11.0,
-                                    decoration:
-                                    TextDecoration
-                                        .underline)),
-                            onPressed: () {
-                              /*Al presionar Ok, cierro la el dialogo y cierro la
-                                                   ventana de visualizacion contenido
-
-                                                     */
-                              Navigator.of(context)
-                                  .popUntil((route) =>
-                              route.isFirst);
-                            })
-                      ],
-                    );
-                  });
-              //TODO mensaje si falla.
-            }).catchError((e) {
-              ErrorHandler().errorDialog(context, e);
-            });
-        },*/
-
         break;
     }
   }

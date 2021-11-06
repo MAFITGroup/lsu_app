@@ -221,7 +221,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                     builder: (context) {
                                       return DialogoAlerta(
                                         tituloMensaje: "Advertencia",
-                                        mensaje: "No ha seleccionado un video.",
+                                        mensaje: "No ha seleccionado un archivo.",
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },

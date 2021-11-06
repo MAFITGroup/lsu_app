@@ -12,6 +12,7 @@ class ControladorContenido {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
   String titulo;
+  String autor;
   String categoria;
   String usuarioAlta;
   String descripcion;
@@ -20,21 +21,24 @@ class ControladorContenido {
   String documentID;
 
   /*
-  Se usa para obtener el objeto Senia
+  Se usa para obtener el objeto Contenido
   cuando entro a Visualizarla
    */
   Future<Contenido> obtenerContenido(String tituloContenido, String descripcionContenido,
-      String categoriaContenido) async {
+      String categoriaContenido, String autorContenido) async {
     await firestore
         .collection('biblioteca')
         .where('titulo', isEqualTo: tituloContenido)
         .where('descripcion', isEqualTo: descripcionContenido)
         .where('categoria', isEqualTo: categoriaContenido)
+        .where('autor', isEqualTo: autorContenido)
+
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         titulo = doc['titulo'];
         descripcion = doc['descripcion'];
+        autor = doc['autor'];
         usuarioAlta = doc['usuarioAlta'];
         categoria = doc['categoria'];
         urlarchivo = doc['archivoRef'];
@@ -43,6 +47,7 @@ class ControladorContenido {
         contenido = new Contenido();
         contenido.titulo = titulo;
         contenido.descripcion = descripcion;
+        contenido.autor = autor;
         contenido.usuarioAlta = usuarioAlta;
         contenido.categoria = categoria;
         contenido.urlarchivo = urlarchivo;
@@ -56,17 +61,20 @@ class ControladorContenido {
       String tituloAnterior,
       String descripcionAnterior,
       String categoriaAnterior,
+      String autorAnterior,
       String tituloNuevo,
       String descripcionNueva,
-      String categoriaNueva) async {
+      String categoriaNueva,
+      String autorNuevo) async {
     Contenido contenido = await obtenerContenido(
-        tituloAnterior, descripcionAnterior, categoriaAnterior);
+        tituloAnterior, descripcionAnterior, categoriaAnterior, autorAnterior);
     String docId = contenido.documentID;
 
     firestore.collection("biblioteca").doc(docId).update({
       'titulo': tituloNuevo,
       'descripcion': descripcionNueva,
       'categoria': categoriaNueva,
+      'autor' : autorNuevo,
     }).then((value) => print("Contenido Editado correctamente"));
   }
 
@@ -74,8 +82,9 @@ class ControladorContenido {
       String titulo,
       String descripcion,
       String categoria,
+      String autor,
       ) async {
-    Contenido contenido = await obtenerContenido(titulo, descripcion, categoria);
+    Contenido contenido = await obtenerContenido(titulo, descripcion, categoria, autor);
     String docId = contenido.documentID;
 
     // primero elimino la senia
@@ -85,7 +94,7 @@ class ControladorContenido {
         .delete()
         .then((value) => print("Contenido eliminado correctamente"));
 
-    // luego elimino el video
+    // luego elimino el archivo
 
     await eliminarArchivoContenido(contenido.urlarchivo);
   }
@@ -101,6 +110,7 @@ class ControladorContenido {
       String titulo,
       String descripcion,
       String categoria,
+      String autor,
       String usuarioAlta,
       String destino,
       File archivo) async {
@@ -129,6 +139,7 @@ class ControladorContenido {
         'documentID': docId,
         'usuarioAlta': usuarioAlta,
         'titulo': titulo,
+        'autor' : autor,
         'descripcion': descripcion,
         'categoria': categoria,
         'archivoRef': downloadLink,
@@ -148,6 +159,7 @@ class ControladorContenido {
   Future<UploadTask> crearYSubirContenidoBytes(
       String titulo,
       String descripcion,
+      String autor,
       String categoria,
       String usuarioAlta,
       String destino,
@@ -160,7 +172,7 @@ class ControladorContenido {
     String docId = new UniqueKey().toString();
     try {
       final ref = FirebaseStorage.instance.ref(destino);
-      subida = ref.putData(archivo, SettableMetadata(contentType: 'pdf'));
+      subida = ref.putData(archivo, SettableMetadata(contentType: 'application/pdf'));
       downloadLink = await (await subida).ref.getDownloadURL();
       /*
       Creo la senia luego de obtener el link de la url
@@ -169,6 +181,7 @@ class ControladorContenido {
         'documentID': docId,
         'usuarioAlta': usuarioAlta,
         'titulo': titulo,
+        'autor': autor,
         'descripcion': descripcion,
         'categoria': categoria,
         'archivoRef': downloadLink,
@@ -180,12 +193,6 @@ class ControladorContenido {
     }
   }
 
-  /*String obtenerVideoDownloadLink(String url) {
-    if (url.isNotEmpty) {
-      urlarchivo = url;
-    }
-    return urlarchivo;
-  }*/
 
   Future<List<Contenido>> obtenerTodosContenido() async {
     List<Contenido> lista = [];
@@ -196,6 +203,7 @@ class ControladorContenido {
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         titulo = doc['titulo'];
+        autor = doc['autor'];
         descripcion = doc['descripcion'];
         usuarioAlta = doc['usuarioAlta'];
         categoria = doc['categoria'];
@@ -205,6 +213,7 @@ class ControladorContenido {
         contenido = new Contenido();
 
         contenido.titulo = titulo;
+        contenido.autor = autor;
         contenido.descripcion = descripcion;
         contenido.usuarioAlta = usuarioAlta;
         contenido.categoria = categoria;
