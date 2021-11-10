@@ -47,7 +47,7 @@ class _AltaContenidoState extends State<AltaContenido> {
   String _usuarioUID = FirebaseAuth.instance.currentUser.uid;
   dynamic _catSeleccionada;
   UploadTask uploadTask;
-  String archivoNombre = 'Seleccione un archivo en formato pdf';
+  String archivoNombre = 'Seleccione un archivo pdf';
 
   @override
   void initState() {
@@ -147,14 +147,15 @@ class _AltaContenidoState extends State<AltaContenido> {
                             obtenerArchivo();
                           },
                         ),
+                        SizedBox(height: 5.0),
                         Text(
                             archivoNombre,
                             style: TextStyle(
                                 color: Colores().colorAzul,
                                 fontFamily: 'Trueno',
                                 fontSize: 11.0,
-                                decoration: TextDecoration.underline
                             )),
+                        SizedBox(height: 5.0),
                         Boton(
                             titulo: 'GUARDAR',
                             onTap: () {
@@ -190,7 +191,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                                         return AlertDialog(
                                           title: Text('Alta de Contenido'),
                                           content: Text(
-                                              'El contenido ha sido guardado correctamente'),
+                                              'El contenido ha sido guardado correctamente \n El mismo podrá tardar unos minutos en visualizarse.'),
                                           actions: [
                                             TextButton(
                                                 child: Text('Ok',
@@ -231,7 +232,8 @@ class _AltaContenidoState extends State<AltaContenido> {
   }
 
   Future guardarContenido() async {
-    final destino = 'Biblioteca/$_tituloContenido';
+    String docID = new UniqueKey().toString();
+    final destino = 'Biblioteca/$docID';
     String nombreUsuario =
     await _controladorUsuario.obtenerNombreUsuario(_usuarioUID);
 
@@ -245,7 +247,8 @@ class _AltaContenidoState extends State<AltaContenido> {
 
       Si la plataforma es web, guarda el archivo en byte.*/
 
-        _controladorContenido.crearYSubirContenidoBytes(
+        _controladorContenido.crearYSubirContenidoWeb(
+            docID,
             _tituloContenido,
             _descripcionContenido,
             _autorContenido,
@@ -261,6 +264,7 @@ class _AltaContenidoState extends State<AltaContenido> {
         return;
       } else {
         _controladorContenido.crearYSubirContenido(
+            docID,
             _tituloContenido,
             _autorContenido,
             _descripcionContenido,

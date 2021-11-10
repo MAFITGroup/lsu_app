@@ -82,12 +82,18 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                         itemBuilder: (context) => [
                           PopupMenuItem(
                               value: 0,
-                              child: Text(!modoEditar
-                                  ? "Editar Seña"
-                                  : "Cancelar Editar")),
+                              child: ListTile(
+                                  leading: Icon(!modoEditar
+                                      ? Icons.edit
+                                      : Icons.cancel_outlined),
+                                  title: Text(!modoEditar
+                                      ? "Editar Seña"
+                                      : "Cancelar Editar"))),
                           PopupMenuItem(
                             value: 1,
-                            child: Text("Eliminar Seña"),
+                            child: ListTile(
+                              leading: Icon(Icons.delete_forever_outlined),
+                              title: Text("Eliminar Seña")),
                           )
                         ],
                       ),

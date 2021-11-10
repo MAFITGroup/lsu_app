@@ -9,6 +9,7 @@ import 'package:lsu_app/pantallas/Gestion%20de%20Usuario/Perfil.dart';
 import 'package:lsu_app/pantallas/Glosario/AltaSenia.dart';
 import 'package:lsu_app/pantallas/Glosario/Glosario.dart';
 import 'package:lsu_app/pantallas/Login/Login.dart';
+import 'package:lsu_app/pantallas/Login/ManualDeUsuario.dart';
 import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/pantallas/Login/Principal.dart';
 import 'package:lsu_app/pantallas/Login/Registrarse.dart';
@@ -182,6 +183,13 @@ class Navegacion {
         context,
         MaterialPageRoute(
           builder: (context) => Noticias(),
+        ));
+  }
+  void navegarManualDeUsuario() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ManualDeUsuario(),
         ));
   }
 

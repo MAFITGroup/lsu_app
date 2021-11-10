@@ -30,7 +30,8 @@ class VisualizarContenido extends StatefulWidget {
       this.contenido,
       this.isUsuarioAdmin,
       this.archivoRef,
-      this.titulo, this.autor})
+      this.titulo,
+      this.autor})
       : super(key: key);
 
   @override
@@ -85,12 +86,18 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                         itemBuilder: (context) => [
                           PopupMenuItem(
                               value: 0,
-                              child: Text(!modoEditar
-                                  ? "Editar Contenido"
-                                  : "Cancelar Editar")),
+                              child: ListTile(
+                                  leading: Icon(!modoEditar
+                                      ? Icons.edit
+                                      : Icons.cancel_outlined),
+                                  title: Text(!modoEditar
+                                      ? "Editar Contenido"
+                                      : "Cancelar Editar"))),
                           PopupMenuItem(
                             value: 1,
-                            child: Text("Eliminar Contenido"),
+                            child: ListTile(
+                                leading: Icon(Icons.delete_forever_outlined),
+                                title: Text("Eliminar Contenido")),
                           )
                         ],
                       ),
@@ -135,8 +142,9 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                               nuevaDescripcionContenido = value;
                             });
                           },
-                          validacion: ((value) =>
-                          value.isEmpty ? 'La descrpición es requerida' : null),
+                          validacion: ((value) => value.isEmpty
+                              ? 'La descrpición es requerida'
+                              : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldTexto(
@@ -152,7 +160,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             });
                           },
                           validacion: ((value) =>
-                          value.isEmpty ? 'El autor es requerido' : null),
+                              value.isEmpty ? 'El autor es requerido' : null),
                         ),
                         SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
@@ -167,8 +175,9 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                 nuevaCategoriaContenido = value;
                               });
                             },
-                            validator: ((value) =>
-                            value == null ? 'La categoría es requerida' : null),
+                            validator: ((value) => value == null
+                                ? 'La categoría es requerida'
+                                : null),
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,
                                 color: Colores().colorSombraBotones),
@@ -196,14 +205,14 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                           visible: !modoEditar,
                           child: Boton(
                               titulo: 'VER ARCHIVO',
-                              onTap: ()   {
+                              onTap: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => visualizarPDF(
-                                          archivoRef : contenido.urlarchivo,
-                                          titulo: contenido.titulo,
-                                        )));
+                                              archivoRef: contenido.urlarchivo,
+                                              titulo: contenido.titulo,
+                                            )));
                               }),
                         ),
                         SizedBox(height: 20.0),
@@ -310,10 +319,10 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
     });
   }
 
-
   Future eliminarContenido(
       String titulo, String descripcion, String categoria, String autor) async {
-    _controladorContenido.eliminarContenido(titulo, descripcion, categoria, autor);
+    _controladorContenido.eliminarContenido(
+        titulo, descripcion, categoria, autor);
   }
 
   /*
@@ -322,17 +331,24 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
   el identificador del documento ya existente
   y setear los nuevos valores.
    */
-  Future guardarEdicion(String tituloAnterior,
+  Future guardarEdicion(
+      String tituloAnterior,
       String descripcionAnterior,
       String categoriaAnterior,
       String autorAnterior,
       String tituloNuevo,
       String descripcionNueva,
       String categoriaNueva,
-      String autorNuevo
-      ) async {
-    _controladorContenido.editarContenido(tituloAnterior, descripcionAnterior,
-        categoriaAnterior, autorAnterior, tituloNuevo, descripcionNueva, categoriaNueva, autorNuevo );
+      String autorNuevo) async {
+    _controladorContenido.editarContenido(
+        tituloAnterior,
+        descripcionAnterior,
+        categoriaAnterior,
+        autorAnterior,
+        tituloNuevo,
+        descripcionNueva,
+        categoriaNueva,
+        autorNuevo);
   }
 
   void onSelected(BuildContext context, int item) {
@@ -347,7 +363,8 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Eliminacion de Contenido'),
-                content: Text('¿Confirma que desea eliminar el contenido seleccionado?'),
+                content: Text(
+                    '¿Confirma que desea eliminar el contenido seleccionado?'),
                 actions: [
                   TextButton(
                       child: Text('Ok',
@@ -358,7 +375,11 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                               decoration: TextDecoration.underline)),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        eliminarContenido(widget.contenido.titulo, widget.contenido.descripcion, widget.contenido.categoria, widget.contenido.autor);
+                        eliminarContenido(
+                            widget.contenido.titulo,
+                            widget.contenido.descripcion,
+                            widget.contenido.categoria,
+                            widget.contenido.autor);
                         showCupertinoDialog(
                             context: context,
                             barrierDismissible: true,
@@ -366,12 +387,15 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                               return DialogoAlerta(
                                 tituloMensaje: "Contenido Eliminado",
                                 mensaje:
-                                "El contenido ha sido eliminado correctamente.",
+                                    "El contenido ha sido eliminado correctamente.",
                                 onPressed: () {
-                                  Navegacion(context).navegarABiblioteca();
+                                  Navigator.of(context)
+                                      .popUntil((route) => route.isFirst);
                                 },
                               );
-                            });
+                            }).catchError((e) {
+                          ErrorHandler().errorDialog(context, e);
+                        });
                       }),
                   TextButton(
                       child: Text('Cancelar',

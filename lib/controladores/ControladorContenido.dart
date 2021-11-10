@@ -87,7 +87,7 @@ class ControladorContenido {
     Contenido contenido = await obtenerContenido(titulo, descripcion, categoria, autor);
     String docId = contenido.documentID;
 
-    // primero elimino la senia
+    // primero elimino el contenido
     await firestore
         .collection("biblioteca")
         .doc(docId)
@@ -96,17 +96,18 @@ class ControladorContenido {
 
     // luego elimino el archivo
 
-    await eliminarArchivoContenido(contenido.urlarchivo);
+    await eliminarArchivoContenido(contenido.documentID);
   }
 
-  Future eliminarArchivoContenido(String archivoRef) async{
+  Future eliminarArchivoContenido(String docID) async{
     await storage
-        .refFromURL(archivoRef)
+        .ref("Biblioteca/$docID")
         .delete()
         .then((value) => print("Archivo eliminado correctamente"));
   }
 
   Future<UploadTask> crearYSubirContenido(
+      String docID,
       String titulo,
       String descripcion,
       String categoria,
@@ -119,7 +120,6 @@ class ControladorContenido {
      */
     UploadTask subida;
     String downloadLink;
-    String docId = new UniqueKey().toString();
     try {
       final ref = FirebaseStorage.instance.ref(destino);
       subida = ref.putFile(archivo);
@@ -129,14 +129,14 @@ class ControladorContenido {
       /*
       Creo el contenido luego de obtener el link de la url
        */
-      await firestore.collection("biblioteca").doc(docId).set({
+      await firestore.collection("biblioteca").doc(docID).set({
         /*
         guardo el docId porque me sirve para luego
         al editar, matchear el documento con el id
         correspondiente a la coleccion para saber identificar
         el doc a editar.
          */
-        'documentID': docId,
+        'documentID': docID,
         'usuarioAlta': usuarioAlta,
         'titulo': titulo,
         'autor' : autor,
@@ -156,7 +156,8 @@ class ControladorContenido {
   desde la web, ya que el reproductor de video es null en la web
   por lo tanto se pasa como @param un tipo de dato Uint8List
    */
-  Future<UploadTask> crearYSubirContenidoBytes(
+  Future<UploadTask> crearYSubirContenidoWeb(
+      String docID,
       String titulo,
       String descripcion,
       String autor,
@@ -169,7 +170,6 @@ class ControladorContenido {
      */
     UploadTask subida;
     String downloadLink;
-    String docId = new UniqueKey().toString();
     try {
       final ref = FirebaseStorage.instance.ref(destino);
       subida = ref.putData(archivo, SettableMetadata(contentType: 'application/pdf'));
@@ -177,8 +177,8 @@ class ControladorContenido {
       /*
       Creo la senia luego de obtener el link de la url
        */
-      await firestore.collection("biblioteca").doc(docId).set({
-        'documentID': docId,
+      await firestore.collection("biblioteca").doc(docID).set({
+        'documentID': docID,
         'usuarioAlta': usuarioAlta,
         'titulo': titulo,
         'autor': autor,

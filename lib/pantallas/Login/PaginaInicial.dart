@@ -48,6 +48,13 @@ class _PaginaInicialState extends State<PaginaInicial> {
                     PopupMenuItem(
                         value: 1,
                         child: Text("Perfil")),
+                    PopupMenuItem(
+                        value: 2,
+                        child: ListTile(
+                          leading: Icon(Icons.picture_as_pdf_outlined),
+                            title: Text("Ayuda"),
+
+                        )),
                   ],
             ),
           ],
@@ -107,6 +114,10 @@ class _PaginaInicialState extends State<PaginaInicial> {
         break;
       case 1:
         Navegacion(context).navegarAPerfil(usuario);
+        break;
+      case 2:
+        Navegacion(context).navegarManualDeUsuario();
+        break;
     }
   }
 

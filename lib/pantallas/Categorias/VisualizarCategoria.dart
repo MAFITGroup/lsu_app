@@ -60,12 +60,18 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                         value: 0,
-                        child: Text(!modoEditar
-                            ? "Editar Categoria"
-                            : "Cancelar Editar")),
+                        child: ListTile(
+                            leading: Icon(!modoEditar
+                                ? Icons.edit
+                                : Icons.cancel_outlined),
+                            title: Text(!modoEditar
+                                ? "Editar Categoria"
+                                : "Cancelar Editar"))),
                     PopupMenuItem(
-                      value: 1,
-                      child: Text("Eliminar Categoria"),
+                        value: 1,
+                        child: ListTile(
+                            leading: Icon(Icons.delete_forever_outlined),
+                            title: Text("Eliminar Categoria")),
                     )
                   ],
                 ),
@@ -205,7 +211,8 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
   }
 
   Future<bool> existeCategoriaenSenia(String nombre) async {
-    isCategoriaEnSenia = await ControladorCategoria().existeCategoriaenSenia(nombre);
+    isCategoriaEnSenia =
+        await ControladorCategoria().existeCategoriaenSenia(nombre);
   }
 
   /*
@@ -266,7 +273,8 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                   mensaje:
                                       "La categoria ha sido eliminada correctamente.",
                                   onPressed: () {
-                                    Navegacion(context).navegarACategorias();
+                                    Navigator.of(context)
+                                        .popUntil((route) => route.isFirst);
                                   },
                                 );
                               });
@@ -278,7 +286,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                 return DialogoAlerta(
                                   tituloMensaje: "Aviso de Alerta",
                                   mensaje:
-                                  "No es posible eliminar la categoría. La misma está asociada a una o más señas.",
+                                      "No es posible eliminar la categoría. La misma está asociada a una o más señas.",
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
