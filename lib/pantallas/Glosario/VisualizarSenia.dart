@@ -81,20 +81,21 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                         onSelected: (item) => onSelected(context, item),
                         itemBuilder: (context) => [
                           PopupMenuItem(
-                              value: 0,
-                              child: ListTile(
-                                  leading: Icon(!modoEditar
-                                      ? Icons.edit
-                                      : Icons.cancel_outlined),
-                                  title: Text(!modoEditar
-                                      ? "Editar Seña"
-                                      : "Cancelar Editar"))),
+                            value: 0,
+                            child: ListTile(
+                                leading: Icon(!modoEditar
+                                    ? Icons.edit
+                                    : Icons.cancel_outlined),
+                                title: Text(!modoEditar
+                                    ? "Editar Seña"
+                                    : "Cancelar Editar")),
+                          ),
                           PopupMenuItem(
                             value: 1,
                             child: ListTile(
-                              leading: Icon(Icons.delete_forever_outlined),
-                              title: Text("Eliminar Seña")),
-                          )
+                                leading: Icon(Icons.delete_forever_outlined),
+                                title: Text("Eliminar Seña")),
+                          ),
                         ],
                       ),
                     ]
@@ -340,7 +341,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
 
   Future<void> listarSubCateogiras(String nombreCategoria) async {
     listaSubCategorias = await ControladorCategoria()
-        .listarSubCategoriasPorCategoria(nombreCategoria);
+        .listarSubCategoriasPorCategoriaList(nombreCategoria);
   }
 
   void editarSenia() {

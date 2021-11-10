@@ -12,7 +12,7 @@ import 'package:lsu_app/modelo/Categoria.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
-import 'VisualizarSeniasPorCategoria.dart';
+import 'VisualizarSubCategoriaPorCategoria.dart';
 
 class Glosario extends StatefulWidget {
   @override
@@ -26,7 +26,6 @@ class _GlosarioState extends State<Glosario> {
   List<Senia> listaSeniaXCategoria = [];
   List<Senia> listaSenias = [];
   bool isUsuarioAdmin;
-  bool isSearching = false;
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
   ControladorCategoria _controladorCategoria = new ControladorCategoria();
   ControladorSenia _controladorSenia = new ControladorSenia();
@@ -76,7 +75,7 @@ class _GlosarioState extends State<Glosario> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(
-                          child:  Image.asset('recursos/logo-carga.gif'),
+                          child: Image.asset('recursos/logo-carga.gif'),
                         );
                       } else {
                         return ListView.builder(
@@ -89,7 +88,7 @@ class _GlosarioState extends State<Glosario> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              VisualizarSeniaPorCategoria(
+                                              VisualizarSubCategoriaPorCategoria(
                                                 nombreCategoria:
                                                     listaCategorias[index]
                                                         .nombre,

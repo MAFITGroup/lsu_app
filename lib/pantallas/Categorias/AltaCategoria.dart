@@ -24,6 +24,8 @@ class _AltaCategoria extends State<AltaCategoria> {
   bool isCategoriaExistente = false;
   List<SubCategoriaDinamica> listaDinamicaWidgetSubCategoria = [];
   List<String> listaDeSubcategorias = [];
+  List<String> listaDeSubcategoriasClaseDinamica = [];
+  List<String> listaTotalSubs = [];
   ControladorCategoria _controladorCategoria = new ControladorCategoria();
 
   @override
@@ -71,9 +73,9 @@ class _AltaCategoria extends State<AltaCategoria> {
                         )),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.only(left: 50, right: 50),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -82,13 +84,15 @@ class _AltaCategoria extends State<AltaCategoria> {
                               nombre: 'NOMBRE SUBCATEGORIA',
                               icon: Icon(Icons.account_tree_outlined),
                               valor: (value) {
-                                _nombreSubCategoria = value;
+                                setState(() {
+                                  _nombreSubCategoria = value;
+                                });
                               },
                               validacion: ((value) => value.isEmpty
                                   ? 'El nombre de la Sub Categoria es requerido'
                                   : null),
                               onSaved: (value) {
-                                listaDeSubcategorias.add(_nombreSubCategoria);
+                                listaDeSubcategorias.add(_nombreSubCategoria.toUpperCase().trim());
                               },
                             ),
                           ),
@@ -120,36 +124,59 @@ class _AltaCategoria extends State<AltaCategoria> {
                       titulo: 'GUARDAR',
                       onTap: () {
                         if (Validar().camposVacios(formKey)) {
+                          listaTotalSubs.addAll(listaDeSubcategorias);
+                          listaTotalSubs
+                              .addAll(listaDeSubcategoriasClaseDinamica);
                           if (!isCategoriaExistente) {
-                            crearCategoria().then((value) {
-                              /*
+                            if (!existeSubCategoria(listaTotalSubs)) {
+                              crearCategoria().then((value) {
+                                /*
                                     Luego de guardar la categoria,
                                     creo un dialogo de alerta indicando que se
                                     guardo de forma ok
                                      */
-                              showDialog(
-                                  useRootNavigator: false,
+                                showDialog(
+                                    useRootNavigator: false,
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return DialogoAlerta(
+                                        tituloMensaje: "Alta de Categoria",
+                                        mensaje:
+                                            "La categoria ha sido guardada correctamente",
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        Categorias()),
+                                            ModalRoute.withName('/'),
+                                          );
+                                        },
+                                      );
+                                    });
+                                //TODO mensaje si falla.
+                              }).catchError((e) {
+                                ErrorHandler().errorDialog(context, e);
+                              });
+                            } else {
+                              listaDeSubcategorias.clear();
+                              listaDeSubcategoriasClaseDinamica.clear();
+                              listaTotalSubs.clear();
+                              return showCupertinoDialog(
                                   context: context,
-                                  builder: (BuildContext context) {
+                                  barrierDismissible: true,
+                                  builder: (context) {
                                     return DialogoAlerta(
-                                      tituloMensaje: "Alta de Categoria",
+                                      tituloMensaje: "Advertencia",
                                       mensaje:
-                                          "La categoria ha sido guardada correctamente",
+                                          "Una de las sub categorias ingresadas esta repetida.",
                                       onPressed: () {
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  Categorias()),
-                                          ModalRoute.withName('/'),
-                                        );
+                                        Navigator.of(context).pop();
                                       },
                                     );
                                   });
-                              //TODO mensaje si falla.
-                            }).catchError((e) {
-                              ErrorHandler().errorDialog(context, e);
-                            });
+                            }
                           } else {
                             return showCupertinoDialog(
                                 context: context,
@@ -181,8 +208,8 @@ class _AltaCategoria extends State<AltaCategoria> {
 
   agregarWidgetSubCategoria() {
     setState(() {
-      listaDinamicaWidgetSubCategoria.add(
-          new SubCategoriaDinamica(listaSubcategorias: listaDeSubcategorias));
+      listaDinamicaWidgetSubCategoria.add(new SubCategoriaDinamica(
+          listaSubcategorias: listaDeSubcategoriasClaseDinamica));
     });
   }
 
@@ -197,10 +224,19 @@ class _AltaCategoria extends State<AltaCategoria> {
 
   Future crearCategoria() async {
     _controladorCategoria.crearCategoria(
-        this._nombreCategoria, this.listaDeSubcategorias);
+        this._nombreCategoria, this.listaTotalSubs);
   }
 
   Future<bool> existeCategoria(String nombre) async {
     isCategoriaExistente = await _controladorCategoria.existeCategoria(nombre);
+  }
+
+  bool existeSubCategoria(List lista) {
+    for (int i = 0; i < lista.length; i++) {
+      if (lista.skip(i + 1).contains(lista[i])) {
+        return true;
+      }
+    }
+    return false;
   }
 }

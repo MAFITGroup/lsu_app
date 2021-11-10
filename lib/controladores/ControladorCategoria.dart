@@ -29,14 +29,14 @@ class ControladorCategoria {
 
     for (String nombre in listaDeSubs) {
       index++;
-      subCategorias.putIfAbsent("nombreSub_$index",
-          () => nombre.toUpperCase().trimLeft().trimRight());
+      subCategorias.putIfAbsent(
+          "nombreSub_$index", () => nombre.toUpperCase().trim());
     }
 
     //creo mi categoria
     firestore.collection("categorias").doc(docId).set({
       'documentID': docId,
-      'nombre': nombre.toUpperCase().trimLeft().trimRight(),
+      'nombre': nombre.toUpperCase().trim(),
       'subCategorias': subCategorias,
     });
   }
@@ -83,8 +83,6 @@ class ControladorCategoria {
 
     return categoria;
   }
-
-
 
   /*
   Retorna una Lista Categoria con sus propiedades
@@ -167,8 +165,11 @@ class ControladorCategoria {
   /*
   Retorna una lista de subCategorias
    segun la categoria principal
+
+   La uso para listar subs en combos.
    */
-  Future<List> listarSubCategoriasPorCategoria(String nombreCategoria) async {
+  Future<List> listarSubCategoriasPorCategoriaList(
+      String nombreCategoria) async {
     List subCategorias = [];
     List dataSubCat;
     QuerySnapshot querySnapshot =
@@ -190,6 +191,41 @@ class ControladorCategoria {
      */
     subCategorias.sort((a, b) {
       return a.toString().compareTo(b.toString());
+    });
+    return subCategorias;
+  }
+
+  /*
+  Retorna una lista de subCategorias
+   segub la categoria principal con las propiedades de la SubCategoria.
+
+   La uso para glosario
+   */
+  Future<List<SubCategoria>> listarSubCategoriasPorCategoria(
+      String nombreCategoria) async {
+    List<SubCategoria> subCategorias = [];
+    List dataSubCat;
+    QuerySnapshot querySnapshot =
+        await categoriasRef.where('nombre', isEqualTo: nombreCategoria).get();
+    dataSubCat = querySnapshot.docs.map((doc) => doc["subCategorias"]).toList();
+
+    Map<String, dynamic> mapSubCategorias =
+        new Map<String, dynamic>(); //map para armar las subCategorias
+    for (mapSubCategorias in dataSubCat) {
+      for (String value in mapSubCategorias.values) {
+        if (value != null && value.isNotEmpty) {
+          SubCategoria sub = new SubCategoria();
+          sub.nombre = value;
+          subCategorias.add(sub);
+        }
+      }
+    }
+
+    /*
+    Ordeno por nombre
+     */
+    subCategorias.sort((a, b) {
+      return a.nombre.toString().compareTo(b.nombre.toString());
     });
     return subCategorias;
   }

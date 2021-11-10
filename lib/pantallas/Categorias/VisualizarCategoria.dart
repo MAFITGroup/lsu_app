@@ -6,7 +6,6 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
-import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -59,20 +58,20 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                   onSelected: (item) => onSelected(context, item),
                   itemBuilder: (context) => [
                     PopupMenuItem(
-                        value: 0,
-                        child: ListTile(
-                            leading: Icon(!modoEditar
-                                ? Icons.edit
-                                : Icons.cancel_outlined),
-                            title: Text(!modoEditar
-                                ? "Editar Categoria"
-                                : "Cancelar Editar"))),
+                      value: 0,
+                      child: ListTile(
+                          leading: Icon(
+                              !modoEditar ? Icons.edit : Icons.cancel_outlined),
+                          title: Text(!modoEditar
+                              ? "Editar Categoria"
+                              : "Cancelar Editar")),
+                    ),
                     PopupMenuItem(
-                        value: 1,
-                        child: ListTile(
-                            leading: Icon(Icons.delete_forever_outlined),
-                            title: Text("Eliminar Categoria")),
-                    )
+                      value: 1,
+                      child: ListTile(
+                          leading: Icon(Icons.delete_forever_outlined),
+                          title: Text("Eliminar Categoria")),
+                    ),
                   ],
                 ),
               ],
@@ -273,8 +272,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                   mensaje:
                                       "La categoria ha sido eliminada correctamente.",
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .popUntil((route) => route.isFirst);
+                                    Navegacion(context).navegarACategorias();
                                   },
                                 );
                               });

@@ -1,29 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lsu_app/controladores/ControladorSenia.dart';
+import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
-import 'package:lsu_app/modelo/Senia.dart';
+import 'package:lsu_app/modelo/SubCategoria.dart';
+import 'package:lsu_app/pantallas/Glosario/VisualizarSeniasPorSubCategoria.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
-import 'VisualizarSenia.dart';
-
-class VisualizarSeniaPorCategoria extends StatefulWidget {
+class VisualizarSubCategoriaPorCategoria extends StatefulWidget {
   final String nombreCategoria;
 
-  const VisualizarSeniaPorCategoria({Key key, this.nombreCategoria})
+  const VisualizarSubCategoriaPorCategoria({Key key, this.nombreCategoria})
       : super(key: key);
 
   @override
-  _VisualizarSeniaPorCategoriaState createState() =>
-      _VisualizarSeniaPorCategoriaState();
+  _VisualizarSubCategoriaPorCategoriaState createState() =>
+      _VisualizarSubCategoriaPorCategoriaState();
 }
 
-class _VisualizarSeniaPorCategoriaState
-    extends State<VisualizarSeniaPorCategoria> {
+class _VisualizarSubCategoriaPorCategoriaState
+    extends State<VisualizarSubCategoriaPorCategoria> {
   bool isUsuarioAdmin;
-  List<Senia> listaSeniaXCategoria = [];
-  ControladorSenia _controladorSenia = new ControladorSenia();
+  List<SubCategoria> listaSubCategoriaPorCategoria = [];
+  ControladorCategoria _controladorCategoria = new ControladorCategoria();
 
   @override
   void initState() {
@@ -41,23 +40,28 @@ class _VisualizarSeniaPorCategoriaState
           body: Column(
             children: [
               BarraDeNavegacion(
-                titulo: Text("SEÑAS " + "- CATEGORIA: " + widget.nombreCategoria,
+                titulo: Text(
+                    "SUB CATEGORIAS " +
+                        "- CATEGORIA: " +
+                        widget.nombreCategoria,
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               ),
               Expanded(
                 child: Container(
                   child: FutureBuilder(
-                    future: listarSeniasXCategorias(nombreCategoria),
+                    future: listarSubCategoriasXCategorias(nombreCategoria),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(
-                          child:  Image.asset('recursos/logo-carga.gif'),
+                          child: Image.asset('recursos/logo-carga.gif'),
                         );
-                      } else if (listaSeniaXCategoria.length <= 0) {
-                        return Text("NO EXISTEN SEÑAS DENTRO DE LA CATEGORIA: "+ widget.nombreCategoria);
+                      } else if (listaSubCategoriaPorCategoria.length <= 0) {
+                        return Text(
+                            "NO EXISTEN SUB CATEGORIAS DENTRO DE LA CATEGORIA: " +
+                                widget.nombreCategoria);
                       } else {
                         return ListView.builder(
-                            itemCount: listaSeniaXCategoria.length,
+                            itemCount: listaSubCategoriaPorCategoria.length,
                             itemBuilder: (context, index) {
                               return Card(
                                   child: ListTile(
@@ -65,13 +69,16 @@ class _VisualizarSeniaPorCategoriaState
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => VisualizarSenia(
-                                                senia:
-                                                    listaSeniaXCategoria[index],
-                                                isUsuarioAdmin: isUsuarioAdmin,
+                                          builder: (context) =>
+                                              VisualizarSeniasPorSubCategoria(
+                                                nombreSubCategoria:
+                                                    listaSubCategoriaPorCategoria[
+                                                            index]
+                                                        .nombre,
                                               )));
                                 },
-                                title: Text(listaSeniaXCategoria[index].nombre),
+                                title: Text(listaSubCategoriaPorCategoria[index]
+                                    .nombre),
                               ));
                             });
                       }
@@ -86,9 +93,10 @@ class _VisualizarSeniaPorCategoriaState
     );
   }
 
-  Future<List<Senia>> listarSeniasXCategorias(String nombreCategoria) async {
-    listaSeniaXCategoria =
-        await _controladorSenia.obtenerSeniasXCategoria(nombreCategoria);
+  Future<List<SubCategoria>> listarSubCategoriasXCategorias(
+      String nombreCategoria) async {
+    listaSubCategoriaPorCategoria = await _controladorCategoria
+        .listarSubCategoriasPorCategoria(nombreCategoria);
   }
 
   Future<void> obtenerUsuarioAdministrador() async {

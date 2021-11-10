@@ -129,7 +129,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                           child: DropdownSearch(
                             key: categoriaKey,
                             items: listaCategorias,
-                            onChanged: (value) async{
+                            onChanged: (value) async {
                               await listarSubCateogiras(value);
                               subCategoriaKey.currentState.clear();
                               setState(() {
@@ -229,7 +229,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                                     builder: (context) {
                                       return DialogoAlerta(
                                         tituloMensaje: "Advertencia",
-                                        mensaje: "No ha seleccionado un archivo.",
+                                        mensaje:
+                                            "No ha seleccionado un archivo.",
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -257,7 +258,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                                         return AlertDialog(
                                           title: Text('Alta de Seña'),
                                           content: Text(
-                                              'La seña ha sido guardada correctamente'),
+                                              'La seña ha sido guardada correctamente.'
+                                              '\nLa misma podrá tardar unos minutos en visualizarse.'),
                                           actions: [
                                             TextButton(
                                                 child: Text('Ok',
@@ -461,6 +463,6 @@ class _AltaSeniaState extends State<AltaSenia> {
 
   Future<void> listarSubCateogiras(String nombreCategoria) async {
     listaSubCategorias = await ControladorCategoria()
-        .listarSubCategoriasPorCategoria(nombreCategoria);
+        .listarSubCategoriasPorCategoriaList(nombreCategoria);
   }
 }

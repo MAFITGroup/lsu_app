@@ -3,86 +3,86 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 
 class ControladorUsuario {
-    String _uid;
-    String _correo;
-    String _nombreCompleto;
-    String _telefono;
-    String _localidad;
-    String _especialidad;
-    bool _esAdministrador;
-    String _statusUsuario;
-    Usuario usuario = new Usuario();
+  String _uid;
+  String _correo;
+  String _nombreCompleto;
+  String _telefono;
+  String _localidad;
+  String _especialidad;
+  bool _esAdministrador;
+  String _statusUsuario;
+  Usuario usuario = new Usuario();
 
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-    void crearUsuario(
-        String uid,
-        String email,
-        String nombreCompleto,
-        String telefono,
-        String localidad,
-        String especialidad,
-        bool esAdministrador,
-        String statusUsuario){
-      //creo mi nuevo usuario
-      firestore.collection("usuarios").doc(firebaseAuth.currentUser.uid).set({
-        'usuarioUID': uid,
-        'correo': email.trim(),
-        'nombreCompleto': nombreCompleto,
-        'telefono': telefono,
-        'localidad': localidad,
-        'especialidad': especialidad,
-        'esAdministrador': esAdministrador,
-        'statusUsuario' : statusUsuario,
-      });
-    }
+  void crearUsuario(
+      String uid,
+      String email,
+      String nombreCompleto,
+      String telefono,
+      String localidad,
+      String especialidad,
+      bool esAdministrador,
+      String statusUsuario) {
+    //creo mi nuevo usuario
+    firestore.collection("usuarios").doc(firebaseAuth.currentUser.uid).set({
+      'usuarioUID': uid,
+      'correo': email.trim(),
+      'nombreCompleto': nombreCompleto,
+      'telefono': telefono,
+      'localidad': localidad,
+      'especialidad': especialidad,
+      'esAdministrador': esAdministrador,
+      'statusUsuario': statusUsuario,
+    });
+  }
 
-    Future<Usuario> obtenerUsuarioLogueado(String usuarioActualUID) async{
-      String usuarioActualUID = FirebaseAuth.instance.currentUser.uid;
-     await firestore
-          .collection('usuarios')
-          .doc(usuarioActualUID)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
-        if (documentSnapshot.exists) {
-          _uid = documentSnapshot['usuarioUID'];
-          _correo = documentSnapshot['correo'];
-          _nombreCompleto = documentSnapshot['nombreCompleto'];
-          _telefono = documentSnapshot['telefono'];
-          _localidad = documentSnapshot['localidad'];
-          _especialidad = documentSnapshot['especialidad'];
-          _esAdministrador = documentSnapshot['esAdministrador'];
-          _statusUsuario = documentSnapshot['statusUsuario'];
+  Future<Usuario> obtenerUsuarioLogueado(String usuarioActualUID) async {
+    String usuarioActualUID = FirebaseAuth.instance.currentUser.uid;
+    await firestore
+        .collection('usuarios')
+        .doc(usuarioActualUID)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        _uid = documentSnapshot['usuarioUID'];
+        _correo = documentSnapshot['correo'];
+        _nombreCompleto = documentSnapshot['nombreCompleto'];
+        _telefono = documentSnapshot['telefono'];
+        _localidad = documentSnapshot['localidad'];
+        _especialidad = documentSnapshot['especialidad'];
+        _esAdministrador = documentSnapshot['esAdministrador'];
+        _statusUsuario = documentSnapshot['statusUsuario'];
 
-          usuario.uid = _uid;
-          usuario.correo = _correo;
-          usuario.nombreCompleto = _nombreCompleto;
-          usuario.telefono = _telefono;
-          usuario.localidad = _localidad;
-          usuario.especialidad = _especialidad;
-          usuario.esAdministrador = _esAdministrador;
-          usuario.statusUsuario = _statusUsuario;
+        usuario.uid = _uid;
+        usuario.correo = _correo;
+        usuario.nombreCompleto = _nombreCompleto;
+        usuario.telefono = _telefono;
+        usuario.localidad = _localidad;
+        usuario.especialidad = _especialidad;
+        usuario.esAdministrador = _esAdministrador;
+        usuario.statusUsuario = _statusUsuario;
 
-          return usuario;
-        }else{
-          print('usuario null');
-        }
-      });
-
-      return usuario;
-    }
-
-    Future<bool> isUsuarioAdministrador(String usuarioActualUID) async {
-      usuario = await obtenerUsuarioLogueado(usuarioActualUID);
-      if (usuario.esAdministrador == true) {
-        print('Obtuve usuario administrador');
-        return true;
+        return usuario;
       } else {
-        print('NO obbtuve usuario administrador');
-        return false;
+        print('usuario null');
       }
+    });
+
+    return usuario;
+  }
+
+  Future<bool> isUsuarioAdministrador(String usuarioActualUID) async {
+    usuario = await obtenerUsuarioLogueado(usuarioActualUID);
+    if (usuario.esAdministrador == true) {
+      print('Obtuve usuario administrador');
+      return true;
+    } else {
+      print('NO obbtuve usuario administrador');
+      return false;
     }
+  }
 
   /*
   Se usa al iniciar sesion, si el usuario.
@@ -136,21 +136,22 @@ class ControladorUsuario {
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
 
-              listaUsuariosPendientes.add(usuario);
-
-            });
+        listaUsuariosPendientes.add(usuario);
       });
+    });
 
-    listaUsuariosPendientes.sort((a,b){
+    listaUsuariosPendientes.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
 
-      return listaUsuariosPendientes;
-   }
+    return listaUsuariosPendientes;
+  }
 
-   Future<List<Usuario>> obtenerUsuariosActivos() async {
+  Future<List<Usuario>> obtenerUsuariosActivos() async {
     List<Usuario> listaUsuariosActivos = [];
 
+    Usuario usuarioLogueado =
+        await obtenerUsuarioLogueado(firebaseAuth.currentUser.uid);
     await firestore
         .collection('usuarios')
         .where('statusUsuario', isEqualTo: 'ACTIVO')
@@ -176,19 +177,20 @@ class ControladorUsuario {
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
 
-        listaUsuariosActivos.add(usuario);
-
-            });
+        if (usuario.correo != usuarioLogueado.correo) {
+          listaUsuariosActivos.add(usuario);
+        }
       });
+    });
 
-    listaUsuariosActivos.sort((a,b){
+    listaUsuariosActivos.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
 
-      return listaUsuariosActivos;
-   }
+    return listaUsuariosActivos;
+  }
 
-   Future<List<Usuario>> obtenerUsuariosInactivos() async {
+  Future<List<Usuario>> obtenerUsuariosInactivos() async {
     List<Usuario> listaUsuariosInactivos = [];
 
     await firestore
@@ -217,124 +219,105 @@ class ControladorUsuario {
         usuario.statusUsuario = _statusUsuario;
 
         listaUsuariosInactivos.add(usuario);
-
-            });
       });
-    listaUsuariosInactivos.sort((a,b){
+    });
+    listaUsuariosInactivos.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
 
-      return listaUsuariosInactivos;
-   }
+    return listaUsuariosInactivos;
+  }
 
-   void editarPerfil(
-       String correoAnterior,
-       String nombreAnterior,
-       String celularAnterior,
-       String departamentoAnterior,
-       String especialidadAnterior,
-       String correoNuevo,
-       String nombreNuevo,
-       String celularNuevo,
-       String departamentoNuevo,
-       String especialidadNueva,
-       ) async {
-      Usuario usuario = await obtenerUsuarioPerfil(
-          correoAnterior);
+  void editarPerfil(
+    String correoAnterior,
+    String nombreAnterior,
+    String celularAnterior,
+    String departamentoAnterior,
+    String especialidadAnterior,
+    String correoNuevo,
+    String nombreNuevo,
+    String celularNuevo,
+    String departamentoNuevo,
+    String especialidadNueva,
+  ) async {
+    Usuario usuario = await obtenerUsuarioPerfil(correoAnterior);
 
-      String usuarioId = usuario.uid;
-      print(usuarioId);
+    String usuarioId = usuario.uid;
+    print(usuarioId);
 
-      firestore.collection('usuarios')
-      .doc(usuarioId)
-      .update({
-        'correo' : correoNuevo,
-        'nombreCompleto' : nombreNuevo,
-        'telefono' : celularNuevo,
-        'localidad' : departamentoNuevo,
-        'especialidad' : especialidadNueva,
+    firestore.collection('usuarios').doc(usuarioId).update({
+      'correo': correoNuevo,
+      'nombreCompleto': nombreNuevo,
+      'telefono': celularNuevo,
+      'localidad': departamentoNuevo,
+      'especialidad': especialidadNueva,
+    }).then((value) => print('Usuario editado correctamente'));
+  }
 
-      }).then((value) => print('Usuario editado correctamente'));
-   }
+  Future<Usuario> obtenerUsuarioPerfil(String correo) async {
+    await firestore
+        .collection('usuarios')
+        .where('correo', isEqualTo: correo)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _correo = doc['correo'];
+        _nombreCompleto = doc['nombreCompleto'];
+        _telefono = doc['telefono'];
+        _localidad = doc['localidad'];
+        _especialidad = doc['especialidad'];
+        _uid = doc['usuarioUID'];
 
-   Future<Usuario> obtenerUsuarioPerfil(String correo) async {
-      await firestore
-          .collection('usuarios')
-          .where('correo', isEqualTo: correo)
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-            querySnapshot.docs.forEach((doc) {
-              _correo = doc['correo'];
-              _nombreCompleto = doc['nombreCompleto'];
-              _telefono = doc['telefono'];
-              _localidad = doc['localidad'];
-              _especialidad = doc['especialidad'];
-              _uid = doc['usuarioUID'];
-
-              usuario = new Usuario();
-              usuario.correo = _correo;
-              usuario.nombreCompleto = _nombreCompleto;
-              usuario.telefono = _telefono;
-              usuario.localidad = _localidad;
-              usuario.especialidad = _especialidad;
-              usuario.uid = _uid;
-            });
+        usuario = new Usuario();
+        usuario.correo = _correo;
+        usuario.nombreCompleto = _nombreCompleto;
+        usuario.telefono = _telefono;
+        usuario.localidad = _localidad;
+        usuario.especialidad = _especialidad;
+        usuario.uid = _uid;
       });
+    });
 
-      return usuario;
-   }
+    return usuario;
+  }
 
-   void eliminarUsuarios( String correo) async {
-        Usuario usuario = await obtenerUsuarioPerfil(correo);
-        String docId = usuario.uid;
+  void eliminarUsuarios(String correo) async {
+    Usuario usuario = await obtenerUsuarioPerfil(correo);
+    String docId = usuario.uid;
 
-        // Elimina documento
-        await firestore
-            .collection('usuarios')
-            .doc(docId)
-            .delete()
-            .then((value) => print('Usuario elimiando correctamente'));
+    // Elimina documento
+    await firestore
+        .collection('usuarios')
+        .doc(docId)
+        .delete()
+        .then((value) => print('Usuario elimiando correctamente'));
+  }
 
-}
-
-Future eliminarAuth() async {
+  Future eliminarAuth() async {
     await firebaseAuth.currentUser.delete();
-}
+  }
 
-    void inactivarUsuario(
-        String correo
-        ) async {
-      Usuario usuario = await obtenerUsuarioPerfil(correo);
-      String docId = usuario.uid;
+  void inactivarUsuario(String correo) async {
+    Usuario usuario = await obtenerUsuarioPerfil(correo);
+    String docId = usuario.uid;
 
-      // Pasa el usuario a estado inactivo
-      await firestore
-          .collection('usuarios')
-          .doc(docId)
-          .update({
-        'statusUsuario': 'INACTIVO'
-      })
-          .then((value) => print('Usuario elimiando correctamente'));
-    }
+    // Pasa el usuario a estado inactivo
+    await firestore
+        .collection('usuarios')
+        .doc(docId)
+        .update({'statusUsuario': 'INACTIVO'}).then(
+            (value) => print('Usuario elimiando correctamente'));
+  }
 
-    void administrarUsuario(String correo, String estado, bool esAdministrador) async {
+  void administrarUsuario(
+      String correo, String estado, bool esAdministrador) async {
+    Usuario usuario = await obtenerUsuarioPerfil(correo);
+    String docId = usuario.uid;
 
-      Usuario usuario = await obtenerUsuarioPerfil(correo);
-      String docId = usuario.uid;
-
-      // Pasa el usuario a estado inactivo
-      await firestore
-          .collection('usuarios')
-          .doc(docId)
-          .update({
+    // Pasa el usuario a estado inactivo
+    await firestore.collection('usuarios').doc(docId).update({
       'statusUsuario': estado,
       'esAdministrador': esAdministrador,
-      })
-          .then((value) => print('Usuario actualizado correctamente'));
-    }
-
-
+    }).then((value) => print('Usuario actualizado correctamente'));
+  }
 }
-
-
-

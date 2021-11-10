@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +23,7 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 60, right: 120),
+            padding: const EdgeInsets.only(left: 30, right: 90),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -32,15 +31,19 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
                   child: TextFieldTexto(
                     nombre: 'NOMBRE SUBCATEGORIA',
                     icon: Icon(Icons.account_tree_outlined),
-                    valor: (value) {
-                      _nombreSubCategoria = value;
+                    valor: (value){
+                      setState(() {
+                        _nombreSubCategoria = value;
+                      });
                     },
                     validacion: ((value) => value.isEmpty
                         ? 'El nombre de la Sub Categoria es requerido'
                         : null),
                     onSaved: (value) {
-                      listaSubcategorias.add(value);
-                    },
+                      setState(() {
+                        listaSubcategorias.add(_nombreSubCategoria.toUpperCase().trim());
+                      });
+                    }
                   ),
                 ),
               ],

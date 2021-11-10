@@ -9,12 +9,12 @@ import 'package:lsu_app/modelo/Senia.dart';
 class ControladorSenia {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
-  String nombre;
-  String categoria;
-  String subCategoria;
-  String usuarioAlta;
-  String descripcion;
-  String urlVideo;
+  String _nombre;
+  String _categoria;
+  String _subCategoria;
+  String _usuarioAlta;
+  String _descripcion;
+  String _urlVideo;
   Senia senia;
   String documentID;
 
@@ -120,21 +120,21 @@ class ControladorSenia {
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        nombre = doc['nombre'];
-        descripcion = doc['descripcion'];
-        usuarioAlta = doc['usuarioAlta'];
-        categoria = doc['categoria'];
-        subCategoria = doc['subCategoria'];
-        urlVideo = doc['videoRef'];
+        _nombre = doc['nombre'];
+        _descripcion = doc['descripcion'];
+        _usuarioAlta = doc['usuarioAlta'];
+        _categoria = doc['categoria'];
+        _subCategoria = doc['subCategoria'];
+        _urlVideo = doc['videoRef'];
         documentID = doc['documentID'];
 
         senia = new Senia();
-        senia.nombre = nombre;
-        senia.descripcion = descripcion;
-        senia.usuarioAlta = usuarioAlta;
-        senia.categoria = categoria;
-        senia.subCategoria = subCategoria;
-        senia.urlVideo = urlVideo;
+        senia.nombre = _nombre;
+        senia.descripcion = _descripcion;
+        senia.usuarioAlta = _usuarioAlta;
+        senia.categoria = _categoria;
+        senia.subCategoria = _subCategoria;
+        senia.urlVideo = _urlVideo;
         senia.documentID = documentID;
       });
     });
@@ -178,13 +178,12 @@ class ControladorSenia {
         .then((value) => print("Seña Eliminada correctamente"));
 
     // luego elimino el video
-
-    await eliminarVideoSenia(senia.urlVideo);
+    await eliminarVideoSenia(docId);
   }
 
-  Future eliminarVideoSenia(String linkVideoRef) async {
+  Future eliminarVideoSenia(String docId) async {
     await storage
-        .refFromURL(linkVideoRef)
+        .ref("Videos/$docId")
         .delete()
         .then((value) => print("Archivo eliminado correctamente"));
   }
@@ -197,22 +196,22 @@ class ControladorSenia {
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        nombre = doc['nombre'];
-        descripcion = doc['descripcion'];
-        usuarioAlta = doc['usuarioAlta'];
-        categoria = doc['categoria'];
-        subCategoria = doc['subCategoria'];
-        urlVideo = doc['videoRef'];
+        _nombre = doc['nombre'];
+        _descripcion = doc['descripcion'];
+        _usuarioAlta = doc['usuarioAlta'];
+        _categoria = doc['categoria'];
+        _subCategoria = doc['subCategoria'];
+        _urlVideo = doc['videoRef'];
         documentID = doc['documentID'];
 
         senia = new Senia();
 
-        senia.nombre = nombre;
-        senia.descripcion = descripcion;
-        senia.usuarioAlta = usuarioAlta;
-        senia.categoria = categoria;
-        senia.subCategoria = subCategoria;
-        senia.urlVideo = urlVideo;
+        senia.nombre = _nombre;
+        senia.descripcion = _descripcion;
+        senia.usuarioAlta = _usuarioAlta;
+        senia.categoria = _categoria;
+        senia.subCategoria = _subCategoria;
+        senia.urlVideo = _urlVideo;
         senia.documentID = documentID;
 
         lista.add(senia);
@@ -238,22 +237,22 @@ class ControladorSenia {
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        nombre = doc['nombre'];
-        descripcion = doc['descripcion'];
-        usuarioAlta = doc['usuarioAlta'];
-        categoria = doc['categoria'];
-        subCategoria = doc['subCategoria'];
-        urlVideo = doc['videoRef'];
+        _nombre = doc['nombre'];
+        _descripcion = doc['descripcion'];
+        _usuarioAlta = doc['usuarioAlta'];
+        _categoria = doc['categoria'];
+        _subCategoria = doc['subCategoria'];
+        _urlVideo = doc['videoRef'];
         documentID = doc['documentID'];
 
         senia = new Senia();
 
-        senia.nombre = nombre;
-        senia.descripcion = descripcion;
-        senia.usuarioAlta = usuarioAlta;
-        senia.categoria = categoria;
-        senia.subCategoria = subCategoria;
-        senia.urlVideo = urlVideo;
+        senia.nombre = _nombre;
+        senia.descripcion = _descripcion;
+        senia.usuarioAlta = _usuarioAlta;
+        senia.categoria = _categoria;
+        senia.subCategoria = _subCategoria;
+        senia.urlVideo = _urlVideo;
         senia.documentID = documentID;
 
         lista.add(senia);
@@ -269,4 +268,46 @@ class ControladorSenia {
 
     return lista;
   }
+
+  Future<List<Senia>> obtenerSeniasPorSubCategoria(String nombreSubCategoria) async {
+    List<Senia> lista = [];
+
+    await firestore
+        .collection('senias')
+        .where('subCategoria', isEqualTo: nombreSubCategoria)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _nombre = doc['nombre'];
+        _descripcion = doc['descripcion'];
+        _usuarioAlta = doc['usuarioAlta'];
+        _categoria = doc['categoria'];
+        _subCategoria = doc['subCategoria'];
+        _urlVideo = doc['videoRef'];
+        documentID = doc['documentID'];
+
+        senia = new Senia();
+
+        senia.nombre = _nombre;
+        senia.descripcion = _descripcion;
+        senia.usuarioAlta = _usuarioAlta;
+        senia.categoria = _categoria;
+        senia.subCategoria = _subCategoria;
+        senia.urlVideo = _urlVideo;
+        senia.documentID = documentID;
+
+        lista.add(senia);
+      });
+    });
+
+    /*
+    Ordeno por nombre
+     */
+    lista.sort((a, b) {
+      return a.nombre.toString().compareTo(b.nombre.toString());
+    });
+
+    return lista;
+  }
+
 }
