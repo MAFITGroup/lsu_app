@@ -1,9 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class GestionUsuarios extends StatefulWidget {
   @override
@@ -13,13 +16,14 @@ class GestionUsuarios extends StatefulWidget {
 class _GestionUsuarios extends State<GestionUsuarios> {
   final formKey = new GlobalKey<FormState>();
 
-  List<String> _tabs = ['ACTIVO', 'PENDIENTE', 'INACTIVO'];
-
   List<Usuario> pendienteUsuarios = [];
   List<Usuario> activoUsuarios = [];
   List<Usuario> inactivoUsuarios = [];
 
   Usuario usuario;
+
+  int _selectedIndexForBottomNavigationBar = 0;
+  int _selectedIndexForTabBar = 0;
 
   @override
   void initState() {
@@ -35,46 +39,55 @@ class _GestionUsuarios extends State<GestionUsuarios> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: DefaultTabController(
-            length: _tabs.length, // This is the number of tabs.
-            child: NestedScrollView(
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
-                  return <Widget>[
-                    SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                          context),
-                      sliver: SliverAppBar(
-                        title: const Text('GESTION DE USUARIOS',
-                            style:
-                                TextStyle(fontFamily: 'Trueno', fontSize: 16)),
-                        // This is the title in the app bar.
-                        backgroundColor: Colores().colorAzul,
-                        pinned: false,
-                        expandedHeight: 150.0,
-                        forceElevated: innerBoxIsScrolled,
-                        bottom: TabBar(
-                          tabs: _tabs
-                              .map((String name) => Tab(text: name))
-                              .toList(),
-                          indicatorColor: Colores().colorBlanco,
-                        ),
-                      ),
-                    ),
-                  ];
-                },
-                body: TabBarView(
-                  children: [
-                    listActivos(),
-                    listPendientes(),
-                    listInactivos(),
-                  ],
-                )
+    void _onItemTappedForTabBar(int index) {
+      setState(() {
+        _selectedIndexForTabBar = index + 1;
+        _selectedIndexForBottomNavigationBar = 0;
+      });
+    }
+    final tabBar = new TabBar(labelColor: Colores().colorBlanco,
+      indicatorColor: Colores().colorBlanco,
+      onTap: _onItemTappedForTabBar,
+      tabs: <Widget>[
+        new Tab(
+          text: "ACTIVO",
+        ),
+        new Tab(
+          text: "PENDIENTE",
+        ),
+        new Tab(
+          text: "INACTIVO",
+        ),
+      ],
+    );
 
-                // TabBarView
+    return new DefaultTabController(length: 3, child: new Scaffold(
+      appBar: AppBar(
+          bottom:tabBar ,
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.light),
+          backgroundColor: Colores().colorAzul,
+          title: Text("GESTION DE USUARIOS"),
+/*          actions: [
+            IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.search)),
+          ]
+*/      ),
+      body: TabBarView(
+        children: [
+          listActivos(),
+          listPendientes(),
+          listInactivos()
+        ],
+      ),
 
-                )));
+    ),
+
+    );
+
   }
 
   Widget listPendientes() {
@@ -345,6 +358,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
 
                                         Navigator.of(context).pop();
                                         Navegacion(context).navegarAPaginaGestionUsuarioDest();
+
                                       },
                                       child: Text('Ok',
                                           style: TextStyle(

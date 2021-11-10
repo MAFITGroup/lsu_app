@@ -174,7 +174,6 @@ class AlertDialog_resgistro extends StatelessWidget {
                     decoration: TextDecoration.underline)),
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pop();
               Navegacion(context).navegarAPrincipalDest();
             }),
       ],

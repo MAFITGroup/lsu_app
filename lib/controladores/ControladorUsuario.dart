@@ -141,6 +141,10 @@ class ControladorUsuario {
             });
       });
 
+    listaUsuariosPendientes.sort((a,b){
+      return a.nombreCompleto.compareTo(b.nombreCompleto);
+    });
+
       return listaUsuariosPendientes;
    }
 
@@ -177,6 +181,10 @@ class ControladorUsuario {
             });
       });
 
+    listaUsuariosActivos.sort((a,b){
+      return a.nombreCompleto.compareTo(b.nombreCompleto);
+    });
+
       return listaUsuariosActivos;
    }
 
@@ -212,6 +220,9 @@ class ControladorUsuario {
 
             });
       });
+    listaUsuariosInactivos.sort((a,b){
+      return a.nombreCompleto.compareTo(b.nombreCompleto);
+    });
 
       return listaUsuariosInactivos;
    }
@@ -284,9 +295,10 @@ class ControladorUsuario {
             .delete()
             .then((value) => print('Usuario elimiando correctamente'));
 
-        // Elimina del Authentication
-        await firebaseAuth.currentUser.delete();
+}
 
+Future eliminarAuth() async {
+    await firebaseAuth.currentUser.delete();
 }
 
     void inactivarUsuario(

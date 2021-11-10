@@ -1,9 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
-
 
 
 class ControladorNoticia {
@@ -18,6 +16,7 @@ class ControladorNoticia {
   String _usuarioAlta;
 
   Noticia noticia;
+
 
   Future<Noticia> obtenerNoticia(
       String tipoNoticia,
@@ -67,7 +66,8 @@ class ControladorNoticia {
       String link,
       String usuarioAlta
       ){
-    String fechaSubida = DateTime.now().toString();
+    var fechaHoy = DateTime.now();
+    String fechaSubida = '${fechaHoy.day}-${fechaHoy.month}-${fechaHoy.year}';
     String docId = new UniqueKey().toString();
     firestore.collection('noticias').doc(docId).set({
       'tipo'       : tipo,
@@ -156,6 +156,11 @@ class ControladorNoticia {
       });
 
     });
+    listaCharlas.sort((a,b){
+      return b.fechaSubida.compareTo(a.fechaSubida);
+
+    });
+
 
     return listaCharlas;
   }
@@ -190,6 +195,11 @@ class ControladorNoticia {
       });
 
     });
+    listaLlamados.sort((a,b){
+      return b.fechaSubida.toString().compareTo(a.fechaSubida.toString());
+
+    });
+
 
     return listaLlamados;
   }
@@ -220,7 +230,12 @@ class ControladorNoticia {
 
         listaNoticias.add(noticia);
 
+
       });
+
+    });
+    listaNoticias.sort((a,b){
+      return b.fechaSubida.toString().compareTo(a.fechaSubida.toString());
 
     });
 

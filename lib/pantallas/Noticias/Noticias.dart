@@ -2,13 +2,13 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
-import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/RedesBotones.dart';
@@ -16,7 +16,7 @@ import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-enum RedesSociales {facebook, twitter, email, whatsapp, instagram}
+enum RedesSociales {facebook, twitter, email, whatsapp}
 
 class Noticias extends StatefulWidget {
   const Noticias({key}) : super(key: key);
@@ -36,10 +36,11 @@ class _NoticiasState extends State<Noticias> {
 
   bool isUsuarioAdmin;
   bool modoEditar;
-  
-  List<String> _tabs = ['CHARLAS', 'LLAMADOS'];
 
   bool isSearching;
+
+  int _selectedIndexForBottomNavigationBar = 0;
+  int _selectedIndexForTabBar = 0;
 
   @override
   void initState() {
@@ -55,163 +56,58 @@ class _NoticiasState extends State<Noticias> {
 
   @override
   Widget build(BuildContext context) {
-    return isSearching
-    ? busquedaNoticias()
-    : visualizarNoticias();
-  }
-
-  Widget _botones(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        isUsuarioAdmin == true
-        ? FloatingActionButton(
-          child: Icon(Icons.add),
-          backgroundColor: Colores().colorAzul,
-          onPressed: Navegacion(context).navegarAltaNoticia,
-        )
-        : Container(),
-        SizedBox(height: 10.0),
-
-        isSearching == false
-        ? FloatingActionButton(
-          child: Icon(Icons.search),
-          backgroundColor: Colores().colorAzul,
-          onPressed: (){
-            setState(() {
-              this.isSearching = true;
-            });
-           }
-           )
-          : busquedaNoticias()
-
+    void _onItemTappedForTabBar(int index) {
+      setState(() {
+        _selectedIndexForTabBar = index + 1;
+        _selectedIndexForBottomNavigationBar = 0;
+      });
+    }
+    final tabBar = new TabBar(labelColor: Colores().colorBlanco,
+      indicatorColor: Colores().colorBlanco,
+      onTap: _onItemTappedForTabBar,
+      tabs: <Widget>[
+        new Tab(
+          text: "CHARLAS",
+        ),
+        new Tab(
+          text: "LLAMADOS",
+        ),
       ],
     );
-  }
 
-  Widget visualizarNoticias(){
-    return Scaffold(
-        body: DefaultTabController(
-            length: _tabs.length, // This is the number of tabs.
-            child: NestedScrollView(
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverOverlapAbsorber(
-                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                        context),
-                    sliver: SliverAppBar(
-                      title: const Text('NOTICIAS',
-                          style:
-                          TextStyle(fontFamily: 'Trueno', fontSize: 16)),
-                      // This is the title in the app bar.
-                      backgroundColor: Colores().colorAzul,
-                      pinned: false,
-                      expandedHeight: 150.0,
-                      forceElevated: innerBoxIsScrolled,
-                      bottom: TabBar(
-                        tabs: _tabs
-                            .map((String name) => Tab(text: name))
-                            .toList(),
-                        indicatorColor: Colores().colorBlanco,
-                      ),
-                    ),
-                  ),
-
-                ];
-              },
-              body: TabBarView(
-                children: [
-                  listCharlas(),
-                  listLlamados()
-
-                ],
-              ),
-
-            )
-        ),
-        floatingActionButton: _botones()
-
-    );
-  }
-
-  Widget busquedaNoticias(){
-    return Container (
-        height: 600,
-        width: 600,
-        child: Center(
-        child: Scaffold(
-      body: Column(
+    return new DefaultTabController(length: 2, child: new Scaffold(
+      appBar: AppBar(
+          bottom:tabBar ,
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.light),
+          backgroundColor: Colores().colorAzul,
+          title: Text("NOTICIAS"),
+/*          actions: [
+            IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.search)),
+          ]
+*/      ),
+      body: TabBarView(
         children: [
-          BarraDeNavegacion(
-            titulo: TextField(
-              onChanged: (valor){
-                _filtroNoticias(valor);
-              },
-              style: TextStyle(color: Colores().colorBlanco),
-              decoration: InputDecoration(
-                hintText: "BUSCA UNA NOTICIA",
-                hintStyle: TextStyle(
-                  fontFamily: 'Trueno',
-                  fontSize: 14,
-                  color: Colores().colorBlanco)),
-              ),
-            ),
-          Expanded(
-              child: Container(
-                height: 600,
-                child: FutureBuilder(
-                  future: obtenerNoticias(),
-                  builder: (context, snapshot){
-                    if(snapshot.connectionState == ConnectionState.waiting){
-                      return Center(
-                        child:  Image.asset('recursos/logo-carga.gif'),
-                      );
-                    } else{
-                      return ListView.builder(
-                        itemCount: listaNoticias.length,
-                        itemBuilder: (context, index){
-                          return Container(
-                            margin: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: Colores().colorBlanco,
-                                  boxShadow: <BoxShadow>[
-                              BoxShadow(
-                              color: Colors.black12,
-                                  blurRadius: 15,
-                                  offset: Offset(0,0)
-                              ), ]
-                            ),
-                            child: ListTile(
-                              title: Text('Titulo: ' + listaNoticias[index].titulo),
-                              subtitle: Text(
-                                  'Descripción: ' + listaNoticias[index].descripcion +
-                                      '\nLink: ' + listaNoticias[index].link
-                              ),
-                              onLongPress: (){
-                                String tipo = listaNoticias[index].tipo;
-                                String tit = listaNoticias[index].titulo;
-                                String desc = listaNoticias[index].descripcion;
-                                String link = listaNoticias[index].link;
-
-                                accionNoticia(tipo, tit, desc, link, context);
-                              } ,
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  },
-                ),
-              )
-          )
-
-
-
+          listCharlas(),
+          listLlamados()
         ],
       ),
-    )));
+
+      floatingActionButton:
+      isUsuarioAdmin == false
+          ? FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Colores().colorAzul,
+        onPressed: Navegacion(context).navegarAltaNoticia,
+      )
+          : SizedBox(height: 0.0),
+    ),
+
+    );
   }
 
   Future<void> obtenerNoticias() async {
@@ -259,7 +155,8 @@ class _NoticiasState extends State<Noticias> {
                       title: Text('Titulo: ' + listaLlamados[index].titulo),
                       subtitle: Text(
                           'Descripción: ' + listaLlamados[index].descripcion +
-                              '\nLink: ' + listaLlamados[index].link
+                              '\nLink: ' + listaLlamados[index].link +
+                              '\nFecha de Publicación: ' + listaLlamados[index].fechaSubida
                       ),
                       onTap: (){
 
@@ -330,7 +227,8 @@ class _NoticiasState extends State<Noticias> {
                       title: Text('Titulo: ' + listaCharlas[index].titulo),
                       subtitle: Text(
                           'Descripción: ' + listaCharlas[index].descripcion +
-                        '\nLink: ' + listaCharlas[index].link
+                        '\nLink: ' + listaCharlas[index].link +
+                        '\nFecha de Publicación: ' + listaCharlas[index].fechaSubida
                       ),
                       onTap: (){
 
@@ -520,7 +418,7 @@ class _NoticiasState extends State<Noticias> {
                             : null
                         ),
                       ),
-                      !modoEditar
+/*                      !modoEditar
                           ? Boton(
                         titulo: 'EDITAR',
                         onTap: (){
@@ -621,10 +519,16 @@ class _NoticiasState extends State<Noticias> {
                           },
                           child: const Text('ATRAS')
                       ),
-                      !modoEditar
+*/                     !modoEditar
                           ? SocialMediaBotones()
-                          : Container()
+                          : Container(),
 
+                    // Eliminar este boton al activar los botones de arriba
+                TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('ATRAS'))
                     ],
                   ),
                 ),

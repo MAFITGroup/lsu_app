@@ -59,7 +59,7 @@ class _LoginState extends State<Login> {
   loginForm(context) {
     String a,b;
     return Container(
-      child: Form(
+
         child: Column(
           children: [
             TextFieldTexto(
@@ -83,10 +83,15 @@ class _LoginState extends State<Login> {
               valor: (value) {
                 this._password = value;
               },
-              validacion: (value) =>
-                  value.isEmpty
-                      ? 'La contraseña es requerida'
-                      : Validar().validarPassword(value),
+              validacion: (value){
+                if (value.isEmpty) {
+                  return 'Campo obligatorio';
+                } else if (value.length <= 8) {
+                  return 'La contraseña debe contener mas de 8 caracteres';
+                } else {
+                  return Validar().validarPassword(value);
+                }
+              },
             ),
 
             SizedBox(height: 30),
@@ -95,19 +100,11 @@ class _LoginState extends State<Login> {
                 titulo: 'INGRESAR',
                 onTap: () {
 
-                  if(_email != null && _password != null){
+
+                 if(Validar().camposVacios(formKey)){
 
                     AuthService().signIn(_email, _password, context);
 
-                  }
-                  else{
-
-                    return showCupertinoDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (context) {
-                          return AlertDialog_campoVacio();
-                        });
                   }
 
                 }),
@@ -155,7 +152,7 @@ class _LoginState extends State<Login> {
             ),
           ],
         ),
-      ),
+
     );
   }
 }
