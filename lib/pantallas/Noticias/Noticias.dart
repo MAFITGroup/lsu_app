@@ -83,7 +83,7 @@ class _NoticiasState extends State<Noticias> {
               statusBarIconBrightness: Brightness.light,
               statusBarBrightness: Brightness.light),
           backgroundColor: Colores().colorAzul,
-          title: Text("NOTICIAS"),
+          title: Text("NOTICIAS",style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
 /*          actions: [
             IconButton(
                 onPressed: () {},
@@ -98,13 +98,13 @@ class _NoticiasState extends State<Noticias> {
       ),
 
       floatingActionButton:
-      isUsuarioAdmin
+      isUsuarioAdmin == true
           ? FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: Colores().colorAzul,
         onPressed: Navegacion(context).navegarAltaNoticia,
       )
-          : SizedBox(height: 0.0),
+          : null,
     ),
 
     );

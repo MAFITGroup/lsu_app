@@ -247,10 +247,10 @@ class ControladorUsuario {
 
     firestore.collection('usuarios').doc(usuarioId).update({
       'correo': correoNuevo,
-      'nombreCompleto': nombreNuevo,
-      'telefono': celularNuevo,
+      'nombreCompleto': nombreNuevo.trim(),
+      'telefono': celularNuevo.trim(),
       'localidad': departamentoNuevo,
-      'especialidad': especialidadNueva,
+      'especialidad': especialidadNueva.trim(),
     }).then((value) => print('Usuario editado correctamente'));
   }
 

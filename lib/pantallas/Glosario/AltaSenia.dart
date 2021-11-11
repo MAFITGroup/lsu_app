@@ -18,6 +18,7 @@ import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
+import 'package:lsu_app/pantallas/Glosario/Glosario.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -275,9 +276,21 @@ class _AltaSeniaState extends State<AltaSenia> {
                                                   /*Al presionar Ok, cierro la el dialogo y cierro la
                                                    ventana de alta seña
                                                      */
-                                                  Navigator.of(context)
-                                                      .popUntil((route) =>
-                                                          route.isFirst);
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return Glosario();
+                                                      },
+                                                    ),
+                                                  );
+                                                  /*
+                                                        Dos POP, uno para el diologo y otro para la
+                                                        pantalla de Alta
+                                                         */
+                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
                                                 })
                                           ],
                                         );

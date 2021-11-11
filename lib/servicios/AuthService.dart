@@ -28,8 +28,6 @@ class AuthService extends ChangeNotifier {
   //Cerrar sesion
   signOut() {
     firebaseAuth.signOut();
-
-
   }
 
   //Iniciar Sesion
@@ -56,15 +54,23 @@ class AuthService extends ChangeNotifier {
           firebaseAuth
               .signInWithEmailAndPassword(email: email, password: password)
               .then((val) {
-            Navegacion(context).navegarAPaginaInicial();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return PaginaInicial();
+                },
+              ),
+            );
+            Navigator.of(context).pop();
           }).catchError((e) {
-            String erro = e.toString();
+            String error = e.toString();
             ErrorHandler().errorDialog(e, context);
 
-            if (erro.contains('too-many-requests')) {
+            if (error.contains('too-many-requests')) {
               ErrorHandler().errorDialogTooManyRequest(e, context);
             }
-            if (erro.contains('wrong-password')) {
+            if (error.contains('wrong-password')) {
               ErrorHandler().errorDialogWrongPassword(e, context);
             }
           });

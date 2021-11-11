@@ -5,12 +5,10 @@ import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/Boton.dart';
-import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:lsu_app/widgets/auth_background.dart';
 import 'package:lsu_app/widgets/card_container.dart';
-
 
 class Login extends StatefulWidget {
   @override
@@ -42,10 +40,7 @@ class _LoginState extends State<Login> {
                         color: Colores().colorAzul),
                   ),
                   SizedBox(height: 30),
-                  Form(
-                      key: formKey,
-                      child: loginForm(context)
-                  ),
+                  Form(key: formKey, child: loginForm(context)),
                 ],
               ),
             ),
@@ -57,102 +52,71 @@ class _LoginState extends State<Login> {
   }
 
   loginForm(context) {
-    String a,b;
     return Container(
-
-        child: Column(
-          children: [
-            TextFieldTexto(
-              nombre: 'CORREO',
-              icon: Icon(Icons.alternate_email_rounded),
-              valor: (value) {
-                a = value.toLowerCase();
-                b= a.trim();
-                this._email = b;
-              },
-              validacion: (value) => value.isEmpty
-                  ? 'Campo obligatorio'
-                  : Validar().validarCorreo(value)
-            ),
-
-            SizedBox(height: 30),
-
-            TextFieldContrasenia(
-              nombre: 'CONTRASEÑA',
-              icon: Icon(Icons.lock_outline),
-              valor: (value) {
-                this._password = value;
-              },
-              validacion: (value){
-                if (value.isEmpty) {
-                  return 'Campo obligatorio';
-                } else if (value.length <= 8) {
-                  return 'La contraseña debe contener mas de 8 caracteres';
-                } else {
-                  return Validar().validarPassword(value);
+      child: Column(
+        children: [
+          TextFieldTexto(
+            nombre: 'CORREO',
+            icon: Icon(Icons.alternate_email_rounded),
+            valor: (value) {
+              this._email = value.toLowerCase().trim();
+            },
+            validacion: (value) => value.isEmpty
+                ? 'Campo obligatorio'
+                : Validar().validarCorreo(value),
+          ),
+          SizedBox(height: 30),
+          TextFieldContrasenia(
+            nombre: 'CONTRASEÑA',
+            icon: Icon(Icons.lock_outline),
+            valor: (value) {
+              this._password = value;
+            },
+            validacion: (value) {
+              if (value.isEmpty) {
+                return 'Campo obligatorio';
+              } else if (value.length <= 8) {
+                return 'La contraseña debe contener mas de 8 caracteres';
+              } else {
+                return Validar().validarPassword(value);
+              }
+            },
+          ),
+          SizedBox(height: 30),
+          Boton(
+              titulo: 'INGRESAR',
+              onTap: () {
+                if (Validar().camposVacios(formKey)) {
+                  AuthService().signIn(_email, _password, context);
                 }
-              },
-            ),
-
-            SizedBox(height: 30),
-
-            Boton(
-                titulo: 'INGRESAR',
-                onTap: () {
-
-
-                 if(Validar().camposVacios(formKey)){
-
-                    AuthService().signIn(_email, _password, context);
-
-                  }
-
-                }),
-
-            SizedBox(height: 10),
-
-            TextButton(
-                onPressed:
-
-                  Navegacion(context).navegarAResetPassword
-
-                ,
-                child: Container(
-                    alignment: Alignment.bottomCenter,
-                    padding: EdgeInsets.only(top: 15.0, left: 20.0),
-                    child: InkWell(
-                        child: Text('OLVIDE MI CONTRASEÑA',
-                            style: TextStyle(
-                                color: Colores().colorAzul,
-                                fontFamily: 'Trueno',
-                                fontSize: 11.0,
-                                decoration: TextDecoration.underline)
-                        )
-                    )
-                )
-            ),
-            TextButton(
-                onPressed:
-
-                  Navegacion(context).navegarAPrincipalDest
-                ,
-                child: Container(
-                    alignment: Alignment.bottomCenter,
-                    padding: EdgeInsets.only(top: 15.0, left: 20.0),
-                    child: InkWell(
-                        child: Text('ATRAS',
-                            style: TextStyle(
-                                color: Colores().colorAzul,
-                                fontFamily: 'Trueno',
-                                fontSize: 11.0,
-                                decoration: TextDecoration.underline)
-                        )
-                    )
-                )
-            ),
-          ],
-        ),
-
+              }),
+          SizedBox(height: 10),
+          TextButton(
+              onPressed: Navegacion(context).navegarAResetPassword,
+              child: Container(
+                  alignment: Alignment.bottomCenter,
+                  padding: EdgeInsets.only(top: 15.0, left: 20.0),
+                  child: InkWell(
+                      child: Text('OLVIDE MI CONTRASEÑA',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration.underline))))),
+          TextButton(
+              onPressed: Navegacion(context).navegarAPrincipalDest,
+              child: Container(
+                  alignment: Alignment.bottomCenter,
+                  padding: EdgeInsets.only(top: 15.0, left: 20.0),
+                  child: InkWell(
+                      child: Text('ATRAS',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration.underline))))),
+        ],
+      ),
     );
   }
 }

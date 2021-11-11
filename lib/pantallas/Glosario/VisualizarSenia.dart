@@ -18,6 +18,8 @@ import 'package:lsu_app/widgets/SeleccionadorVideo.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
+import 'Glosario.dart';
+
 class VisualizarSenia extends StatefulWidget {
   final Senia senia;
   final bool isUsuarioAdmin;
@@ -309,9 +311,30 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                                        ventana de alta seña
 
                                                          */
+                                                        Navigator
+                                                            .pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return Glosario();
+                                                            },
+                                                          ),
+                                                        );
+                                                        /*
+                                                        Cuatro POP, uno para el diologo y los demas
+                                                        para la volver a la
+                                                        pantalla de glosario
+                                                         */
                                                         Navigator.of(context)
-                                                            .popUntil((route) =>
-                                                                route.isFirst);
+                                                            .pop();
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       })
                                                 ],
                                               );
@@ -439,8 +462,19 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                                    ventana de visualizacion seña
 
                                                      */
-                                            Navigator.of(context).popUntil(
-                                                (route) => route.isFirst);
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return Glosario();
+                                                },
+                                              ),
+                                            );
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
                                           })
                                     ],
                                   );

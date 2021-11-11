@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
 
 
@@ -71,10 +71,10 @@ class ControladorContenido {
     String docId = contenido.documentID;
 
     firestore.collection("biblioteca").doc(docId).update({
-      'titulo': tituloNuevo,
+      'titulo': tituloNuevo.trim(),
       'descripcion': descripcionNueva,
       'categoria': categoriaNueva,
-      'autor' : autorNuevo,
+      'autor' : autorNuevo.trim(),
     }).then((value) => print("Contenido Editado correctamente"));
   }
 
@@ -138,9 +138,9 @@ class ControladorContenido {
          */
         'documentID': docID,
         'usuarioAlta': usuarioAlta,
-        'titulo': titulo,
+        'titulo': titulo.trim(),
         'descripcion': descripcion,
-        'autor' : autor,
+        'autor' : autor.trim(),
         'categoria': categoria,
         'archivoRef': downloadLink,
 
@@ -180,9 +180,9 @@ class ControladorContenido {
       await firestore.collection("biblioteca").doc(docID).set({
         'documentID': docID,
         'usuarioAlta': usuarioAlta,
-        'titulo': titulo,
+        'titulo': titulo.trim(),
         'descripcion': descripcion,
-        'autor': autor,
+        'autor': autor.trim(),
         'categoria': categoria,
         'archivoRef': downloadLink,
 

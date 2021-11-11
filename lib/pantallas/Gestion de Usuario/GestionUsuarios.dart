@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
@@ -6,7 +5,6 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/widgets/Boton.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class GestionUsuarios extends StatefulWidget {
   @override
@@ -69,7 +67,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
               statusBarIconBrightness: Brightness.light,
               statusBarBrightness: Brightness.light),
           backgroundColor: Colores().colorAzul,
-          title: Text("GESTION DE USUARIOS"),
+          title: Text("GESTION DE USUARIOS",style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
 /*          actions: [
             IconButton(
                 onPressed: () {},

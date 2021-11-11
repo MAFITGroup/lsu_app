@@ -208,12 +208,21 @@ class _AltaContenidoState extends State<AltaContenido> {
                                                   /*Al presionar Ok, cierro la el dialogo y cierro la
                                                    ventana de alta contenido
                                                      */
-                                                  Navigator.of(context).pushAndRemoveUntil(
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext context) =>
-                                                              Biblioteca()),
-                                                      ModalRoute.withName('/'),
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                      context) {
+                                                        return Biblioteca();
+                                                      },
+                                                    ),
                                                   );
+                                                  /*
+                                                        Dos POP, uno para el diologo y otro para la
+                                                        pantalla de Alta
+                                                         */
+                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
                                                 })
                                           ],
                                         );
