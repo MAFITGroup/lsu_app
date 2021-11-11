@@ -110,8 +110,8 @@ class ControladorContenido {
       String docID,
       String titulo,
       String descripcion,
-      String categoria,
       String autor,
+      String categoria,
       String usuarioAlta,
       String destino,
       File archivo) async {
@@ -139,8 +139,8 @@ class ControladorContenido {
         'documentID': docID,
         'usuarioAlta': usuarioAlta,
         'titulo': titulo,
-        'autor' : autor,
         'descripcion': descripcion,
+        'autor' : autor,
         'categoria': categoria,
         'archivoRef': downloadLink,
 
@@ -181,8 +181,8 @@ class ControladorContenido {
         'documentID': docID,
         'usuarioAlta': usuarioAlta,
         'titulo': titulo,
-        'autor': autor,
         'descripcion': descripcion,
+        'autor': autor,
         'categoria': categoria,
         'archivoRef': downloadLink,
 

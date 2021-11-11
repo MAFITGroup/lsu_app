@@ -74,7 +74,7 @@ class _BibliotecaState extends State<Biblioteca> {
                                     },
 
                                     title: Text("Titulo: " + listaContenido[index].titulo),
-                                    subtitle: Text ('Categoría: ' + listaContenido[index].categoria + "\nAutor: " + listaContenido[index].autor),
+                                    subtitle: Text ("Autor: " + listaContenido[index].autor + '\nCategoría: ' + listaContenido[index].categoria),
                                   ));
                             });
                       }

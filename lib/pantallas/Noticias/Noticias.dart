@@ -98,7 +98,7 @@ class _NoticiasState extends State<Noticias> {
       ),
 
       floatingActionButton:
-      isUsuarioAdmin == false
+      isUsuarioAdmin
           ? FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: Colores().colorAzul,
@@ -275,7 +275,7 @@ class _NoticiasState extends State<Noticias> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: [
-                  Text('Uds esta prestes a visitar un sitio web fuera de la app,'),
+                  Text('Uds esta a punto de visitar un sitio web fuera de la app,'),
                   SizedBox(height: 10.0),
                   Text('¿Desea continuar?'),
                 ],

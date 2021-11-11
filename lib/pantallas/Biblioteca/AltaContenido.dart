@@ -15,6 +15,7 @@ import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
+import 'package:lsu_app/pantallas/Biblioteca/Biblioteca.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -207,9 +208,12 @@ class _AltaContenidoState extends State<AltaContenido> {
                                                   /*Al presionar Ok, cierro la el dialogo y cierro la
                                                    ventana de alta contenido
                                                      */
-                                                  Navigator.of(context)
-                                                      .popUntil((route) =>
-                                                  route.isFirst);
+                                                  Navigator.of(context).pushAndRemoveUntil(
+                                                      MaterialPageRoute(
+                                                          builder: (BuildContext context) =>
+                                                              Biblioteca()),
+                                                      ModalRoute.withName('/'),
+                                                  );
                                                 })
                                           ],
                                         );
@@ -266,8 +270,8 @@ class _AltaContenidoState extends State<AltaContenido> {
         _controladorContenido.crearYSubirContenido(
             docID,
             _tituloContenido,
-            _autorContenido,
             _descripcionContenido,
+            _autorContenido,
             _catSeleccionada,
             nombreUsuario,
             destino,

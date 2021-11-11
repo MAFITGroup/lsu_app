@@ -9,6 +9,7 @@ import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
+import 'package:lsu_app/pantallas/Biblioteca/Biblioteca.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -281,9 +282,11 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                                        ventana de alta contenido
 
                                                          */
-                                                        Navigator.of(context)
-                                                            .popUntil((route) =>
-                                                                route.isFirst);
+                                                        Navigator.of(context).pushAndRemoveUntil(
+                                                          MaterialPageRoute(
+                                                              builder: (BuildContext context) =>
+                                                                  Biblioteca()),
+                                                          ModalRoute.withName('/'), );
                                                       })
                                                 ],
                                               );
@@ -389,8 +392,12 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                 mensaje:
                                     "El contenido ha sido eliminado correctamente.",
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .popUntil((route) => route.isFirst);
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              Biblioteca()),
+                                      ModalRoute.withName('/'),
+                                  );
                                 },
                               );
                             }).catchError((e) {
