@@ -192,5 +192,35 @@ class ErrorHandler {
     );
   }
 
+  Future<bool> errorDialogEditarPerfil(BuildContext context, e ) {
+    return showCupertinoDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)
+              ),
+              title: Text('Editar perfil'),
+              content: Text('Ocurrió un error durante la modificación de datos, intente nuevamente'),
+              actions: [
+                TextButton(
+                  child: Text('ok',
+                      style: TextStyle(
+                          color: Colores().colorAzul,
+                          fontFamily: 'Trueno',
+                          fontSize: 11.0,
+                          decoration: TextDecoration.underline
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ]
+
+          );
+        }
+    );
+  }
 
 }

@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
-class TextFieldNumerico extends StatelessWidget {
+class TextFieldNumerico extends StatefulWidget {
+
   final String nombre;
   final Function(String) valor;
   final Function(String) validacion;
   final Icon icon;
+
+  final TextEditingController controlador;
+  final bool botonHabilitado;
 
   TextFieldNumerico({
     Key key,
@@ -15,16 +19,28 @@ class TextFieldNumerico extends StatelessWidget {
     this.valor,
     this.validacion,
     this.icon,
+    this.controlador,
+    this.botonHabilitado
   }) : super(key: key);
 
   @override
+  _TextFieldNumericoState createState() => _TextFieldNumericoState();
+
+}
+
+class _TextFieldNumericoState extends State<TextFieldNumerico>{
+
+  @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: TextFormField(
+        enabled: widget.botonHabilitado,
+          controller: widget.controlador,
           decoration: InputDecoration(
-              prefixIcon: icon == null ? Icon(null) : icon,
-              labelText: nombre,
+              prefixIcon: widget.icon == null ? Icon(null) : widget.icon,
+              labelText: widget.nombre,
               labelStyle: TextStyle(
                   fontFamily: 'Trueno',
                   fontSize: 12.0,
@@ -37,8 +53,8 @@ class TextFieldNumerico extends StatelessWidget {
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.digitsOnly
           ],
-          onChanged: valor,
-          validator: validacion),
+          onChanged: widget.valor,
+          validator: widget.validacion),
     );
   }
 }

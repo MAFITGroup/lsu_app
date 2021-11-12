@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
 
 class ControladorCategoria {
@@ -6,6 +7,62 @@ class ControladorCategoria {
   final categoriasRef = FirebaseFirestore.instance.collection('categorias');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   Categoria categoria;
+  String _documentID;
+
+  /*
+  Crea la categoría
+   */
+  void crearCategoria(String nombre) {
+    String docId = new UniqueKey().toString();
+    //creo mi categoria
+    firestore.collection("categorias").doc(docId).set({
+      'documentID': docId,
+      'nombre': nombre.trimLeft().trimRight(),
+    });
+  }
+
+  /*
+  Se usa para obtener el objeto categoria
+  cuando entro a Visualizarla
+   */
+  Future<Categoria> obtenerCategoria(String nombreCategoria) async {
+    await firestore
+        .collection('categorias')
+        .where('nombre', isEqualTo: nombreCategoria)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _nombreCategoria = doc['nombre'];
+        _documentID = doc['documentID'];
+
+        categoria = new Categoria();
+        categoria.nombre = _nombreCategoria;
+        categoria.documentID = _documentID;
+      });
+    });
+
+    return categoria;
+  }
+
+  void editarCategoria(String nombreAnterior, String nombreNuevo) async {
+    Categoria categoria = await obtenerCategoria(nombreAnterior);
+    String docId = categoria.documentID;
+
+    firestore.collection("categorias").doc(docId).update({
+      'nombre': nombreNuevo,
+    }).then((value) => print("Categoria Editada correctamente"));
+  }
+
+  void eliminarCategoria(String nombre) async {
+    Categoria categoria = await obtenerCategoria(nombre);
+    String docId = categoria.documentID;
+
+    firestore
+        .collection("categorias")
+        .doc(docId)
+        .delete()
+        .then((value) => print("Categoria Eliminada correctamente"));
+  }
 
   /*
   Retorna una Lista Categoria con sus propiedades
@@ -13,15 +70,14 @@ class ControladorCategoria {
   Future<List<Categoria>> obtenerTodasCategorias() async {
     List<Categoria> lista = [];
 
-    await firestore
-        .collection('categorias')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
+    await categoriasRef.get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         _nombreCategoria = doc['nombre'];
+        _documentID = doc['documentID'];
 
         categoria = new Categoria();
         categoria.nombre = _nombreCategoria;
+        categoria.documentID = _documentID;
 
         lista.add(categoria);
       });
@@ -43,10 +99,60 @@ class ControladorCategoria {
     return listaCategorias;
   }
 
-  void crearCategoria(String nombre) {
-    //creo mi categoria
-    firestore.collection("categorias").doc(nombre).set({
-      'nombre': nombre,
-    });
+  void obtenerSeniaModifCat(String nombreAnterior, String nombreNuevo) async {
+    var batch = FirebaseFirestore.instance.batch();
+    await firestore
+        .collection('senias')
+        .where('categoria', isEqualTo: nombreAnterior)
+        .get()
+        .then((response) => {
+              response.docs.forEach((doc) => {
+                    firestore
+                        .collection('senias')
+                        .doc(doc.id)
+                        .update({'categoria': nombreNuevo})
+                  })
+            });
+  }
+
+  Future<bool> existeCategoria(String nombre) async {
+    bool existeCategoria = false;
+    String nombreCat;
+
+    if (nombre != null) {
+      await categoriasRef
+          .where('nombre', isEqualTo: nombre.trimLeft().trimRight())
+          .get()
+          .then((query) {
+        query.docs.forEach((element) {
+          nombreCat = element.get('nombre').toString();
+          if (nombreCat != null) {
+            existeCategoria = true;
+          }
+        });
+      });
+    }
+    return existeCategoria;
+  }
+
+  Future<bool> existeCategoriaenSenia(String nombre) async {
+    bool existeCategoriaEnSenia = false;
+    String nombreCat;
+
+    if (nombre != null) {
+      await firestore
+          .collection('senias')
+          .where('categoria', isEqualTo: nombre)
+          .get()
+          .then((query) {
+        query.docs.forEach((element) {
+          nombreCat = element.get('categoria').toString();
+          if (nombreCat != null) {
+            existeCategoriaEnSenia = true;
+          }
+        });
+      });
+    }
+    return existeCategoriaEnSenia;
   }
 }
