@@ -325,7 +325,7 @@ class _NoticiasState extends State<Noticias> {
             builder: (context, setState){
               return AlertDialog(
                 insetPadding: EdgeInsets.all(2.0),
-                title: Text('Editar Noticia'),
+                title: Text('Visualizar Noticia'),
                 content: SingleChildScrollView(
                   child: Column(
                     children: [
