@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
@@ -29,8 +28,6 @@ class AuthService extends ChangeNotifier {
   //Cerrar sesion
   signOut() {
     firebaseAuth.signOut();
-
-
   }
 
   //Iniciar Sesion
@@ -43,7 +40,7 @@ class AuthService extends ChangeNotifier {
     switch (estadoUsuario) {
       case 'PENDIENTE':
         {
-          return showCupertinoDialog(
+          return showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {
@@ -57,15 +54,23 @@ class AuthService extends ChangeNotifier {
           firebaseAuth
               .signInWithEmailAndPassword(email: email, password: password)
               .then((val) {
-            Navegacion(context).navegarAPaginaInicial();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return PaginaInicial();
+                },
+              ),
+            );
+            Navigator.of(context).pop();
           }).catchError((e) {
-            String erro = e.toString();
+            String error = e.toString();
             ErrorHandler().errorDialog(e, context);
 
-            if (erro.contains('too-many-requests')) {
+            if (error.contains('too-many-requests')) {
               ErrorHandler().errorDialogTooManyRequest(e, context);
             }
-            if (erro.contains('wrong-password')) {
+            if (error.contains('wrong-password')) {
               ErrorHandler().errorDialogWrongPassword(e, context);
             }
           });
@@ -74,7 +79,7 @@ class AuthService extends ChangeNotifier {
 
       case 'INACTIVO':
         {
-          return showCupertinoDialog(
+          return showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {
@@ -85,7 +90,7 @@ class AuthService extends ChangeNotifier {
 
       default:
         {
-          return showCupertinoDialog(
+          return showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {

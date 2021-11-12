@@ -6,7 +6,6 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
-import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -59,14 +58,20 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                   onSelected: (item) => onSelected(context, item),
                   itemBuilder: (context) => [
                     PopupMenuItem(
-                        value: 0,
-                        child: Text(!modoEditar
-                            ? "Editar Categoria"
-                            : "Cancelar Editar")),
+                      value: 0,
+                      child: ListTile(
+                          leading: Icon(
+                              !modoEditar ? Icons.edit : Icons.cancel_outlined),
+                          title: Text(!modoEditar
+                              ? "Editar Categoria"
+                              : "Cancelar Editar")),
+                    ),
                     PopupMenuItem(
                       value: 1,
-                      child: Text("Eliminar Categoria"),
-                    )
+                      child: ListTile(
+                          leading: Icon(Icons.delete_forever_outlined),
+                          title: Text("Eliminar Categoria")),
+                    ),
                   ],
                 ),
               ],
@@ -96,6 +101,9 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                         ? Boton(
                             titulo: 'GUARDAR',
                             onTap: () {
+                              if (nuevoNombreCategoria == null) {
+                                nuevoNombreCategoria = categoria.nombre;
+                              }
                               if (Validar().camposVacios(formKey)) {
                                 if (!isCategoriaExistente) {
                                   showDialog(
@@ -202,7 +210,8 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
   }
 
   Future<bool> existeCategoriaenSenia(String nombre) async {
-    isCategoriaEnSenia = await ControladorCategoria().existeCategoriaenSenia(nombre);
+    isCategoriaEnSenia =
+        await ControladorCategoria().existeCategoriaenSenia(nombre);
   }
 
   /*
@@ -275,7 +284,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                 return DialogoAlerta(
                                   tituloMensaje: "Aviso de Alerta",
                                   mensaje:
-                                  "No es posible eliminar la categoría. La misma está asociada a una o más señas.",
+                                      "No es posible eliminar la categoría. La misma está asociada a una o más señas.",
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },

@@ -1,31 +1,71 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
+import 'package:lsu_app/modelo/SubCategoria.dart';
 
 class ControladorCategoria {
   String _nombreCategoria;
   final categoriasRef = FirebaseFirestore.instance.collection('categorias');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   Categoria categoria;
+  SubCategoria subCategoria;
   String _documentID;
 
   /*
   Crea la categoría
    */
-  void crearCategoria(String nombre) {
-    String docId = new UniqueKey().toString();
+  void crearCategoria(String nombre, List<String> listaDeSubs) {
+    /*
+    Pido al menos una subCategoria, sino tengo no dejo guardar.
+     */
+    if (listaDeSubs == null || listaDeSubs.isEmpty) {
+      return;
+    }
+
+    String docId = new UniqueKey().toString(); //Clase que genera un id unico
+    int index = 0;
+    Map<String, String> subCategorias =
+        new Map<String, String>(); //map para armar las subCategorias
+
+    for (String nombre in listaDeSubs) {
+      index++;
+      subCategorias.putIfAbsent(
+          "nombreSub_$index", () => nombre.toUpperCase().trim());
+    }
+
     //creo mi categoria
     firestore.collection("categorias").doc(docId).set({
       'documentID': docId,
-      'nombre': nombre.trimLeft().trimRight(),
+      'nombre': nombre.toUpperCase().trim(),
+      'subCategorias': subCategorias,
     });
+  }
+
+  void editarCategoria(String nombreAnterior, String nombreNuevo) async {
+    Categoria categoria = await obtenerCategoriaPorNombre(nombreAnterior);
+    String docId = categoria.documentID;
+
+    firestore.collection("categorias").doc(docId).update({
+      'nombre': nombreNuevo,
+    }).then((value) => print("Categoria Editada correctamente"));
+  }
+
+  void eliminarCategoria(String nombre) async {
+    Categoria categoria = await obtenerCategoriaPorNombre(nombre);
+    String docId = categoria.documentID;
+
+    firestore
+        .collection("categorias")
+        .doc(docId)
+        .delete()
+        .then((value) => print("Categoria Eliminada correctamente"));
   }
 
   /*
   Se usa para obtener el objeto categoria
   cuando entro a Visualizarla
    */
-  Future<Categoria> obtenerCategoria(String nombreCategoria) async {
+  Future<Categoria> obtenerCategoriaPorNombre(String nombreCategoria) async {
     await firestore
         .collection('categorias')
         .where('nombre', isEqualTo: nombreCategoria)
@@ -42,26 +82,6 @@ class ControladorCategoria {
     });
 
     return categoria;
-  }
-
-  void editarCategoria(String nombreAnterior, String nombreNuevo) async {
-    Categoria categoria = await obtenerCategoria(nombreAnterior);
-    String docId = categoria.documentID;
-
-    firestore.collection("categorias").doc(docId).update({
-      'nombre': nombreNuevo,
-    }).then((value) => print("Categoria Editada correctamente"));
-  }
-
-  void eliminarCategoria(String nombre) async {
-    Categoria categoria = await obtenerCategoria(nombre);
-    String docId = categoria.documentID;
-
-    firestore
-        .collection("categorias")
-        .doc(docId)
-        .delete()
-        .then((value) => print("Categoria Eliminada correctamente"));
   }
 
   /*
@@ -83,6 +103,13 @@ class ControladorCategoria {
       });
     });
 
+    /*
+    Ordeno por nombre
+     */
+    lista.sort((a, b) {
+      return a.nombre.toString().compareTo(b.nombre.toString());
+    });
+
     return lista;
   }
 
@@ -96,11 +123,114 @@ class ControladorCategoria {
     QuerySnapshot querySnapshot = await categoriasRef.get();
     //obtengo solo el atributo del nombre para mostrar
     listaCategorias = querySnapshot.docs.map((doc) => doc["nombre"]).toList();
+
+    /*
+    Ordeno por nombre
+     */
+    listaCategorias.sort((a, b) {
+      return a.toString().compareTo(b.toString());
+    });
+
     return listaCategorias;
   }
 
+  /*
+  Retorna una lista de sub categorias solo con el nombre,
+   */
+  Future<List> listarSubCategorias() async {
+    List subCategorias = [];
+    List dataSubCat;
+    QuerySnapshot querySnapshot = await categoriasRef.get();
+    dataSubCat = querySnapshot.docs.map((doc) => doc["subCategorias"]).toList();
+
+    Map<String, dynamic> mapSubCategorias =
+        new Map<String, dynamic>(); //map para armar las subCategorias
+    for (mapSubCategorias in dataSubCat) {
+      for (String valor in mapSubCategorias.values) {
+        if (valor != null && valor.isNotEmpty) {
+          subCategorias.add(valor);
+        }
+      }
+    }
+
+    /*
+    Ordeno por nombre
+     */
+    subCategorias.sort((a, b) {
+      return a.toString().compareTo(b.toString());
+    });
+    return subCategorias;
+  }
+
+  /*
+  Retorna una lista de subCategorias
+   segun la categoria principal
+
+   La uso para listar subs en combos.
+   */
+  Future<List> listarSubCategoriasPorCategoriaList(
+      String nombreCategoria) async {
+    List subCategorias = [];
+    List dataSubCat;
+    QuerySnapshot querySnapshot =
+        await categoriasRef.where('nombre', isEqualTo: nombreCategoria).get();
+    dataSubCat = querySnapshot.docs.map((doc) => doc["subCategorias"]).toList();
+
+    Map<String, dynamic> mapSubCategorias =
+        new Map<String, dynamic>(); //map para armar las subCategorias
+    for (mapSubCategorias in dataSubCat) {
+      for (String keys in mapSubCategorias.values) {
+        if (keys != null && keys.isNotEmpty) {
+          subCategorias.add(keys);
+        }
+      }
+    }
+
+    /*
+    Ordeno por nombre
+     */
+    subCategorias.sort((a, b) {
+      return a.toString().compareTo(b.toString());
+    });
+    return subCategorias;
+  }
+
+  /*
+  Retorna una lista de subCategorias
+   segub la categoria principal con las propiedades de la SubCategoria.
+
+   La uso para glosario
+   */
+  Future<List<SubCategoria>> listarSubCategoriasPorCategoria(
+      String nombreCategoria) async {
+    List<SubCategoria> subCategorias = [];
+    List dataSubCat;
+    QuerySnapshot querySnapshot =
+        await categoriasRef.where('nombre', isEqualTo: nombreCategoria).get();
+    dataSubCat = querySnapshot.docs.map((doc) => doc["subCategorias"]).toList();
+
+    Map<String, dynamic> mapSubCategorias =
+        new Map<String, dynamic>(); //map para armar las subCategorias
+    for (mapSubCategorias in dataSubCat) {
+      for (String value in mapSubCategorias.values) {
+        if (value != null && value.isNotEmpty) {
+          SubCategoria sub = new SubCategoria();
+          sub.nombre = value;
+          subCategorias.add(sub);
+        }
+      }
+    }
+
+    /*
+    Ordeno por nombre
+     */
+    subCategorias.sort((a, b) {
+      return a.nombre.toString().compareTo(b.nombre.toString());
+    });
+    return subCategorias;
+  }
+
   void obtenerSeniaModifCat(String nombreAnterior, String nombreNuevo) async {
-    var batch = FirebaseFirestore.instance.batch();
     await firestore
         .collection('senias')
         .where('categoria', isEqualTo: nombreAnterior)
@@ -121,7 +251,8 @@ class ControladorCategoria {
 
     if (nombre != null) {
       await categoriasRef
-          .where('nombre', isEqualTo: nombre.trimLeft().trimRight())
+          .where('nombre',
+              isEqualTo: nombre.toUpperCase().trimLeft().trimRight())
           .get()
           .then((query) {
         query.docs.forEach((element) {
@@ -154,5 +285,16 @@ class ControladorCategoria {
       });
     }
     return existeCategoriaEnSenia;
+  }
+
+  Future<bool> existeSubCategoria(String nombreSubCategoria) async {
+    List subCategorias = await ControladorCategoria().listarSubCategorias();
+    for (String subCat in subCategorias) {
+      if (subCat == nombreSubCategoria) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 }

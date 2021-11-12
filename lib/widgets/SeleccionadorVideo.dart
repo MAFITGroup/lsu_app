@@ -27,7 +27,7 @@ class SeleccionadorVideoState extends State<SeleccionadorVideo> {
 
     if (widget.file != null) {
       chewieController = ChewieController(
-          aspectRatio: kIsWeb ? 16 / 9 : 5 / 4,
+          aspectRatio: kIsWeb ? 16 / 9 : 4 / 3,
           allowMuting: true,
           autoPlay: true,
           looping: true,
@@ -47,7 +47,7 @@ class SeleccionadorVideoState extends State<SeleccionadorVideo> {
        */
     } else if (widget.url != null) {
       chewieController = ChewieController(
-          aspectRatio: kIsWeb ? 16 / 9 : 5 / 4,
+          aspectRatio: kIsWeb ? 16 / 9 : 4 / 3,
           allowMuting: true,
           autoPlay: true,
           looping: true,

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
@@ -23,6 +24,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
   void initState() {
     obtenerUsuarioAdministrador();
     datosUsuario();
+
   }
 
   @override
@@ -35,19 +37,28 @@ class _PaginaInicialState extends State<PaginaInicial> {
               style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
           listaWidget: [
             PopupMenuButton<int>(
-              /*
-              Agregar en el metodo on Selected
-              las acciones
-               */
               onSelected: (item) => onSelected(context, item),
               itemBuilder: (context) =>
                   [
                     PopupMenuItem(
                         value: 0,
-                        child: Text("Cerrar Sesión")),
+                        child:ListTile(
+                          leading: Icon(Icons.logout),
+                          title: Text('Cerrar Sesión'),
+                        )),
                     PopupMenuItem(
                         value: 1,
-                        child: Text("Perfil")),
+                        child: ListTile(
+                          leading: Icon(Icons.account_circle_outlined),
+                            title: Text("Perfil")
+                        )),
+                    PopupMenuItem(
+                        value: 2,
+                        child: ListTile(
+                          leading: Icon(Icons.picture_as_pdf_outlined),
+                            title: Text("Ayuda"),
+
+                        )),
                   ],
             ),
           ],
@@ -103,9 +114,14 @@ class _PaginaInicialState extends State<PaginaInicial> {
     switch (item) {
       case 0:
         AuthService().signOut();
+        Navegacion(context).navegarAPrincipalDest();
         break;
       case 1:
         Navegacion(context).navegarAPerfil(usuario);
+        break;
+      case 2:
+        Navegacion(context).navegarManualDeUsuario();
+        break;
     }
   }
 
@@ -122,6 +138,10 @@ class _PaginaInicialState extends State<PaginaInicial> {
 
   Future<void> datosUsuario() async {
     usuario = await controladorUsuario
-        .obtenerUsuarioLogueado(FirebaseAuth.instance.currentUser.uid);
+          .obtenerUsuarioLogueado(FirebaseAuth.instance.currentUser.uid);
+
+    if(usuario.statusUsuario == 'INACTIVO' || usuario.statusUsuario == 'PENDIENTE' ){
+      AuthService().signOut();
+    }
   }
 }

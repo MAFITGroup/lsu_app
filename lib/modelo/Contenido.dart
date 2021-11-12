@@ -3,6 +3,7 @@ class Contenido {
   String _titulo;
   String _descripcion;
   String _categoria;
+  String _autor;
   String _urlarchivo;
   String _documentID;
 
@@ -12,6 +13,8 @@ class Contenido {
   String get usuarioAlta => _usuarioAlta;
 
   String get titulo => _titulo;
+
+  String get autor => _autor;
 
   String get descripcion => _descripcion;
 
@@ -23,16 +26,16 @@ class Contenido {
 
 
 
-
-
-
-
   set usuarioAlta(String value) {
     _usuarioAlta = value;
   }
 
   set titulo(String value) {
     _titulo = value;
+  }
+
+  set autor(String value) {
+    _autor = value;
   }
 
   set descripcion(String value) {

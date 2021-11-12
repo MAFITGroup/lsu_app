@@ -17,8 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Plataforma LSU',
       home: AuthService().handleAuth(),
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Color.fromRGBO(239, 243, 248, 1.0)
-      ),
+          scaffoldBackgroundColor: Color.fromRGBO(239, 243, 248, 1.0)),
     );
   }
 }

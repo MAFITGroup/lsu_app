@@ -9,10 +9,12 @@ import 'package:lsu_app/pantallas/Gestion%20de%20Usuario/Perfil.dart';
 import 'package:lsu_app/pantallas/Glosario/AltaSenia.dart';
 import 'package:lsu_app/pantallas/Glosario/Glosario.dart';
 import 'package:lsu_app/pantallas/Login/Login.dart';
+import 'package:lsu_app/pantallas/Login/ManualDeUsuario.dart';
 import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/pantallas/Login/Principal.dart';
 import 'package:lsu_app/pantallas/Login/Registrarse.dart';
 import 'package:lsu_app/pantallas/Login/ResetPassword.dart';
+import 'package:lsu_app/pantallas/Noticias/AltaNoticias.dart';
 import 'package:lsu_app/pantallas/Noticias/Noticias.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 
@@ -61,7 +63,7 @@ class Navegacion {
   }
 
   void navegarAPerfil(Usuario usuario) {
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => Perfil(usuario: usuario),
@@ -69,11 +71,11 @@ class Navegacion {
   }
 
 
-  void navegarAltaSenia() {
+  void navegarAltaSenia(List listaCategorias) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => AltaSenia(),
+          builder: (context) => AltaSenia(listaCategorias: listaCategorias),
         ));
   }
 
@@ -121,6 +123,21 @@ class Navegacion {
         ));
   }
 
+  void navegarAPerfilDest(Usuario usuario) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Perfil(usuario: usuario),
+        ));
+  }
+  void navegarAPaginaGestionUsuarioDest() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GestionUsuarios(),
+        ));
+  }
+
   void navegarAPaginaGestionUsuario() {
     Navigator.push(
         context,
@@ -153,7 +170,28 @@ class Navegacion {
         ));
   }
 
+  void navegarAltaNoticia() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AltaNoticias(),
+        ));
+  }
 
+  void navegarANoticiasDest() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Noticias(),
+        ));
+  }
+  void navegarManualDeUsuario() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ManualDeUsuario(),
+        ));
+  }
 
 
 

@@ -1,12 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/buscadores/BuscadorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
+import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
 import 'package:lsu_app/pantallas/Categorias/VisualizarCategoria.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
-
 
 class Categorias extends StatefulWidget {
   @override
@@ -15,8 +17,9 @@ class Categorias extends StatefulWidget {
 
 class _CategoriasState extends State<Categorias> {
   List<Categoria> listaCategorias = [];
-  List<Categoria> listaCategoriasFiltradas = [];
-  bool isSearching = false;
+  bool isUsuarioAdmin;
+  ControladorUsuario _controladorUsuario = new ControladorUsuario();
+  ControladorCategoria _controladorCategoria = new ControladorCategoria();
 
   @override
   Widget build(BuildContext context) {
@@ -24,30 +27,17 @@ class _CategoriasState extends State<Categorias> {
       body: Column(
         children: [
           BarraDeNavegacion(
-            titulo: !isSearching
-                ? Text("BUSQUEDA DE CATEGORIAS",
-                style: TextStyle(fontFamily: 'Trueno', fontSize: 14))
-                : TextField(
-              onChanged: (valor) {
-                _filtrarCategorias(valor);
-              },
-              style: TextStyle(color: Colores().colorBlanco),
-              decoration: InputDecoration(
-                  hintText: "BUSCA UNA CATEGORIA",
-                  hintStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 14,
-                      color: Colores().colorBlanco)),
-            ),
+            titulo: Text("CATEGORIAS",
+                style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
             listaWidget: [
               IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  setState(() {
-                    this.isSearching = !isSearching;
-                  });
-                },
-              )
+                  onPressed: () {
+                    showSearch(
+                        context: context,
+                        delegate: BuscadorCategoria(
+                            listaCategorias, listaCategorias, isUsuarioAdmin));
+                  },
+                  icon: Icon(Icons.search)),
             ],
           ),
           Expanded(
@@ -64,19 +54,16 @@ class _CategoriasState extends State<Categorias> {
                         itemBuilder: (context, index) {
                           return Card(
                               child: ListTile(
-                                onTap: () {
-
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => VisualizarCategoria(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VisualizarCategoria(
                                             categoria: listaCategorias[index],
-
                                           )));
-
-                                },
-                                title: Text(listaCategorias[index].nombre),
-                              ));
+                            },
+                            title: Text(listaCategorias[index].nombre),
+                          ));
                         });
                   }
                 },
@@ -96,17 +83,18 @@ class _CategoriasState extends State<Categorias> {
     );
   }
 
-  Future<void> listarCategorias() async {
-    listaCategorias = listaCategoriasFiltradas =
-    await ControladorCategoria().obtenerTodasCategorias();
+  Future<void> obtenerUsuarioAdministrador() async {
+    isUsuarioAdmin = await _controladorUsuario
+        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
+    /*
+    setState para que la pagina se actualize sola si el usuario es administrador.
+     */
+    setState(() {
+      isUsuarioAdmin;
+    });
   }
 
-  void _filtrarCategorias(String valor) {
-    setState(() {
-      listaCategoriasFiltradas = listaCategorias
-          .where((cat) =>
-          cat.toString().startsWith(valor))
-          .toList();
-    });
+  Future<void> listarCategorias() async {
+    listaCategorias = await _controladorCategoria.obtenerTodasCategorias();
   }
 }

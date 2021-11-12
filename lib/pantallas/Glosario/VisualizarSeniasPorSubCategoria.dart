@@ -8,22 +8,21 @@ import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
 import 'VisualizarSenia.dart';
 
-class VisualizarSeniaPorCategoria extends StatefulWidget {
+class VisualizarSeniasPorSubCategoria extends StatefulWidget {
+  final String nombreSubCategoria;
 
- final String nombreCategoria;
-
-  const VisualizarSeniaPorCategoria({Key key, this.nombreCategoria})
+  const VisualizarSeniasPorSubCategoria({Key key, this.nombreSubCategoria})
       : super(key: key);
 
   @override
-  _VisualizarSeniaPorCategoriaState createState() =>
-      _VisualizarSeniaPorCategoriaState();
+  _VisualizarSeniasPorSubCategoriaState createState() =>
+      _VisualizarSeniasPorSubCategoriaState();
 }
 
-class _VisualizarSeniaPorCategoriaState
-    extends State<VisualizarSeniaPorCategoria> {
+class _VisualizarSeniasPorSubCategoriaState
+    extends State<VisualizarSeniasPorSubCategoria> {
   bool isUsuarioAdmin;
-  List<Senia> listaSeniaXCategoria = [];
+  List<Senia> listaSeniaPorSubCategoria = [];
   ControladorSenia _controladorSenia = new ControladorSenia();
 
   @override
@@ -33,8 +32,7 @@ class _VisualizarSeniaPorCategoriaState
 
   @override
   Widget build(BuildContext context) {
-
-    String nombreCategoria = widget.nombreCategoria;
+    String nombreSubCategoria = widget.nombreSubCategoria;
     return Container(
       height: 600,
       width: 600,
@@ -43,19 +41,26 @@ class _VisualizarSeniaPorCategoriaState
           body: Column(
             children: [
               BarraDeNavegacion(
-                titulo: Text("BUSQUEDA DE SEÑA",
+                titulo: Text(
+                    "SEÑAS " + "- SUB CATEGORIA: " + widget.nombreSubCategoria,
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               ),
               Expanded(
                 child: Container(
                   child: FutureBuilder(
-                    future: listarSeniasXCategorias(nombreCategoria),
+                    future: listarSeniasPorSubCategorias(nombreSubCategoria),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Cargando...");
+                        return Center(
+                          child: Image.asset('recursos/logo-carga.gif'),
+                        );
+                      } else if (listaSeniaPorSubCategoria.length <= 0) {
+                        return Text(
+                            "NO EXISTEN SEÑAS DENTRO DE LA SUB CATEGORIA: " +
+                                widget.nombreSubCategoria);
                       } else {
                         return ListView.builder(
-                            itemCount: listaSeniaXCategoria.length,
+                            itemCount: listaSeniaPorSubCategoria.length,
                             itemBuilder: (context, index) {
                               return Card(
                                   child: ListTile(
@@ -64,11 +69,14 @@ class _VisualizarSeniaPorCategoriaState
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => VisualizarSenia(
-                                                senia: listaSeniaXCategoria[index],
+                                                senia:
+                                                    listaSeniaPorSubCategoria[
+                                                        index],
                                                 isUsuarioAdmin: isUsuarioAdmin,
                                               )));
                                 },
-                                title: Text(listaSeniaXCategoria[index].nombre),
+                                title: Text(
+                                    listaSeniaPorSubCategoria[index].nombre),
                               ));
                             });
                       }
@@ -83,8 +91,10 @@ class _VisualizarSeniaPorCategoriaState
     );
   }
 
-  Future<List<Senia>> listarSeniasXCategorias(String nombreCategoria) async {
-    listaSeniaXCategoria =  await _controladorSenia.obtenerSeniasXCategoria(nombreCategoria);
+  Future<List<Senia>> listarSeniasPorSubCategorias(
+      String nombreSubCategoria) async {
+    listaSeniaPorSubCategoria = await _controladorSenia
+        .obtenerSeniasPorSubCategoria(nombreSubCategoria);
   }
 
   Future<void> obtenerUsuarioAdministrador() async {

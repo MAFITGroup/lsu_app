@@ -31,34 +31,6 @@ Widget build(BuildContext context) {
 }
 
 }
-class AlertDialog_resetPass extends StatelessWidget {
-  final Widget child;
-
-  const AlertDialog_resetPass({Key key, this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      title: Text('Solicitud de nueva contraseña'),
-      content: Text('Link enviado a su casilla de correo'),
-      actions: [
-        TextButton(
-          child: Text('Ok',
-              style: TextStyle(
-                  color: Colores().colorAzul,
-                  fontFamily: 'Trueno',
-                  fontSize: 11.0,
-                  decoration: TextDecoration.underline)),
-          onPressed: () {
-            Navigator.of(context).pop();
-            Navegacion(context).navegarALoginDest;
-          },
-        )
-      ],
-    );
-  }
-}
 
 class AlertDialog_usrInactivo extends StatelessWidget {
   final Widget child;
@@ -201,7 +173,6 @@ class AlertDialog_resgistro extends StatelessWidget {
                     fontSize: 11.0,
                     decoration: TextDecoration.underline)),
             onPressed: () {
-              Navigator.of(context).pop();
               Navigator.of(context).pop();
               Navegacion(context).navegarAPrincipalDest();
             }),

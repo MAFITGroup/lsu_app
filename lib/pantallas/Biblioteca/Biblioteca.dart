@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lsu_app/buscadores/BuscadorContenido.dart';
 import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -35,8 +36,18 @@ class _BibliotecaState extends State<Biblioteca> {
           body: Column(
             children: [
               BarraDeNavegacion(
-                titulo: Text("BUSQUEDA DE CONTENIDO",
+                titulo: Text("CONTENIDO",
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
+                listaWidget: [
+                  IconButton(
+                      onPressed: () {
+                        showSearch(
+                            context: context,
+                            delegate: BuscadorContenido(
+                                listaContenido, listaContenido, isUsuarioAdmin));
+                      },
+                      icon: Icon(Icons.search)),
+                ],
               ),
               Expanded(
                 child: Container(
@@ -45,6 +56,7 @@ class _BibliotecaState extends State<Biblioteca> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Text("Cargando...");
+
                       } else {
                         return ListView.builder(
                             itemCount: listaContenido.length,
@@ -60,7 +72,9 @@ class _BibliotecaState extends State<Biblioteca> {
                                                 isUsuarioAdmin: isUsuarioAdmin,
                                               )));
                                     },
-                                    title: Text(listaContenido[index].titulo),
+
+                                    title: Text("Titulo: " + listaContenido[index].titulo),
+                                    subtitle: Text ("Autor: " + listaContenido[index].autor + '\nCategoría: ' + listaContenido[index].categoria),
                                   ));
                             });
                       }
