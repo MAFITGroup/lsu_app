@@ -118,7 +118,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                       title: Text(pendienteUsuarios[index].nombreCompleto),
                       subtitle: Text('Correo : ' + pendienteUsuarios[index].correo +
                           '\nCelular: ' + pendienteUsuarios[index].telefono  +
-                          '\nDepartamento: ' + pendienteUsuarios[index].localidad +
+                          '\nDepartamento: ' + pendienteUsuarios[index].departamento +
                           '\nEspecialidad: ' + pendienteUsuarios[index].especialidad),
                       onTap: () {
 
@@ -168,7 +168,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                       title: Text(activoUsuarios[index].nombreCompleto),
                       subtitle: Text('Correo : ' + activoUsuarios[index].correo +
                       '\nCelular: ' + activoUsuarios[index].telefono  +
-                      '\nDepartamento: ' + activoUsuarios[index].localidad +
+                      '\nDepartamento: ' + activoUsuarios[index].departamento +
                       '\nEspecialidad: ' + activoUsuarios[index].especialidad),
                       onTap: () {
                         String nombre = activoUsuarios[index].nombreCompleto;
@@ -216,7 +216,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                     title: Text(inactivoUsuarios[index].nombreCompleto),
                     subtitle: Text('Correo : ' + inactivoUsuarios[index].correo +
                         '\nCelular: ' + inactivoUsuarios[index].telefono  +
-                        '\nDepartamento: ' + inactivoUsuarios[index].localidad +
+                        '\nDepartamento: ' + inactivoUsuarios[index].departamento +
                         '\nEspecialidad: ' + inactivoUsuarios[index].especialidad),
                     onTap: () {
 

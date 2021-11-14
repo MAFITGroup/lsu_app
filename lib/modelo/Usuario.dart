@@ -3,7 +3,7 @@ class Usuario {
   String _correo;
   String _nombreCompleto;
   String _telefono;
-  String _localidad;
+  String _departamento;
   String _especialidad;
   bool _esAdministrador;
   String _statusUsuario;
@@ -22,7 +22,7 @@ class Usuario {
 
   String get telefono => _telefono;
 
-  String get localidad => _localidad;
+  String get departamento => _departamento;
 
   String get especialidad => _especialidad;
 
@@ -38,8 +38,8 @@ class Usuario {
     _especialidad = value;
   }
 
-  set localidad(String value) {
-    _localidad = value;
+  set departamento(String value) {
+    _departamento = value;
   }
 
   set telefono(String value) {

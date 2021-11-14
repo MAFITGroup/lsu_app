@@ -105,7 +105,6 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Center(
                 child: Form(
                   key: formKey,
                   child: Container(
@@ -351,7 +350,6 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),

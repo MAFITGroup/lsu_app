@@ -7,7 +7,7 @@ class ControladorUsuario {
   String _correo;
   String _nombreCompleto;
   String _telefono;
-  String _localidad;
+  String _departamento;
   String _especialidad;
   bool _esAdministrador;
   String _statusUsuario;
@@ -21,7 +21,7 @@ class ControladorUsuario {
       String email,
       String nombreCompleto,
       String telefono,
-      String localidad,
+      String departamento,
       String especialidad,
       bool esAdministrador,
       String statusUsuario) {
@@ -31,7 +31,7 @@ class ControladorUsuario {
       'correo': email.trim(),
       'nombreCompleto': nombreCompleto,
       'telefono': telefono,
-      'localidad': localidad,
+      'departamento': departamento,
       'especialidad': especialidad,
       'esAdministrador': esAdministrador,
       'statusUsuario': statusUsuario,
@@ -50,7 +50,7 @@ class ControladorUsuario {
         _correo = documentSnapshot['correo'];
         _nombreCompleto = documentSnapshot['nombreCompleto'];
         _telefono = documentSnapshot['telefono'];
-        _localidad = documentSnapshot['localidad'];
+        _departamento = documentSnapshot['departamento'];
         _especialidad = documentSnapshot['especialidad'];
         _esAdministrador = documentSnapshot['esAdministrador'];
         _statusUsuario = documentSnapshot['statusUsuario'];
@@ -59,7 +59,7 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
@@ -121,7 +121,7 @@ class ControladorUsuario {
         _correo = doc['correo'];
         _nombreCompleto = doc['nombreCompleto'];
         _telefono = doc['telefono'];
-        _localidad = doc['localidad'];
+        _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _esAdministrador = doc['esAdministrador'];
         _statusUsuario = doc['statusUsuario'];
@@ -131,7 +131,7 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
@@ -162,7 +162,7 @@ class ControladorUsuario {
         _correo = doc['correo'];
         _nombreCompleto = doc['nombreCompleto'];
         _telefono = doc['telefono'];
-        _localidad = doc['localidad'];
+        _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _esAdministrador = doc['esAdministrador'];
         _statusUsuario = doc['statusUsuario'];
@@ -172,7 +172,7 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
@@ -203,7 +203,7 @@ class ControladorUsuario {
         _correo = doc['correo'];
         _nombreCompleto = doc['nombreCompleto'];
         _telefono = doc['telefono'];
-        _localidad = doc['localidad'];
+        _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _esAdministrador = doc['esAdministrador'];
         _statusUsuario = doc['statusUsuario'];
@@ -213,7 +213,7 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
@@ -249,7 +249,7 @@ class ControladorUsuario {
       'correo': correoNuevo,
       'nombreCompleto': nombreNuevo.trim(),
       'telefono': celularNuevo.trim(),
-      'localidad': departamentoNuevo,
+      'departamento': departamentoNuevo,
       'especialidad': especialidadNueva.trim(),
     }).then((value) => print('Usuario editado correctamente'));
   }
@@ -264,7 +264,7 @@ class ControladorUsuario {
         _correo = doc['correo'];
         _nombreCompleto = doc['nombreCompleto'];
         _telefono = doc['telefono'];
-        _localidad = doc['localidad'];
+        _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _uid = doc['usuarioUID'];
 
@@ -272,7 +272,7 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.uid = _uid;
       });

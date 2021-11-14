@@ -10,6 +10,7 @@ import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
+
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
@@ -70,11 +71,7 @@ class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
     Usuario usuario = widget.usuario;
-    return Container(
-      height: 600,
-      width: 600,
-      child: Center(
-          child: Scaffold(
+    return Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -119,19 +116,6 @@ class _PerfilState extends State<Perfil> {
                         controlador: modoEditar
                             ? null
                             : TextEditingController(text: usuario.correo),
-
-                        /*
-                                          valor: (value) {
-
-                                            setState(() {
-                                              correoNuevo = value.toLowerCase();
-                                            });
-                                          },
-
-                                          validacion: (value) => value.isEmpty
-                                              ? 'Campo obligatorio'
-                                              : Validar().validarCorreo(value)
-                                          */
                       ),
                       // NOMBRE COMPLETO
                       TextFieldTexto(
@@ -173,7 +157,7 @@ class _PerfilState extends State<Perfil> {
                         child: DropdownSearch(
                           items: departamentos,
                           enabled: modoEditar,
-                          selectedItem: usuario.localidad,
+                          selectedItem: usuario.departamento,
                           onChanged: (value) {
                             setState(() {
                               departamentoNuevo = value.toUpperCase();
@@ -241,7 +225,7 @@ class _PerfilState extends State<Perfil> {
                                   celularNuevo = usuario.telefono;
                                 }
                                 if (departamentoNuevo == null) {
-                                  departamentoNuevo = usuario.localidad;
+                                  departamentoNuevo = usuario.departamento;
                                 }
                                 if (especialidadNueva == null) {
                                   especialidadNueva = usuario.especialidad;
@@ -251,7 +235,7 @@ class _PerfilState extends State<Perfil> {
                                       usuario.correo,
                                       usuario.nombreCompleto,
                                       usuario.telefono,
-                                      usuario.localidad,
+                                      usuario.departamento,
                                       usuario.especialidad,
                                       correoNuevo,
                                       nombreNuevo,
@@ -269,7 +253,7 @@ class _PerfilState extends State<Perfil> {
                                                   'Los datos han sido guardados correctamente'),
                                               actions: [
                                                 TextButton(
-                                                    child: Text('Ok',
+                                                    child: Text('OK',
                                                         style: TextStyle(
                                                             color: Colores()
                                                                 .colorAzul,
@@ -299,7 +283,7 @@ class _PerfilState extends State<Perfil> {
             ],
           ),
         ),
-      )),
+
     );
   }
 

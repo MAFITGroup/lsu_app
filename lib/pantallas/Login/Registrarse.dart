@@ -2,6 +2,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
@@ -27,6 +28,7 @@ class _RegistrarseState extends State<Registrarse> {
     'LAVALLEJA', 'MALDONADO', 'MONTEVIDEO', 'PAYSANDU', 'RIO NEGRO', 'RIVERA', 'ROCHA', 'SALTO', 'SORIANO',
     'SAN JOSE', 'TACUAREMBO', 'TREINTA Y TRES'];
 
+  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -147,6 +149,33 @@ class _RegistrarseState extends State<Registrarse> {
               },
               validacion: ((value) =>
                   value.isEmpty ? 'Campo obligatorio' : null)),
+
+          Container(
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: isChecked,
+                  onChanged: (value){
+                    setState(() {
+                      isChecked = value;
+                    });
+                  },
+
+                ),
+                TextButton(
+                    onPressed: (){
+                  Navegacion(context).navegarTerminosCondiciones();
+                }, child: Text('TERMINO Y CONDICIONES DE USO', style: TextStyle(
+                    color: Colores()
+                        .colorAzul,
+                    fontFamily:
+                    'Trueno',
+                    fontSize: 11.0,
+                    )))
+              ],
+            )
+          ),
           SizedBox(height: 50.0),
 
           Boton(
@@ -154,22 +183,49 @@ class _RegistrarseState extends State<Registrarse> {
               onTap: () {
                 String _statusUsuario = 'PENDIENTE';
 
-                if (Validar().camposVacios(formKey)) {
-                  AuthService()
+                if (Validar().camposVacios(formKey) ) {
+                  if (isChecked) {
+                    AuthService()
 
-                      //dejo mi UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
+                    //dejo mi UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
 
-                      .signUp(
-                          '',
-                          _email,
-                          _password,
-                          _nombreCompleto,
-                          _telefono,
-                          _localidad,
-                          _especialidad,
-                          false,
-                          _statusUsuario,
-                          context);
+                        .signUp(
+                        '',
+                        _email,
+                        _password,
+                        _nombreCompleto,
+                        _telefono,
+                        _localidad,
+                        _especialidad,
+                        false,
+                        _statusUsuario,
+                        context);
+                  }
+                  else {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Terminos y Condiciones de Uso'),
+                            content: Text(
+                                'Para completar el registro es necesario aceptar los Terminos y Condiciones de uso'),
+                            actions: [
+                              TextButton(onPressed: () {
+                                Navigator.of(context).pop();
+                              }, child: Text('OK', style: TextStyle(
+                                  color: Colores()
+                                      .colorAzul,
+                                  fontFamily:
+                                  'Trueno',
+                                  fontSize: 11.0,
+                                  decoration:
+                                  TextDecoration
+                                      .underline))),
+                            ],
+                          );
+                        }
+                    );
+                  }
                 }
               }),
 
