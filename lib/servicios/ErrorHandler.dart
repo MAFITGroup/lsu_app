@@ -90,7 +90,7 @@ class ErrorHandler {
   }
 
   Future<bool> errorDialog3(BuildContext context, e ) {
-    return showCupertinoDialog(
+    return showDialog(
       context: context,
         barrierDismissible: true,
         builder: (context) {

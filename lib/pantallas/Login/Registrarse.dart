@@ -166,7 +166,7 @@ class _RegistrarseState extends State<Registrarse> {
                 TextButton(
                     onPressed: (){
                   Navegacion(context).navegarTerminosCondiciones();
-                }, child: Text('TERMINO Y CONDICIONES DE USO', style: TextStyle(
+                }, child: Text('TERMINOS Y CONDICIONES DE USO', style: TextStyle(
                     color: Colores()
                         .colorAzul,
                     fontFamily:

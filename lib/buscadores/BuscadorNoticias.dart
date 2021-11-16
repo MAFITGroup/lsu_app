@@ -111,4 +111,4 @@ class BuscadorNoticias extends SearchDelegate {
 
 
 }
- // Widget de buscador
+

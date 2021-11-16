@@ -1,6 +1,12 @@
+import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 
 class ControladorUsuario {
   String _uid;
@@ -15,6 +21,8 @@ class ControladorUsuario {
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  User user = FirebaseAuth.instance.currentUser ;
+
 
   void crearUsuario(
       String uid,
@@ -291,6 +299,7 @@ class ControladorUsuario {
         .doc(docId)
         .delete()
         .then((value) => print('Usuario elimiando correctamente'));
+
   }
 
   Future eliminarAuth() async {
@@ -306,7 +315,29 @@ class ControladorUsuario {
         .collection('usuarios')
         .doc(docId)
         .update({'statusUsuario': 'INACTIVO'}).then(
-            (value) => print('Usuario elimiando correctamente'));
+            (value) => print('Usuario modificado correctamente'));
+  }
+
+  void reactivarUsuario(String correo, context) async {
+    Usuario usuario = await obtenerUsuarioPerfil(correo);
+    String docId = usuario.uid;
+
+    // Pasa el usuario a estado inactivo
+    await firestore
+        .collection('usuarios')
+        .doc(docId)
+        .update({'statusUsuario': 'PENDIENTE'}).then(
+            (value) => {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogoAlerta(
+                      tituloMensaje: "Solicitud de reactivación de usuario",
+                      mensaje: "Su solicitud esta pendiente de aprobación del administrador",
+                      onPressed: Navegacion(context).navegarALoginDest,
+                    );
+                  })
+            });
   }
 
   void administrarUsuario(
@@ -319,5 +350,45 @@ class ControladorUsuario {
       'statusUsuario': estado,
       'esAdministrador': esAdministrador,
     }).then((value) => print('Usuario actualizado correctamente'));
+  }
+
+  Future<List<Usuario>> obtenerUsuarios() async {
+    List<Usuario> listaUsuarios = [];
+
+    await firestore
+        .collection('usuarios')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _nombreCompleto = doc['nombreCompleto'];
+        _correo = doc['correo'];
+        _departamento = doc['departamento'];
+        _esAdministrador = doc['esAdministrador'];
+        _especialidad = doc['especialidad'];
+        _statusUsuario = doc['statusUsuario'];
+        _telefono = doc['telefono'];
+
+        usuario = new Usuario();
+
+        usuario.nombreCompleto = _nombreCompleto;
+        usuario.correo = _correo;
+        usuario.departamento = _departamento;
+        usuario.esAdministrador = _esAdministrador;
+        usuario.especialidad = _especialidad;
+        usuario.statusUsuario = _statusUsuario;
+        usuario.telefono = _telefono;
+
+        listaUsuarios.add(usuario);
+
+
+      });
+
+    });
+    listaUsuarios.sort((a,b){
+      return a.nombreCompleto.toString().compareTo(b.nombreCompleto.toString());
+
+    });
+
+    return listaUsuarios;
   }
 }

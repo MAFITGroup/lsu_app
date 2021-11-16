@@ -12,6 +12,7 @@ import 'package:lsu_app/pantallas/Login/Login.dart';
 import 'package:lsu_app/pantallas/Login/ManualDeUsuario.dart';
 import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/pantallas/Login/Principal.dart';
+import 'package:lsu_app/pantallas/Login/ReactivarUsuario.dart';
 import 'package:lsu_app/pantallas/Login/Registrarse.dart';
 import 'package:lsu_app/pantallas/Login/ResetPassword.dart';
 import 'package:lsu_app/pantallas/Login/TerminosCondiciones.dart';
@@ -109,6 +110,14 @@ class Navegacion {
         context,
         MaterialPageRoute(
           builder: (context) => ResetPassword(),
+        ));
+  }
+
+  void navegarAReactivarUsuario() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReactivarUsuario(),
         ));
   }
   void navegarAPaginaInicial() {

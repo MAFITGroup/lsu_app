@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 
@@ -32,43 +33,6 @@ Widget build(BuildContext context) {
 
 }
 
-class AlertDialog_usrInactivo extends StatelessWidget {
-  final Widget child;
-
-  const AlertDialog_usrInactivo({Key key, this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        title: Text('Usuario inactivo'),
-        content: Column(mainAxisSize: MainAxisSize.min, children: [
-          Container(
-              height: 100.0,
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
-              child: Center(
-                  child: Text(
-                      'Por favor, entre en contacto con el Administrador'))),
-          Container(
-              height: 50.0,
-              child: Row(children: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Ok',
-                        style: TextStyle(
-                            color: Colores().colorAzul,
-                            fontFamily: 'Trueno',
-                            fontSize: 11.0,
-                            decoration: TextDecoration.underline)))
-              ]))
-        ]));
-  }
-}
-
 class AlertDialog_usrPendiente extends StatelessWidget {
   final Widget child;
 
@@ -95,7 +59,7 @@ class AlertDialog_usrPendiente extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Ok',
+                    child: Text('OK',
                         style: TextStyle(
                             color: Colores().colorAzul,
                             fontFamily: 'Trueno',
@@ -132,7 +96,7 @@ class AlertDialog_usrNoRegistrado extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Ok',
+                    child: Text('OK',
                         style: TextStyle(
                             color: Colores().colorAzul,
                             fontFamily: 'Trueno',
