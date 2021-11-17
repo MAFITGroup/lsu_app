@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -391,4 +389,48 @@ class ControladorUsuario {
 
     return listaUsuarios;
   }
+
+  Future obtenerCantidadUsuariosActivos() async {
+    List<Usuario> listaUsuariosActivos = [];
+    int largo;
+
+    Usuario usuarioLogueado =
+    await obtenerUsuarioLogueado(firebaseAuth.currentUser.uid);
+    await firestore
+        .collection('usuarios')
+        .where('statusUsuario', isEqualTo: 'ACTIVO')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _uid = doc['usuarioUID'];
+        _correo = doc['correo'];
+        _nombreCompleto = doc['nombreCompleto'];
+        _telefono = doc['telefono'];
+        _departamento = doc['departamento'];
+        _especialidad = doc['especialidad'];
+        _esAdministrador = doc['esAdministrador'];
+        _statusUsuario = doc['statusUsuario'];
+
+        usuario = new Usuario();
+        usuario.uid = _uid;
+        usuario.correo = _correo;
+        usuario.nombreCompleto = _nombreCompleto;
+        usuario.telefono = _telefono;
+        usuario.departamento = _departamento;
+        usuario.especialidad = _especialidad;
+        usuario.esAdministrador = _esAdministrador;
+        usuario.statusUsuario = _statusUsuario;
+
+        if (usuario.correo != usuarioLogueado.correo) {
+          listaUsuariosActivos.add(usuario);
+        }
+      });
+    });
+
+    largo = listaUsuariosActivos.length;
+
+    return largo;
+  }
+
+
 }
