@@ -39,11 +39,11 @@ class VisualizarContenido extends StatefulWidget {
 
 class _VisualizarContenidoState extends State<VisualizarContenido> {
   List _categorias = [
-    'Papers',
-    'Tesis',
-    'Investigaciones',
-    'Otros'
-  ]; // Lista de las categorias dentro de biblioteca. Hardcodeadas xq son únicas.
+    'PAPERS',
+    'TESIS',
+    'INVESTIGACIONES',
+    'OTROS'
+  ];
   bool modoEditar;
   ControladorContenido _controladorContenido = new ControladorContenido();
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
@@ -273,9 +273,9 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                             builder: (BuildContext context) {
                                               return AlertDialog(
                                                 title: Text(
-                                                    'Edicion de Contenido'),
+                                                    'Editar Contenido'),
                                                 content: Text(
-                                                    'El contenido ha sido modificado correctamente'),
+                                                    'Los datos han sido guardados correctamente'),
                                                 actions: [
                                                   TextButton(
                                                       child: Text('Ok',
@@ -370,6 +370,10 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
   }
 
   void onSelected(BuildContext context, int item) {
+    String titulo = widget.contenido.titulo;
+    String descripcion = widget.contenido.descripcion;
+    String categoria = widget.contenido.categoria;
+    String autor = widget.contenido.autor;
     switch (item) {
       case 0:
         !modoEditar ? editarContenido() : canelarEditar();
@@ -380,9 +384,9 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Eliminación de Contenido'),
+                title: Text('Eliminar Contenido'),
                 content: Text(
-                    '¿Confirma que desea eliminar el contenido seleccionado?'),
+                    '¿¿Desea eliminar el contenido $titulo ?'),
                 actions: [
                   TextButton(
                       child: Text('Ok',
@@ -394,10 +398,10 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         eliminarContenido(
-                            widget.contenido.titulo,
-                            widget.contenido.descripcion,
-                            widget.contenido.categoria,
-                            widget.contenido.autor);
+                            titulo,
+                            descripcion,
+                            categoria,
+                            autor);
                         showCupertinoDialog(
                             context: context,
                             barrierDismissible: true,

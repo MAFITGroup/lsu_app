@@ -98,9 +98,9 @@ class _GlosarioState extends State<Glosario> {
                                                         .nombre,
                                               )));
                                 },
-                                title: Text(listaCategorias[index].nombre,
-                                    style: TextStyle(
-                                        fontFamily: 'Trueno', fontSize: 14)),
+                                title: Text("CATEGORÍA: " + listaCategorias[index].nombre,style: TextStyle(
+                                    fontFamily: 'Trueno',
+                                    fontSize: 14)),
                               ));
                             });
                       }

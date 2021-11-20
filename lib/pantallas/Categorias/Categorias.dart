@@ -68,7 +68,7 @@ class _CategoriasState extends State<Categorias> {
                                             categoria: listaCategorias[index],
                                           )));
                             },
-                            title: Text(listaCategorias[index].nombre,
+                            title: Text("CATEGORÍA: " + listaCategorias[index].nombre,
                                 style: TextStyle(
                                     fontFamily: 'Trueno', fontSize: 14)),
                           ));

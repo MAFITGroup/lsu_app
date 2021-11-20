@@ -116,102 +116,102 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Form(
-                key: formKey,
-                child: Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 300,
-                        child: senia.urlVideo == null
-                            ? Icon(Icons.video_library_outlined,
-                                color: Colores().colorTextos, size: 150)
-                            : SeleccionadorVideo(null, senia.urlVideo),
-                      ),
-                      SizedBox(height: 15.0),
-                      TextFieldTexto(
-                        nombre: 'NOMBRE',
-                        icon: Icon(Icons.format_size_outlined),
-                        habilitado: modoEditar,
-                        controlador: modoEditar
-                            ? null
-                            : TextEditingController(text: senia.nombre),
-                        valor: (value) {
-                          setState(() {
-                            nuevoNombreSenia = value;
-                          });
-                        },
-                        validacion: ((value) =>
-                            value.isEmpty ? 'El nombre es requerido' : null),
-                      ),
-                      SizedBox(height: 15.0),
-                      TextFieldDescripcion(
-                        nombre: 'DESCRIPCION',
-                        icon: Icon(Icons.description),
-                        habilitado: modoEditar,
-                        controlador: modoEditar
-                            ? null
-                            : TextEditingController(text: senia.descripcion),
-                        valor: (value) {
-                          setState(() {
-                            nuevaDescripcionSenia = value;
-                          });
-                        },
-                      ),
-                      SizedBox(height: 15.0),
-                      // Menu desplegable de Categorias
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: DropdownSearch(
-                          key: categoriaKey,
-                          items: listaCategorias,
-                          enabled: modoEditar,
-                          selectedItem: senia.categoria,
-                          onChanged: (value) async {
-                            await listarSubCategorias(value);
-                            subCategoriaKey.currentState.clear();
+                child: Form(
+                  key: formKey,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 300,
+                          child: senia.urlVideo == null
+                              ? Icon(Icons.video_library_outlined,
+                                  color: Colores().colorTextos, size: 150)
+                              : SeleccionadorVideo(null, senia.urlVideo),
+                        ),
+                        SizedBox(height: 15.0),
+                        TextFieldTexto(
+                          nombre: 'NOMBRE',
+                          icon: Icon(Icons.format_size_outlined),
+                          habilitado: modoEditar,
+                          controlador: modoEditar
+                              ? null
+                              : TextEditingController(text: senia.nombre),
+                          valor: (value) {
                             setState(() {
-                              nuevaCategoriaSenia = value;
-                              if (value != null) {
-                                isSubCategoriaSeleccionada = true;
-                                subCategoriaKey.currentState.clear();
-                              } else {
-                                isSubCategoriaSeleccionada = false;
-                                subCategoriaKey.currentState.clear();
-                              }
+                              nuevoNombreSenia = value;
                             });
                           },
-                          showSearchBox: true,
-                          clearButton: Icon(Icons.close,
-                              color: Colores().colorSombraBotones),
-                          dropDownButton: modoEditar
-                              ? Icon(Icons.arrow_drop_down,
-                                  color: Colores().colorSombraBotones)
-                              : Container(),
-                          showClearButton: modoEditar ? true : false,
-                          mode: Mode.DIALOG,
-                          dropdownSearchDecoration: InputDecoration(
-                              hintStyle: TextStyle(
-                                  fontFamily: 'Trueno',
-                                  fontSize: 12,
-                                  color: Colores().colorSombraBotones),
-                              hintText: "CATEGORÍA",
-                              prefixIcon: Icon(Icons.category_outlined),
-                              focusColor: Colores().colorSombraBotones,
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colores().colorSombraBotones),
-                              )),
-                          validator: (dynamic valor) {
-                            if (valor == null) {
-                              return "La categoría es requerida";
-                            } else {
-                              return null;
-                            }
+                          validacion: ((value) =>
+                              value.isEmpty ? 'El nombre es requerido' : null),
+                        ),
+                        SizedBox(height: 15.0),
+                        TextFieldDescripcion(
+                          nombre: 'DESCRIPCION',
+                          icon: Icon(Icons.format_align_left_outlined),
+                          habilitado: modoEditar,
+                          controlador: modoEditar
+                              ? null
+                              : TextEditingController(text: senia.descripcion),
+                          valor: (value) {
+                            setState(() {
+                              nuevaDescripcionSenia = value;
+                            });
                           },
                         ),
-                      ),
+                        SizedBox(height: 15.0),
+                        // Menu desplegable de Categorias
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25, right: 25),
+                          child: DropdownSearch(
+                            key: categoriaKey,
+                            items: listaCategorias,
+                            enabled: modoEditar,
+                            selectedItem: senia.categoria,
+                            onChanged: (value) async {
+                              await listarSubCategorias(value);
+                              subCategoriaKey.currentState.clear();
+                              setState(() {
+                                nuevaCategoriaSenia = value;
+                                if (value != null) {
+                                  isSubCategoriaSeleccionada = true;
+                                  subCategoriaKey.currentState.clear();
+                                } else {
+                                  isSubCategoriaSeleccionada = false;
+                                  subCategoriaKey.currentState.clear();
+                                }
+                              });
+                            },
+                            showSearchBox: true,
+                            clearButton: Icon(Icons.close,
+                                color: Colores().colorSombraBotones),
+                            dropDownButton: modoEditar
+                                ? Icon(Icons.category_outlined,
+                                    color: Colores().colorSombraBotones)
+                                : Container(),
+                            showClearButton: modoEditar ? true : false,
+                            mode: Mode.DIALOG,
+                            dropdownSearchDecoration: InputDecoration(
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Trueno',
+                                    fontSize: 12,
+                                    color: Colores().colorSombraBotones),
+                                hintText: "CATEGORÍA",
+                                prefixIcon: Icon(Icons.category_outlined),
+                                focusColor: Colores().colorSombraBotones,
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colores().colorSombraBotones),
+                                )),
+                            validator: (dynamic valor) {
+                              if (valor == null) {
+                                return "La categoría es requerida";
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
 
                       // Menu desplegable de SubCategorias
                       Padding(
@@ -296,28 +296,28 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                         creo un dialogo de alerta indicando que se
                                         guardo de forma ok
                                          */
-                                      showDialog(
-                                          useRootNavigator: false,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text('Edición de Seña'),
-                                              content: Text(
-                                                  'La seña ha sido modificada correctamente'),
-                                              actions: [
-                                                TextButton(
-                                                    child: Text('Ok',
-                                                        style: TextStyle(
-                                                            color: Colores()
-                                                                .colorAzul,
-                                                            fontFamily:
-                                                                'Trueno',
-                                                            fontSize: 11.0,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline)),
-                                                    onPressed: () {
-                                                      /*Al presionar Ok, cierro la el dialogo y cierro la
+                                        showDialog(
+                                            useRootNavigator: false,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('Editar Seña'),
+                                                content: Text(
+                                                    'Los datos han sido guardados correctamente'),
+                                                actions: [
+                                                  TextButton(
+                                                      child: Text('Ok',
+                                                          style: TextStyle(
+                                                              color: Colores()
+                                                                  .colorAzul,
+                                                              fontFamily:
+                                                                  'Trueno',
+                                                              fontSize: 11.0,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline)),
+                                                      onPressed: () {
+                                                        /*Al presionar Ok, cierro la el dialogo y cierro la
                                                        ventana de alta seña
 
                                                          */
@@ -419,6 +419,11 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
   }
 
   void onSelected(BuildContext context, int item) {
+    String nombre = widget.senia.nombre;
+    String descripcion = widget.senia.descripcion;
+    String categoria = widget.senia.categoria;
+    String subcategoria = widget.senia.subCategoria;
+
     switch (item) {
       case 0:
         !modoEditar ? editarSenia() : canelarEditar();
@@ -429,8 +434,8 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Eliminación de Seña'),
-                content: Text('¿Está seguro que desea eliminar la seña?'),
+                title: Text('Eliminar Seña'),
+                content: Text('¿Desea eliminar la seña $nombre ?'),
                 actions: [
                   TextButton(
                       child: Text('OK',
@@ -441,10 +446,10 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                               decoration: TextDecoration.underline)),
                       onPressed: () {
                         eliminarSenia(
-                            widget.senia.nombre,
-                            widget.senia.descripcion,
-                            widget.senia.categoria,
-                            widget.senia.subCategoria)
+                            nombre,
+                            descripcion,
+                            categoria,
+                            subcategoria)
                           ..then((userCreds) {
                             /*
                                     Luego de eliminar la seña,
@@ -456,7 +461,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('Eliminación de Seña'),
+                                    title: Text('Seña Eliminada'),
                                     content: Text(
                                         'La seña ha sido eliminada correctamente'),
                                     actions: [

@@ -29,10 +29,10 @@ class AltaContenido extends StatefulWidget {
 
 class _AltaContenidoState extends State<AltaContenido> {
   List _categorias = [
-    'Papers',
-    'Tesis',
-    'Investigaciones',
-    'Otros'
+    'PAPERS',
+    'TESIS',
+    'INVESTIGACIONES',
+    'OTROS'
   ]; // Lista de las categorias dentro de biblioteca. Hardcodeadas xq son únicas.
   ControladorContenido _controladorContenido = new ControladorContenido();
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
@@ -188,10 +188,10 @@ class _AltaContenidoState extends State<AltaContenido> {
                                         return AlertDialog(
                                           title: Text('Alta de Contenido'),
                                           content: Text(
-                                              'El contenido ha sido guardado correctamente \n El mismo podrá tardar unos minutos en visualizarse.'),
+                                              'El contenido ha sido ingresado correctamente \nEl mismo podrá tardar unos minutos en visualizarse.'),
                                           actions: [
                                             TextButton(
-                                                child: Text('Ok',
+                                                child: Text('OK',
                                                     style: TextStyle(
                                                         color:
                                                             Colores().colorAzul,

@@ -11,6 +11,8 @@ import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/SubCategoriaDinamica.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
+import 'Categorias.dart';
+
 class VisualizarCategoria extends StatefulWidget {
   final Categoria categoria;
 
@@ -100,7 +102,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                               Expanded(
                                 child: TextFieldTexto(
                                   nombre: 'NOMBRE CATEGORÍA',
-                                  icon: Icon(Icons.account_tree_outlined),
+                                  icon: Icon(Icons.category_outlined),
                                   habilitado: modoEditar,
                                   controlador: modoEditar
                                       ? null
@@ -111,7 +113,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                     existeCategoria(nuevoNombreCategoria);
                                   },
                                   validacion: ((value) => value.isEmpty
-                                      ? 'Campo Obligatorio'
+                                      ? 'La categoría es requerida'
                                       : null),
                                 ),
                               ),
@@ -173,7 +175,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                             return DialogoAlerta(
                                               tituloMensaje: "Advertencia",
                                               mensaje:
-                                                  "No es posible eliminar la subcategoría. La misma está asociada a una o más señas.",
+                                                  "No es posible eliminar la subcategoría. La misma se encuentra asociada a una o más señas.",
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                               },
@@ -234,79 +236,51 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                 if (!isCategoriaExistente) {
                                   if (!existeSubCategoria(
                                       listaSubCategoriasNuevas)) {
-                                    showDialog(
-                                        useRootNavigator: false,
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('Edicion de Categoría'),
-                                            content: Text(
-                                                '¿Confirma que desea modificar la Categoría Seleccionada?'),
-                                            actions: [
-                                              TextButton(
-                                                  child: Text('Ok',
-                                                      style: TextStyle(
-                                                          color: Colores()
-                                                              .colorAzul,
-                                                          fontFamily: 'Trueno',
-                                                          fontSize: 11.0,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline)),
-                                                  onPressed: () {
-                                                    guardarEdicion(
-                                                        categoria.nombre,
-                                                        nuevoNombreCategoria,
-                                                        listaSubCategorias,
-                                                        listaSubCategoriasNuevas)
-                                                      ..then((userCreds) {
+                                    guardarEdicion(
+                                        categoria.nombre,
+                                        nuevoNombreCategoria,
+                                        listaSubCategorias,
+                                        listaSubCategoriasNuevas)
+                                      ..then((userCreds) {
+                                        showDialog(
+                                            useRootNavigator: false,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('Editar Categoría'),
+                                                content: Text(
+                                                    'Los datos han sido guardados correctamente'),
+                                                actions: [
+                                                  TextButton(
+                                                      child: Text('Ok',
+                                                          style: TextStyle(
+                                                              color: Colores()
+                                                                  .colorAzul,
+                                                              fontFamily:
+                                                                  'Trueno',
+                                                              fontSize: 11.0,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline)),
+                                                      onPressed: () {
+                                                        /*Al presionar Ok, cierro el dialogo y cierro la
+                                                       ventana de alta contenido
+
+                                                         */
                                                         Navigator.of(context)
-                                                            .pop();
-                                                        showCupertinoDialog(
-                                                            context: context,
-                                                            barrierDismissible:
-                                                                true,
-                                                            builder: (context) {
-                                                              return DialogoAlerta(
-                                                                tituloMensaje:
-                                                                    'Edición Realizada',
-                                                                mensaje:
-                                                                    'La categoría se ha editado correctamente',
-                                                                onPressed: () {
-                                                                  /*
-                                                                  dialogo alerta
-                                                                   */
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                  /*
-                                                                  ventana visualizar
-                                                                   */
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                              );
-                                                            });
-                                                      });
-                                                  }),
-                                              TextButton(
-                                                  child: Text('Cancelar',
-                                                      style: TextStyle(
-                                                          color: Colores()
-                                                              .colorAzul,
-                                                          fontFamily: 'Trueno',
-                                                          fontSize: 11.0,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline)),
-                                                  onPressed: () {
-                                                    /*Al presionar Cancelar, cierro el dialogo y me quedo en la misma pag*/
-                                                    Navigator.of(context).pop();
-                                                  })
-                                            ],
-                                          );
-                                        });
+                                                            .pushAndRemoveUntil(
+                                                          MaterialPageRoute(
+                                                              builder: (BuildContext
+                                                                      context) =>
+                                                                  Categorias()),
+                                                          ModalRoute.withName(
+                                                              '/'),
+                                                        );
+                                                      })
+                                                ],
+                                              );
+                                            });
+                                      });
                                   } else {
                                     listaSubCategoriasNuevas.clear();
                                     return showCupertinoDialog(
@@ -316,7 +290,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                           return DialogoAlerta(
                                             tituloMensaje: "Advertencia",
                                             mensaje:
-                                                "Una de las subcategorías ingresadas esta repetida.",
+                                                "Una de las subcategorías ingresadas se encuentra repetida.",
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
@@ -451,6 +425,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
   }
 
   void onSelected(BuildContext context, int item) {
+    String categoria = widget.categoria.nombre;
     switch (item) {
       case 0:
         !modoEditar ? editarCategoria() : cancelarEditar();
@@ -463,9 +438,9 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Eliminacion de Categoría'),
+                title: Text('Eliminar Categoría'),
                 content: Text(
-                    '¿Confirma que desea eliminar la Categoría Seleccionada?'),
+                    '¿Desea eliminar la categoría $categoria?'),
                 actions: [
                   TextButton(
                       child: Text('Ok',
@@ -477,7 +452,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         if (isCategoriaEnSenia == false) {
-                          eliminarCategoria(widget.categoria.nombre);
+                          eliminarCategoria(categoria);
                           showCupertinoDialog(
                               context: context,
                               barrierDismissible: true,
@@ -501,7 +476,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                 return DialogoAlerta(
                                   tituloMensaje: "Advertencia",
                                   mensaje:
-                                      "No es posible eliminar la categoría. La misma está asociada a una o más señas.",
+                                      "No es posible eliminar la categoría. La misma se encuentra asociada a una o más señas.",
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },

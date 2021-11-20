@@ -32,7 +32,7 @@ class _ReactivarUsuarioState extends State<ReactivarUsuario> {
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value))
-      return 'Ingresa un correo válido';
+      return 'Por favor, ingrese un correo válido';
     else
       return null;
   }
@@ -62,7 +62,7 @@ class _ReactivarUsuarioState extends State<ReactivarUsuario> {
               this.email = value;
             },
             validacion: (value) => value.isEmpty
-                ? 'Campo obligatorio'
+                ? 'El email es requerido'
                 : Validar().validarCorreo(value),
           ),
           SizedBox(height: 50.0),

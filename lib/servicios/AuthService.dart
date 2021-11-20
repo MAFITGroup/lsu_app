@@ -95,53 +95,56 @@ class AuthService extends ChangeNotifier {
         }
         break;
 
-      case 'INACTIVO':
-        {
-          return showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (context) {
-                return AlertDialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    title: Text('Usuario inactivo'),
-                    content: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Container(
-                          height: 100.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0)),
-                          child: Center(
-                              child: Text('¿Desea reactiviar su usuario?'))),
-                      Container(
-                          height: 50.0,
-                          child: Row(children: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('ATRAS',
-                                    style: TextStyle(
-                                        color: Colores().colorAzul,
-                                        fontFamily: 'Trueno',
-                                        fontSize: 11.0,
-                                        decoration: TextDecoration.underline))),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navegacion(context)
-                                      .navegarAReactivarUsuario();
-                                },
-                                child: Text('REACTIVAR USUARIO',
-                                    style: TextStyle(
-                                        color: Colores().colorAzul,
-                                        fontFamily: 'Trueno',
-                                        fontSize: 11.0,
-                                        decoration: TextDecoration.underline)))
-                          ]))
-                    ]));
-              });
-        }
-        break;
+        case 'INACTIVO':
+          {
+            return showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      title: Text('Usuario inactivo'),
+                      content:
+                          Column(mainAxisSize: MainAxisSize.min, children: [
+                        Container(
+                            height: 100.0,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            child: Center(
+                                child: Text('¿Desea reactiviar su usuario?'))),
+                        Container(
+                            height: 50.0,
+                            child: Row(children: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('ATRÁS',
+                                      style: TextStyle(
+                                          color: Colores().colorAzul,
+                                          fontFamily: 'Trueno',
+                                          fontSize: 11.0,
+                                          decoration:
+                                              TextDecoration.underline))),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navegacion(context)
+                                        .navegarAReactivarUsuario();
+                                  },
+                                  child: Text('REACTIVAR USUARIO',
+                                      style: TextStyle(
+                                          color: Colores().colorAzul,
+                                          fontFamily: 'Trueno',
+                                          fontSize: 11.0,
+                                          decoration:
+                                              TextDecoration.underline)))
+                            ]))
+                      ]));
+                });
+          }
+          break;
 
       default:
         {
@@ -200,6 +203,10 @@ class AuthService extends ChangeNotifier {
       String userID = firebaseAuth.currentUser.uid;
       manej.crearUsuario(userID, email, nombreCompleto, telefono, departamento,
           especialidad, esAdministrador, statusUsuario);
+
+      usuario.sendEmailVerification();
+
+
 
       showDialog(
           context: context,

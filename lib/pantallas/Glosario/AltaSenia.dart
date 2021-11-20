@@ -258,11 +258,11 @@ class _AltaSeniaState extends State<AltaSenia> {
                                         return AlertDialog(
                                           title: Text('Alta de Seña'),
                                           content: Text(
-                                              'La seña ha sido guardada correctamente.'
+                                              'La seña ha sido ingresada correctamente.'
                                               '\nLa misma podrá tardar unos minutos en visualizarse.'),
                                           actions: [
                                             TextButton(
-                                                child: Text('Ok',
+                                                child: Text('OK',
                                                     style: TextStyle(
                                                         color:
                                                             Colores().colorAzul,

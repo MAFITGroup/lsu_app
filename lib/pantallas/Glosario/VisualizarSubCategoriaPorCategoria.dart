@@ -75,7 +75,7 @@ class _VisualizarSubCategoriaPorCategoriaState
                                                         .nombre,
                                               )));
                                 },
-                                title: Text(
+                                title: Text("SUBCATEGORÍA: " +
                                     listaSubCategoriaPorCategoria[index].nombre,
                                     style: TextStyle(
                                         fontFamily: 'Trueno', fontSize: 14)),

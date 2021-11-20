@@ -1,10 +1,12 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
+import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -12,6 +14,8 @@ import 'package:lsu_app/widgets/RedesBotones.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'Noticias.dart';
 
 enum RedesSociales { facebook, twitter, email, whatsapp }
 
@@ -317,14 +321,47 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                 title: Text('Eliminar noticia'),
                 content: Text('¿Desea eliminar la noticia $titulo ?'),
                 actions: [
-                  Boton(
-                    titulo: 'CONFIRMAR',
-                    onTap: () {
-                      eliminarNoticia(tipo, titulo, descripcion, link);
-                      Navigator.of(context).pop();
-                      Navegacion(context).navegarANoticiasDest();
-                    },
-                  )
+                  TextButton(
+                      child: Text('Ok',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration.underline)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        eliminarNoticia(tipo, titulo, descripcion, link);
+                        showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) {
+                              return DialogoAlerta(
+                                tituloMensaje: "Noticia Eliminada",
+                                mensaje:
+                                    "La noticia ha sido eliminado correctamente.",
+                                onPressed: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            Noticias()),
+                                    ModalRoute.withName('/'),
+                                  );
+                                },
+                              );
+                            }).catchError((e) {
+                          ErrorHandler().errorDialog(context, e);
+                        });
+                      }),
+                  TextButton(
+                      child: Text('Cancelar',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration.underline)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })
                 ],
               );
             });
@@ -355,10 +392,12 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
           ),
         ],
       ),
+
     );
   }
 
   Future compartir(RedesSociales redes) async {
+
     final asunto = 'Plataforma LSU';
     final texto =
         'Nuevas noticias publicadas en Plataforma LSU. ¡No te las pierdas!';
@@ -382,6 +421,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
     } else {
       throw AlertDialog().title;
     }
+
   }
 
   lanzarLink(String link) async {
@@ -390,6 +430,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
       await launch(url, forceWebView: true, webOnlyWindowName: '_blank');
     } else {
       throw AlertDialog().title;
+
     }
   }
 
@@ -418,6 +459,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                     onTap: () {
                       lanzarLink(link);
                       Navigator.of(context).pop();
+
                     },
                   ),
                   SizedBox(height: 10),
@@ -457,4 +499,5 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
       String tipo, String titulo, String descripcion, String link) async {
     ControladorNoticia().eliminarNoticia(tipo, titulo, descripcion, link);
   }
+
 }

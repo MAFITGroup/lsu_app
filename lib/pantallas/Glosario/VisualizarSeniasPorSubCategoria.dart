@@ -77,7 +77,7 @@ class _VisualizarSeniasPorSubCategoriaState
                                                 isUsuarioAdmin: isUsuarioAdmin,
                                               )));
                                 },
-                                title: Text(
+                                title: Text( "SEÑA: " +
                                     listaSeniaPorSubCategoria[index].nombre,
                                     style: TextStyle(
                                         fontFamily: 'Trueno', fontSize: 14)),

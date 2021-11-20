@@ -64,7 +64,7 @@ class _LoginState extends State<Login> {
               this._email = value.toLowerCase().trim();
             },
             validacion: (value) => value.isEmpty
-                ? 'Campo obligatorio'
+                ? 'El correo es requerido'
                 : Validar().validarCorreo(value),
           ),
           SizedBox(height: 30),
@@ -76,9 +76,9 @@ class _LoginState extends State<Login> {
             },
             validacion: (value) {
               if (value.isEmpty) {
-                return 'Campo obligatorio';
+                return 'La contraseña es requerida';
               } else if (value.length <= 8) {
-                return 'La contraseña debe contener mas de 8 caracteres';
+                return 'La contraseña debe contener más de 8 caracteres';
               } else {
                 return Validar().validarPassword(value);
               }

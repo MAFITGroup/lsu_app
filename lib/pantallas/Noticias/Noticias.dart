@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -119,44 +120,47 @@ class _NoticiasState extends State<Noticias> {
               );
             } else {
               return ListView.builder(
-                  itemCount: listaLlamados.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colores().colorBlanco,
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 15,
-                                offset: Offset(0, 0))
-                          ]),
-                      child: ListTile(
-                        title: Text('TÍtulo: ' + listaLlamados[index].titulo),
-                        subtitle: Text('Descripción: ' +
-                            listaLlamados[index].descripcion +
-                            '\nLink: ' +
-                            listaLlamados[index].link +
-                            '\nFecha de Publicación: ' +
-                            listaLlamados[index].fechaSubida),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => VisualizarNoticia(
-                                        noticia: listaLlamados[index],
-                                        tipo: listaLlamados[index].tipo,
-                                        titulo: listaLlamados[index].titulo,
-                                        descripcion:
-                                            listaLlamados[index].descripcion,
-                                        link: listaLlamados[index].link,
-                                        isUsuarioAdmin: isUsuarioAdmin,
-                                      )));
-                        },
+                itemCount: listaLlamados.length,
+                itemBuilder: (context, index){
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colores().colorBlanco,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 15,
+                          offset: Offset(0,0)
+                        )
+                      ]
+                    ),
+                    child: ListTile(
+                      title: Text('TÍTULO: ' + listaLlamados[index].titulo),
+                      subtitle: Text(
+                          'DESCRIPCIÓN: ' + listaLlamados[index].descripcion +
+                              '\nLINK: ' + listaLlamados[index].link +
+                              '\nFECHA DE PUBLICACIÓN: ' + listaLlamados[index].fechaSubida
                       ),
-                    );
-                  });
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => VisualizarNoticia(
+                                  noticia: listaLlamados[index],
+                                  tipo: listaLlamados[index].tipo,
+                                  titulo: listaLlamados[index].titulo,
+                                  descripcion: listaLlamados[index].descripcion,
+                                  link: listaLlamados[index].link,
+                                  isUsuarioAdmin: isUsuarioAdmin,
+                                )));
+
+
+                      },
+                    ),
+                  );
+                }
+              );
             }
           },
         ),
@@ -180,44 +184,48 @@ class _NoticiasState extends State<Noticias> {
               );
             } else {
               return ListView.builder(
-                  itemCount: listaCharlas.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colores().colorBlanco,
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 15,
-                                offset: Offset(0, 0))
-                          ]),
-                      child: ListTile(
-                        title: Text('TÍtulo: ' + listaCharlas[index].titulo),
-                        subtitle: Text('Descripción: ' +
-                            listaCharlas[index].descripcion +
-                            '\nLink: ' +
-                            listaCharlas[index].link +
-                            '\nFecha de Publicación: ' +
-                            listaCharlas[index].fechaSubida),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => VisualizarNoticia(
-                                        noticia: listaCharlas[index],
-                                        tipo: listaCharlas[index].tipo,
-                                        titulo: listaCharlas[index].titulo,
-                                        descripcion:
-                                            listaCharlas[index].descripcion,
-                                        link: listaCharlas[index].link,
-                                        isUsuarioAdmin: isUsuarioAdmin,
-                                      )));
-                        },
+                itemCount: listaCharlas.length,
+                itemBuilder: (context, index){
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colores().colorBlanco,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 15,
+                          offset: Offset(0,0)
+                        )
+                      ]
+                    ),
+                    child: ListTile(
+
+                      title: Text('TÍTULO: ' + listaCharlas[index].titulo),
+                      subtitle: Text(
+                          'DESCRIPCIÓN: ' + listaCharlas[index].descripcion +
+                        '\nLINK: ' + listaCharlas[index].link +
+                        '\nFECHA DE PUBLICACIÓN: ' + listaCharlas[index].fechaSubida
                       ),
-                    );
-                  });
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => VisualizarNoticia(
+                                  noticia: listaCharlas[index],
+                                  tipo: listaCharlas[index].tipo,
+                                  titulo: listaCharlas[index].titulo,
+                                  descripcion: listaCharlas[index].descripcion,
+                                  link: listaCharlas[index].link,
+                                  isUsuarioAdmin: isUsuarioAdmin,
+                                )));
+
+                      },
+
+                    ),
+                  );
+                }
+              );
             }
           },
         ),
@@ -241,44 +249,48 @@ class _NoticiasState extends State<Noticias> {
               );
             } else {
               return ListView.builder(
-                  itemCount: listaNoticias.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colores().colorBlanco,
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 15,
-                                offset: Offset(0, 0))
-                          ]),
-                      child: ListTile(
-                        title: Text('TÍtulo: ' + listaNoticias[index].titulo),
-                        subtitle: Text('Descripción: ' +
-                            listaNoticias[index].descripcion +
-                            '\nLink: ' +
-                            listaNoticias[index].link +
-                            '\nFecha de Publicación: ' +
-                            listaNoticias[index].fechaSubida),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => VisualizarNoticia(
-                                        noticia: listaNoticias[index],
-                                        tipo: listaNoticias[index].tipo,
-                                        titulo: listaNoticias[index].titulo,
-                                        descripcion:
-                                            listaNoticias[index].descripcion,
-                                        link: listaNoticias[index].link,
-                                        isUsuarioAdmin: isUsuarioAdmin,
-                                      )));
-                        },
+                itemCount: listaNoticias.length,
+                itemBuilder: (context, index){
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colores().colorBlanco,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 15,
+                          offset: Offset(0,0)
+                        )
+                      ]
+                    ),
+                    child: ListTile(
+
+                      title: Text('TÍTULO: ' + listaNoticias[index].titulo),
+                      subtitle: Text(
+                          'DESCRIPCIÓN: ' + listaNoticias[index].descripcion +
+                        '\nLINK: ' + listaNoticias[index].link +
+                        '\nFECHA DE PUBLICACIÓN: ' + listaNoticias[index].fechaSubida
                       ),
-                    );
-                  });
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => VisualizarNoticia(
+                                  noticia: listaNoticias[index],
+                                  tipo: listaNoticias[index].tipo,
+                                  titulo: listaNoticias[index].titulo,
+                                  descripcion: listaNoticias[index].descripcion,
+                                  link: listaNoticias[index].link,
+                                  isUsuarioAdmin: isUsuarioAdmin,
+                                )));
+
+                      },
+
+                    ),
+                  );
+                }
+              );
             }
           },
         ),

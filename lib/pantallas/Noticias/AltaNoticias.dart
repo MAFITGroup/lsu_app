@@ -94,7 +94,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
     flutterLocalNotificationsPlugin.show(
         0,
         'Plataforma LSU',
-        'Nuevas noticias han sido publicadas en tu Plataforma LSU, no te las pierdas!',
+        'Nuevas noticias han sido publicadas en tu Plataforma LSU. ¡No te las pierdas!',
         NotificationDetails(
             android: AndroidNotificationDetails(channel.id, channel.name,
                 //channel.description,
@@ -133,7 +133,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                               });
                             },
                             validator: ((value) =>
-                                value == null ? 'El tipo es requerid0' : null),
+                                value == null ? 'El tipo es requerido' : null),
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,
                                 color: Colores().colorSombraBotones),
@@ -211,7 +211,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                       return DialogoAlerta(
                                         tituloMensaje: "Alta de Noticia",
                                         mensaje:
-                                            "La noticia ha sido creada correctamente",
+                                            "La noticia ha sido ingresada correctamente",
                                         onPressed: () {
                                           Navigator.of(context)
                                               .pushAndRemoveUntil(

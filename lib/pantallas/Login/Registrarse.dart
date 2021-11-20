@@ -76,7 +76,7 @@ class _RegistrarseState extends State<Registrarse> {
                 this._email = value.toLowerCase();
               },
               validacion: (value) => value.isEmpty
-                  ? 'Campo obligatorio'
+                  ? 'El correo es requerido'
                   : Validar().validarCorreo(value)),
 
           // CONTRASEÑA
@@ -88,9 +88,9 @@ class _RegistrarseState extends State<Registrarse> {
               },
               validacion: (value) {
                 if (value.isEmpty) {
-                  return 'Campo obligatorio';
+                  return 'La contraseña es requerida';
                 } else if (value.length <= 8) {
-                  return 'La contraseña debe contener mas de 8 caracteres';
+                  return 'La contraseña debe contener más de 8 caracteres';
                 } else {
                   return Validar().validarPassword(value);
                 }
@@ -104,7 +104,7 @@ class _RegistrarseState extends State<Registrarse> {
                 this._nombreCompleto = value.toUpperCase();
               },
               validacion: ((value) =>
-                  value.isEmpty ? 'Campo obligatorio' : null)),
+                  value.isEmpty ? 'El nombre completo es requerido' : null)),
 
           // CELULAR
           TextFieldNumerico(
@@ -114,7 +114,7 @@ class _RegistrarseState extends State<Registrarse> {
                 this._telefono = value;
               },
               validacion: (value) => value.isEmpty
-                  ? 'Campo obligatorio'
+                  ? 'El celular es requerido'
                   : Validar().validarCelular(value)),
 
           // DEPARTAMENTO
@@ -129,7 +129,7 @@ class _RegistrarseState extends State<Registrarse> {
               },
               validator: ((dynamic value) {
                 if (value == null) {
-                  return "Campo obligatorio";
+                  return "El departamento es requerido";
                 } else {
                   return null;
                 }
@@ -163,7 +163,7 @@ class _RegistrarseState extends State<Registrarse> {
                 this._especialidad = value.toUpperCase();
               },
               validacion: ((value) =>
-                  value.isEmpty ? 'Campo obligatorio' : null)),
+                  value.isEmpty ? 'La especialidad es requerida' : null)),
 
           Container(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),

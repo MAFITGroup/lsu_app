@@ -58,8 +58,9 @@ class _AltaCategoria extends State<AltaCategoria> {
                               //me guardo el valor en el metodo para hacer el chequeo.
                               existeCategoria(_nombreCategoria);
                             },
-                            validacion: ((value) =>
-                                value.isEmpty ? 'Campo Obligatorio' : null),
+                            validacion: ((value) => value.isEmpty
+                                ? 'La categoría es requerida'
+                                : null),
                           ),
                         ),
                         Container(
@@ -87,8 +88,9 @@ class _AltaCategoria extends State<AltaCategoria> {
                                   _nombreSubCategoria = value;
                                 });
                               },
-                              validacion: ((value) =>
-                                  value.isEmpty ? 'Campo Obligatorio' : null),
+                              validacion: ((value) => value.isEmpty
+                                  ? 'La subcategoría es requerida'
+                                  : null),
                               onSaved: (value) {
                                 listaDeSubcategorias.add(
                                     _nombreSubCategoria.toUpperCase().trim());
@@ -141,7 +143,7 @@ class _AltaCategoria extends State<AltaCategoria> {
                                       return DialogoAlerta(
                                         tituloMensaje: "Alta de Categoría",
                                         mensaje:
-                                            "La categoría ha sido guardada correctamente",
+                                            "La categoría ha sido ingresada correctamente",
                                         onPressed: () {
                                           Navigator.of(context)
                                               .pushAndRemoveUntil(
@@ -169,7 +171,7 @@ class _AltaCategoria extends State<AltaCategoria> {
                                     return DialogoAlerta(
                                       tituloMensaje: "Advertencia",
                                       mensaje:
-                                          "Una de las subcategorías ingresadas está repetida.",
+                                          "Una de las subcategorías ingresadas se encuentra repetida.",
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
