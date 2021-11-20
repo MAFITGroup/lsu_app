@@ -158,26 +158,27 @@ class AuthService extends ChangeNotifier {
       bool esAdministrador,
       String statusUsuario,
       context) {
+    print('<---------- 5. Llega al AuthSerivce.signUp');
+    print('<---------- 6. Se va al createUserWithEmailAndPassword');
     return firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      String userID = usuario.uid;
-
-      //creo mi nuevo usuario
-
+      print('<---------- 7. Sale del createUserWithEmailAndPassword');
+      String userID = firebaseAuth.currentUser.uid;
+      print('<---------- 8. Crea el Uid: ' + userID);
+      print('<---------- 9. Se va al crearUsuario');
       manej.crearUsuario(userID, email, nombreCompleto, telefono, departamento,
           especialidad, esAdministrador, statusUsuario);
-
-      usuario.sendEmailVerification();
-
-
 
       showDialog(
           context: context,
           builder: (BuildContext context) {
+            print('<---------- 14.1 Muestra mensaje de registro correcto');
             return AlertDialog_resgistro();
           });
     }).catchError((e) {
+      print('<---------- 14.2 Muestra mensaje de usuario ya creado');
+      print('<---------- 14.2.1 catchError' + e.toString());
       ErrorHandler().errorDialog3(context, e);
     });
   }

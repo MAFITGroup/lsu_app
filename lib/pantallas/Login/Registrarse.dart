@@ -181,10 +181,15 @@ class _RegistrarseState extends State<Registrarse> {
           Boton(
               titulo: 'REGISTRARSE',
               onTap: () {
+
                 String _statusUsuario = 'PENDIENTE';
+                print('<---------- 1. Boton registrarse');
 
                 if (Validar().camposVacios(formKey) ) {
+                  print('<---------- 2. Valida campos vacios');
                   if (isChecked) {
+                    print('<---------- 3. Valida check fiel Terminos y condiciones');
+                    print('<---------- 4. Se va al AuthSerivce.signUp');
                     AuthService()
 
                     //dejo mi UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
@@ -200,7 +205,6 @@ class _RegistrarseState extends State<Registrarse> {
                         false,
                         _statusUsuario,
                         context);
-
                   }
                   else {
                     showDialog(
@@ -227,6 +231,8 @@ class _RegistrarseState extends State<Registrarse> {
                         }
                     );
                   }
+                  print('<---------- 15. Finaliza el registro del usuario');
+
                 }
               }),
 

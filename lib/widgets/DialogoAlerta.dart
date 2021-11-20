@@ -126,10 +126,11 @@ class AlertDialog_resgistro extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Registro realizado'),
-      content: Text('Pendiente de aprobacion del administrador'),
+      content: Text('Por favor, verifica tu correo electrónico. '
+          '\nEl registro esta pendiente de aprobacion del administrador. Una vez autorizado, recibirás una notificación en tu correo. '),
       actions: [
         TextButton(
-            child: Text('Ok',
+            child: Text('OK',
                 style: TextStyle(
                     color: Colores().colorAzul,
                     fontFamily: 'Trueno',

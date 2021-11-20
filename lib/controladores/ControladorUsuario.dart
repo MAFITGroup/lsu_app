@@ -18,7 +18,7 @@ class ControladorUsuario {
   String _statusUsuario;
   Usuario usuario = new Usuario();
 
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   User user = FirebaseAuth.instance.currentUser;
 
@@ -30,11 +30,13 @@ class ControladorUsuario {
       String departamento,
       String especialidad,
       bool esAdministrador,
-      String statusUsuario) async {
+      String statusUsuario,
+      ) async {
+    print('<---------- 10. Llega al crearUsuario');
     //creo mi nuevo usuario
     await firestore
         .collection("usuarios")
-        .doc(firebaseAuth.currentUser.uid)
+        .doc(uid)
         .set({
       'usuarioUID': uid,
       'correo': email.trim(),
@@ -45,6 +47,14 @@ class ControladorUsuario {
       'esAdministrador': esAdministrador,
       'statusUsuario': statusUsuario,
     });
+    print('<---------- 11. Crea el usuario');
+
+/*    print('<---------- 12. Manda mail de verificacion');
+     FirebaseAuth.instance.currentUser
+        .sendEmailVerification()
+        .whenComplete(() => print('email de verificacion envaido'));
+*/    print('<---------- 13. Sale del crearUsuario');
+
   }
 
   Future<Usuario> obtenerUsuarioLogueado(String usuarioActualUID) async {
@@ -99,45 +109,7 @@ class ControladorUsuario {
    */
   Future<String> obtenerEstadoUsuario(String mail, BuildContext context) async {
 
-    print('<-------------- usario verificado ' + user.emailVerified.toString());
-
     String usuarioEstado;
-    if(!user.emailVerified) {
-      DialogoAlerta(
-        tituloMensaje: 'Usuario no verificado',
-        mensaje: "El correo del usuario no ha sido verificado.",
-        onPressed: () {
-          Row(
-            children: [
-              TextButton(
-                onPressed: (){
-                  user.sendEmailVerification();
-                  Navigator.of(context).pop();
-                },
-                child: Text('VERIFICAR CORREO',
-                    style: TextStyle(
-                        color: Colores().colorAzul,
-                        fontFamily: 'Trueno',
-                        fontSize: 11.0,
-                        decoration: TextDecoration.underline)),
-              ),
-              TextButton(
-                onPressed: (){
-                  Navigator.of(context).pop();
-                },
-                child: Text('ATRAS',
-                    style: TextStyle(
-                        color: Colores().colorAzul,
-                        fontFamily: 'Trueno',
-                        fontSize: 11.0,
-                        decoration: TextDecoration.underline)),
-              )
-            ],
-          );
-        },
-      );
-
-    }else {
       await firestore
           .collection('usuarios')
           .where('correo', isEqualTo: mail)
@@ -148,7 +120,7 @@ class ControladorUsuario {
         });
       });
       return usuarioEstado;
-    }
+
   }
 
   Future<String> obtenerNombreUsuario(String usuarioActualUID) async {

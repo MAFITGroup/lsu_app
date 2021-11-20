@@ -26,6 +26,7 @@ class Usuario {
 
   String get statusUsuario => _statusUsuario;
 
+
   set esAdministrador(bool value) {
     _esAdministrador = value;
   }
