@@ -16,7 +16,6 @@ import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/pantallas/Glosario/Glosario.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
@@ -342,7 +341,8 @@ class _AltaSeniaState extends State<AltaSenia> {
             _subCatSeleccionada,
             nombreUsuario,
             destino,
-            fileWeb,0);
+            fileWeb,
+            0);
       }
     } else {
       /*
@@ -359,7 +359,8 @@ class _AltaSeniaState extends State<AltaSenia> {
             _subCatSeleccionada,
             nombreUsuario,
             destino,
-            archivoDeVideo,0);
+            archivoDeVideo,
+            0);
       }
     }
   }

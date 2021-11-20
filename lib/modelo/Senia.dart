@@ -10,7 +10,6 @@ class Senia {
 
   Senia();
 
-
   String get usuarioAlta => _usuarioAlta;
 
   String get nombre => _nombre;
@@ -25,7 +24,7 @@ class Senia {
 
   String get documentID => _documentID;
 
-  int get cantidadVisualizaciones=> _cantidadVisualizaciones;
+  int get cantidadVisualizaciones => _cantidadVisualizaciones;
 
   set usuarioAlta(String value) {
     _usuarioAlta = value;

@@ -24,9 +24,27 @@ class _RegistrarseState extends State<Registrarse> {
   String _telefono;
   String _departamento;
   String _especialidad;
-  List departamentos = ['ARTIGAS', 'CANELONES', 'CERRO LARGO', 'COLONIA', 'DURAZNO', 'FLORES', 'FLORIDA',
-    'LAVALLEJA', 'MALDONADO', 'MONTEVIDEO', 'PAYSANDÚ', 'RÍO NEGRO', 'RIVERA', 'ROCHA', 'SALTO', 'SORIANO',
-    'SAN JOSÉ', 'TACUAREMBÓ', 'TREINTA Y TRES'];
+  List departamentos = [
+    'ARTIGAS',
+    'CANELONES',
+    'CERRO LARGO',
+    'COLONIA',
+    'DURAZNO',
+    'FLORES',
+    'FLORIDA',
+    'LAVALLEJA',
+    'MALDONADO',
+    'MONTEVIDEO',
+    'PAYSANDÚ',
+    'RÍO NEGRO',
+    'RIVERA',
+    'ROCHA',
+    'SALTO',
+    'SORIANO',
+    'SAN JOSÉ',
+    'TACUAREMBÓ',
+    'TREINTA Y TRES'
+  ];
 
   bool isChecked = false;
 
@@ -104,7 +122,7 @@ class _RegistrarseState extends State<Registrarse> {
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: DropdownSearch(
               items: departamentos,
-              onChanged: (value){
+              onChanged: (value) {
                 setState(() {
                   this._departamento = value;
                 });
@@ -115,11 +133,10 @@ class _RegistrarseState extends State<Registrarse> {
                 } else {
                   return null;
                 }
-              }
-                  ),
+              }),
               showSearchBox: true,
-              clearButton: Icon(Icons.close,
-                  color: Colores().colorSombraBotones),
+              clearButton:
+                  Icon(Icons.close, color: Colores().colorSombraBotones),
               dropDownButton: Icon(Icons.arrow_drop_down,
                   color: Colores().colorSombraBotones),
               showClearButton: true,
@@ -133,11 +150,9 @@ class _RegistrarseState extends State<Registrarse> {
                   prefixIcon: Icon(Icons.location_city_outlined),
                   focusColor: Colores().colorSombraBotones,
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Colores().colorSombraBotones),
+                    borderSide: BorderSide(color: Colores().colorSombraBotones),
                   )),
-
-            ) ,
+            ),
           ),
 
           // ESPECIALIDAD
@@ -151,50 +166,39 @@ class _RegistrarseState extends State<Registrarse> {
                   value.isEmpty ? 'Campo obligatorio' : null)),
 
           Container(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-            child: Row(
-              children: [
-                Checkbox(
-                  value: isChecked,
-                  onChanged: (value){
-                    setState(() {
-                      isChecked = value;
-                    });
-                  },
-
-                ),
-                TextButton(
-                    onPressed: (){
-                  Navegacion(context).navegarTerminosCondiciones();
-                }, child: Text('TÉRMINOS Y CONDICIONES DE USO', style: TextStyle(
-                    color: Colores()
-                        .colorAzul,
-                    fontFamily:
-                    'Trueno',
-                    fontSize: 11.0,
-                    )))
-              ],
-            )
-          ),
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isChecked = value;
+                      });
+                    },
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navegacion(context).navegarTerminosCondiciones();
+                      },
+                      child: Text('TÉRMINOS Y CONDICIONES DE USO',
+                          style: TextStyle(
+                            color: Colores().colorAzul,
+                            fontFamily: 'Trueno',
+                            fontSize: 11.0,
+                          )))
+                ],
+              )),
           SizedBox(height: 50.0),
 
           Boton(
               titulo: 'REGISTRARSE',
               onTap: () {
-
                 String _statusUsuario = 'PENDIENTE';
-                print('<---------- 1. Boton registrarse');
 
-                if (Validar().camposVacios(formKey) ) {
-                  print('<---------- 2. Valida campos vacios');
+                if (Validar().camposVacios(formKey)) {
                   if (isChecked) {
-                    print('<---------- 3. Valida check fiel Terminos y condiciones');
-                    print('<---------- 4. Se va al AuthSerivce.signUp');
-                    AuthService()
-
-                    //dejo mi UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
-
-                        .signUp(
+                    AuthService().signUp(
                         '',
                         _email,
                         _password,
@@ -205,8 +209,7 @@ class _RegistrarseState extends State<Registrarse> {
                         false,
                         _statusUsuario,
                         context);
-                  }
-                  else {
+                  } else {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -215,24 +218,21 @@ class _RegistrarseState extends State<Registrarse> {
                             content: Text(
                                 'Para completar el registro es necesario aceptar los Términos y Condiciones de uso'),
                             actions: [
-                              TextButton(onPressed: () {
-                                Navigator.of(context).pop();
-                              }, child: Text('OK', style: TextStyle(
-                                  color: Colores()
-                                      .colorAzul,
-                                  fontFamily:
-                                  'Trueno',
-                                  fontSize: 11.0,
-                                  decoration:
-                                  TextDecoration
-                                      .underline))),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK',
+                                      style: TextStyle(
+                                          color: Colores().colorAzul,
+                                          fontFamily: 'Trueno',
+                                          fontSize: 11.0,
+                                          decoration:
+                                              TextDecoration.underline))),
                             ],
                           );
-                        }
-                    );
+                        });
                   }
-                  print('<---------- 15. Finaliza el registro del usuario');
-
                 }
               }),
 
@@ -241,5 +241,4 @@ class _RegistrarseState extends State<Registrarse> {
       ),
     );
   }
-
 }

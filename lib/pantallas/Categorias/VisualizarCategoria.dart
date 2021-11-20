@@ -441,10 +441,13 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
   el identificador del documento ya existente
   y setear los nuevos valores.
    */
-  Future guardarEdicion(String nombreAnterior, String nombreNuevo,
-  List<dynamic> listaDeSubsAnterior, List<dynamic> listaDeSubsNuevas) async {
+  Future guardarEdicion(
+      String nombreAnterior,
+      String nombreNuevo,
+      List<dynamic> listaDeSubsAnterior,
+      List<dynamic> listaDeSubsNuevas) async {
     _controladorCategoria.editarCategoria(
-        nombreAnterior, nombreNuevo,listaDeSubsAnterior, listaDeSubsNuevas);
+        nombreAnterior, nombreNuevo, listaDeSubsAnterior, listaDeSubsNuevas);
   }
 
   void onSelected(BuildContext context, int item) {

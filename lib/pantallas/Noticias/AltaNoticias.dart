@@ -89,26 +89,19 @@ class _AltaNoticiasState extends State<AltaNoticias> {
       }
     });
   }
-  
-  void showNotification(){
+
+  void showNotification() {
     flutterLocalNotificationsPlugin.show(
         0,
         'Plataforma LSU',
         'Nuevas noticias han sido publicadas en tu Plataforma LSU, no te las pierdas!',
         NotificationDetails(
-          android: AndroidNotificationDetails(
-            channel.id,
-            channel.name,
-            //channel.description,
-            importance: Importance.high,
-            color: Colors.blue,
-            playSound: true,
-            icon: '@mipmap/ic_launcher'
-
-
-          )
-        )
-    );
+            android: AndroidNotificationDetails(channel.id, channel.name,
+                //channel.description,
+                importance: Importance.high,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/ic_launcher')));
   }
 
   @override
@@ -236,7 +229,22 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                     context: context,
                                     barrierDismissible: true,
                                     builder: (context) {
-                                      return AlertDialog_validarAltaContenido();
+                                      return DialogoAlerta(
+                                        tituloMensaje: 'Alta de Archivo',
+                                        mensaje: 'Uno o más campos están vacíos. Por favor, verifique.',
+                                        onPressed: (){
+                                          TextButton(
+                                              child: Text('Ok',
+                                                  style: TextStyle(
+                                                      color: Colores().colorAzul,
+                                                      fontFamily: 'Trueno',
+                                                      fontSize: 11.0,
+                                                      decoration: TextDecoration.underline)),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              });
+                                        },
+                                      );
                                     });
                               }
                               showNotification();

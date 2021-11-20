@@ -66,7 +66,6 @@ class BuscardorUsuario extends SearchDelegate{
                 );
               },
             ),
-
           );
         }
     );

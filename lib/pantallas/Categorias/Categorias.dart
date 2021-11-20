@@ -51,9 +51,9 @@ class _CategoriasState extends State<Categorias> {
                       child: Image.asset('recursos/logo-carga.gif'),
                     );
                   } else if (listaCategorias.length <= 0) {
-                  return Center(
-                  child: Image.asset('recursos/VuelvePronto.png'),
-                  );
+                    return Center(
+                      child: Image.asset('recursos/VuelvePronto.png'),
+                    );
                   } else {
                     return ListView.builder(
                         itemCount: listaCategorias.length,

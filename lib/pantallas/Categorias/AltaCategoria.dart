@@ -58,19 +58,18 @@ class _AltaCategoria extends State<AltaCategoria> {
                               //me guardo el valor en el metodo para hacer el chequeo.
                               existeCategoria(_nombreCategoria);
                             },
-                            validacion: ((value) => value.isEmpty
-                                ? 'Campo Obligatorio'
-                                : null),
+                            validacion: ((value) =>
+                                value.isEmpty ? 'Campo Obligatorio' : null),
                           ),
                         ),
                         Container(
                             child: FloatingActionButton(
-                              heroTag: "btnAgregar",
-                              onPressed: agregarWidgetSubCategoria,
-                              child: Icon(Icons.add),
-                              backgroundColor: Colores().colorAzul,
-                              splashColor: Colores().colorSombraBotones,
-                            )),
+                          heroTag: "btnAgregar",
+                          onPressed: agregarWidgetSubCategoria,
+                          child: Icon(Icons.add),
+                          backgroundColor: Colores().colorAzul,
+                          splashColor: Colores().colorSombraBotones,
+                        )),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -88,11 +87,11 @@ class _AltaCategoria extends State<AltaCategoria> {
                                   _nombreSubCategoria = value;
                                 });
                               },
-                              validacion: ((value) => value.isEmpty
-                                  ? 'Campo Obligatorio'
-                                  : null),
+                              validacion: ((value) =>
+                                  value.isEmpty ? 'Campo Obligatorio' : null),
                               onSaved: (value) {
-                                listaDeSubcategorias.add(_nombreSubCategoria.toUpperCase().trim());
+                                listaDeSubcategorias.add(
+                                    _nombreSubCategoria.toUpperCase().trim());
                               },
                             ),
                           ),
@@ -209,8 +208,10 @@ class _AltaCategoria extends State<AltaCategoria> {
   agregarWidgetSubCategoria() {
     setState(() {
       listaDinamicaWidgetSubCategoria.add(new SubCategoriaDinamica(
-          listaSubcategorias: listaDeSubcategoriasClaseDinamica,
-      modoAlta: true,modoEditar: false,));
+        listaSubcategorias: listaDeSubcategoriasClaseDinamica,
+        modoAlta: true,
+        modoEditar: false,
+      ));
     });
   }
 

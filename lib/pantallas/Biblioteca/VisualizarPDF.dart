@@ -18,16 +18,16 @@ class _visualizarPDFState extends State<visualizarPDF> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.light),
-            backgroundColor: Colores().colorAzul,
-            title:Text('ARCHIVO - ' + widget.titulo.toUpperCase(),
-              style:TextStyle( fontFamily:'Trueno', fontSize: 14)),
+        appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.light),
+          backgroundColor: Colores().colorAzul,
+          title: Text('ARCHIVO - ' + widget.titulo.toUpperCase(),
+              style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
         ),
         body: Container(
-            child: SfPdfViewer.network( widget.archivoRef,
-                pageSpacing: 2)));
+            child: SfPdfViewer.network(widget.archivoRef, pageSpacing: 2)));
   }
 }

@@ -72,7 +72,6 @@ class Navegacion {
         ));
   }
 
-
   void navegarAltaSenia(List listaCategorias) {
     Navigator.push(
         context,
@@ -120,9 +119,10 @@ class Navegacion {
           builder: (context) => ReactivarUsuario(),
         ));
   }
+
   void navegarAPaginaInicial() {
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => PaginaInicial()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => PaginaInicial()));
   }
 
   void navegarAPaginaInicialDest() {
@@ -140,6 +140,7 @@ class Navegacion {
           builder: (context) => Perfil(usuario: usuario),
         ));
   }
+
   void navegarAPaginaGestionUsuarioDest() {
     Navigator.pushReplacement(
         context,
@@ -195,6 +196,7 @@ class Navegacion {
           builder: (context) => Noticias(),
         ));
   }
+
   void navegarManualDeUsuario() {
     Navigator.push(
         context,
@@ -205,11 +207,8 @@ class Navegacion {
 
   void navegarTerminosCondiciones() {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TerminosCondiciones()),
-        );
+      context,
+      MaterialPageRoute(builder: (context) => TerminosCondiciones()),
+    );
   }
-
-
 }

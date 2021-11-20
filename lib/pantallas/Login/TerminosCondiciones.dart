@@ -9,18 +9,18 @@ class TerminosCondiciones extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.light),
+        appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.light),
           backgroundColor: Colores().colorAzul,
-          title:Text('TÉRMINOS Y CONDICIONES',
-              style:TextStyle( fontFamily:'Trueno', fontSize: 14)),
+          title: Text('TÉRMINOS Y CONDICIONES',
+              style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
         ),
         body: Container(
-            child: SfPdfViewer.asset('recursos/TerminosCondicionesDeUsoPlataformaLSU.pdf',
+            child: SfPdfViewer.asset(
+                'recursos/TerminosCondicionesDeUsoPlataformaLSU.pdf',
                 pageSpacing: 2)));
   }
-
 }
-

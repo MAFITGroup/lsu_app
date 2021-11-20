@@ -13,7 +13,6 @@ import 'package:flutter/widgets.dart';
 import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/pantallas/Biblioteca/Biblioteca.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';

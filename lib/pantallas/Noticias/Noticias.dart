@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +10,7 @@ import 'package:lsu_app/modelo/Noticia.dart';
 
 import 'VisualizarNoticia.dart';
 
-enum RedesSociales {facebook, twitter, email, whatsapp}
+enum RedesSociales { facebook, twitter, email, whatsapp }
 
 class Noticias extends StatefulWidget {
   const Noticias({key}) : super(key: key);
@@ -21,7 +20,6 @@ class Noticias extends StatefulWidget {
 }
 
 class _NoticiasState extends State<Noticias> {
-
   List<Noticia> listaCharlas = [];
   List<Noticia> listaLlamados = [];
   List<Noticia> listaNoticias = [];
@@ -57,7 +55,9 @@ class _NoticiasState extends State<Noticias> {
         _selectedIndexForBottomNavigationBar = 0;
       });
     }
-    final tabBar = new TabBar(labelColor: Colores().colorBlanco,
+
+    final tabBar = new TabBar(
+      labelColor: Colores().colorBlanco,
       indicatorColor: Colores().colorBlanco,
       labelStyle: TextStyle(fontFamily: 'Trueno', fontSize: 14),
       onTap: _onItemTappedForTabBar,
@@ -71,99 +71,92 @@ class _NoticiasState extends State<Noticias> {
       ],
     );
 
-    return new DefaultTabController(length: 2, child: new Scaffold(
-      appBar: AppBar(
-          bottom:tabBar ,
-          systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.light,
-              statusBarBrightness: Brightness.light),
-          backgroundColor: Colores().colorAzul,
-          title: Text("NOTICIAS",style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  showSearch(
-                      context: context,
-                      delegate: BuscadorNoticias(
-                          listaNoticias, listaNoticias, isUsuarioAdmin));
-                },
-                icon: Icon(Icons.search)),
-          ]
+    return new DefaultTabController(
+      length: 2,
+      child: new Scaffold(
+        appBar: AppBar(
+            bottom: tabBar,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+                statusBarBrightness: Brightness.light),
+            backgroundColor: Colores().colorAzul,
+            title: Text("NOTICIAS",
+                style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    showSearch(
+                        context: context,
+                        delegate: BuscadorNoticias(
+                            listaNoticias, listaNoticias, isUsuarioAdmin));
+                  },
+                  icon: Icon(Icons.search)),
+            ]),
+        body: TabBarView(
+          children: [listCharlas(), listLlamados()],
+        ),
+        floatingActionButton: isUsuarioAdmin == true
+            ? FloatingActionButton(
+                child: Icon(Icons.add),
+                backgroundColor: Colores().colorAzul,
+                onPressed: Navegacion(context).navegarAltaNoticia,
+              )
+            : null,
       ),
-      body: TabBarView(
-        children: [
-          listCharlas(),
-          listLlamados()
-        ],
-      ),
-
-      floatingActionButton:
-      isUsuarioAdmin == true
-          ? FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Colores().colorAzul,
-        onPressed: Navegacion(context).navegarAltaNoticia,
-      )
-          : null,
-    ),
-
     );
   }
 
-  Widget listLlamados(){
+  Widget listLlamados() {
     return Scaffold(
       body: Container(
         child: FutureBuilder(
           future: obtenerLlamados(),
-          builder: (context, snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting){
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child:  Image.asset('recursos/logo-carga.gif'),
+                child: Image.asset('recursos/logo-carga.gif'),
               );
-            }else {
+            } else {
               return ListView.builder(
-                itemCount: listaLlamados.length,
-                itemBuilder: (context, index){
-                  return Container(
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colores().colorBlanco,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 15,
-                          offset: Offset(0,0)
-                        )
-                      ]
-                    ),
-                    child: ListTile(
-                      title: Text('TÍtulo: ' + listaLlamados[index].titulo),
-                      subtitle: Text(
-                          'Descripción: ' + listaLlamados[index].descripcion +
-                              '\nLink: ' + listaLlamados[index].link +
-                              '\nFecha de Publicación: ' + listaLlamados[index].fechaSubida
+                  itemCount: listaLlamados.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colores().colorBlanco,
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 15,
+                                offset: Offset(0, 0))
+                          ]),
+                      child: ListTile(
+                        title: Text('TÍtulo: ' + listaLlamados[index].titulo),
+                        subtitle: Text('Descripción: ' +
+                            listaLlamados[index].descripcion +
+                            '\nLink: ' +
+                            listaLlamados[index].link +
+                            '\nFecha de Publicación: ' +
+                            listaLlamados[index].fechaSubida),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => VisualizarNoticia(
+                                        noticia: listaLlamados[index],
+                                        tipo: listaLlamados[index].tipo,
+                                        titulo: listaLlamados[index].titulo,
+                                        descripcion:
+                                            listaLlamados[index].descripcion,
+                                        link: listaLlamados[index].link,
+                                        isUsuarioAdmin: isUsuarioAdmin,
+                                      )));
+                        },
                       ),
-                      onTap: (){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VisualizarNoticia(
-                                  noticia: listaLlamados[index],
-                                  tipo: listaLlamados[index].tipo,
-                                  titulo: listaLlamados[index].titulo,
-                                  descripcion: listaLlamados[index].descripcion,
-                                  link: listaLlamados[index].link,
-                                  isUsuarioAdmin: isUsuarioAdmin,
-                                )));
-
-
-                      },
-                    ),
-                  );
-                }
-              );
+                    );
+                  });
             }
           },
         ),
@@ -171,64 +164,60 @@ class _NoticiasState extends State<Noticias> {
     );
   }
 
-  Widget listCharlas(){
+  Widget listCharlas() {
     return Scaffold(
       body: Container(
         child: FutureBuilder(
           future: obtenerCharlas(),
-          builder: (context, snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting){
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child:  Image.asset('recursos/logo-carga.gif'),
+                child: Image.asset('recursos/logo-carga.gif'),
               );
             } else if (listaCharlas.length <= 0) {
               return Center(
                 child: Image.asset('recursos/VuelvePronto.png'),
               );
-            }else {
+            } else {
               return ListView.builder(
-                itemCount: listaCharlas.length,
-                itemBuilder: (context, index){
-                  return Container(
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colores().colorBlanco,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 15,
-                          offset: Offset(0,0)
-                        )
-                      ]
-                    ),
-                    child: ListTile(
-
-                      title: Text('TÍtulo: ' + listaCharlas[index].titulo),
-                      subtitle: Text(
-                          'Descripción: ' + listaCharlas[index].descripcion +
-                        '\nLink: ' + listaCharlas[index].link +
-                        '\nFecha de Publicación: ' + listaCharlas[index].fechaSubida
+                  itemCount: listaCharlas.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colores().colorBlanco,
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 15,
+                                offset: Offset(0, 0))
+                          ]),
+                      child: ListTile(
+                        title: Text('TÍtulo: ' + listaCharlas[index].titulo),
+                        subtitle: Text('Descripción: ' +
+                            listaCharlas[index].descripcion +
+                            '\nLink: ' +
+                            listaCharlas[index].link +
+                            '\nFecha de Publicación: ' +
+                            listaCharlas[index].fechaSubida),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => VisualizarNoticia(
+                                        noticia: listaCharlas[index],
+                                        tipo: listaCharlas[index].tipo,
+                                        titulo: listaCharlas[index].titulo,
+                                        descripcion:
+                                            listaCharlas[index].descripcion,
+                                        link: listaCharlas[index].link,
+                                        isUsuarioAdmin: isUsuarioAdmin,
+                                      )));
+                        },
                       ),
-                      onTap: (){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VisualizarNoticia(
-                                  noticia: listaCharlas[index],
-                                  tipo: listaCharlas[index].tipo,
-                                  titulo: listaCharlas[index].titulo,
-                                  descripcion: listaCharlas[index].descripcion,
-                                  link: listaCharlas[index].link,
-                                  isUsuarioAdmin: isUsuarioAdmin,
-                                )));
-
-                      },
-
-                    ),
-                  );
-                }
-              );
+                    );
+                  });
             }
           },
         ),
@@ -236,64 +225,60 @@ class _NoticiasState extends State<Noticias> {
     );
   }
 
-  Widget listNoticias(){
+  Widget listNoticias() {
     return Scaffold(
       body: Container(
         child: FutureBuilder(
           future: listadoNoticias(),
-          builder: (context, snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting){
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child:  Image.asset('recursos/logo-carga.gif'),
+                child: Image.asset('recursos/logo-carga.gif'),
               );
             } else if (listaNoticias.length <= 0) {
               return Center(
                 child: Image.asset('recursos/VuelvePronto.png'),
               );
-            }else {
+            } else {
               return ListView.builder(
-                itemCount: listaNoticias.length,
-                itemBuilder: (context, index){
-                  return Container(
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colores().colorBlanco,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 15,
-                          offset: Offset(0,0)
-                        )
-                      ]
-                    ),
-                    child: ListTile(
-
-                      title: Text('TÍtulo: ' + listaNoticias[index].titulo),
-                      subtitle: Text(
-                          'Descripción: ' + listaNoticias[index].descripcion +
-                        '\nLink: ' + listaNoticias[index].link +
-                        '\nFecha de Publicación: ' + listaNoticias[index].fechaSubida
+                  itemCount: listaNoticias.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colores().colorBlanco,
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 15,
+                                offset: Offset(0, 0))
+                          ]),
+                      child: ListTile(
+                        title: Text('TÍtulo: ' + listaNoticias[index].titulo),
+                        subtitle: Text('Descripción: ' +
+                            listaNoticias[index].descripcion +
+                            '\nLink: ' +
+                            listaNoticias[index].link +
+                            '\nFecha de Publicación: ' +
+                            listaNoticias[index].fechaSubida),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => VisualizarNoticia(
+                                        noticia: listaNoticias[index],
+                                        tipo: listaNoticias[index].tipo,
+                                        titulo: listaNoticias[index].titulo,
+                                        descripcion:
+                                            listaNoticias[index].descripcion,
+                                        link: listaNoticias[index].link,
+                                        isUsuarioAdmin: isUsuarioAdmin,
+                                      )));
+                        },
                       ),
-                      onTap: (){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VisualizarNoticia(
-                                  noticia: listaNoticias[index],
-                                  tipo: listaNoticias[index].tipo,
-                                  titulo: listaNoticias[index].titulo,
-                                  descripcion: listaNoticias[index].descripcion,
-                                  link: listaNoticias[index].link,
-                                  isUsuarioAdmin: isUsuarioAdmin,
-                                )));
-
-                      },
-
-                    ),
-                  );
-                }
-              );
+                    );
+                  });
             }
           },
         ),
@@ -304,6 +289,7 @@ class _NoticiasState extends State<Noticias> {
   Future<void> obtenerCharlas() async {
     listaCharlas = await ControladorNoticia().obtenerCharlas();
   }
+
   Future<void> obtenerLlamados() async {
     listaLlamados = await ControladorNoticia().obtenerLlamados();
   }
@@ -322,5 +308,4 @@ class _NoticiasState extends State<Noticias> {
       isUsuarioAdmin;
     });
   }
-
 }

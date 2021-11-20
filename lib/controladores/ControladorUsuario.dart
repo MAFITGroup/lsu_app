@@ -1,8 +1,6 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -23,21 +21,16 @@ class ControladorUsuario {
   User user = FirebaseAuth.instance.currentUser;
 
   void crearUsuario(
-      String uid,
-      String email,
-      String nombreCompleto,
-      String telefono,
-      String departamento,
-      String especialidad,
-      bool esAdministrador,
-      String statusUsuario,
-      ) async {
-    print('<---------- 10. Llega al crearUsuario');
-    //creo mi nuevo usuario
-    await firestore
-        .collection("usuarios")
-        .doc(uid)
-        .set({
+    String uid,
+    String email,
+    String nombreCompleto,
+    String telefono,
+    String departamento,
+    String especialidad,
+    bool esAdministrador,
+    String statusUsuario,
+  ) async {
+    await firestore.collection("usuarios").doc(uid).set({
       'usuarioUID': uid,
       'correo': email.trim(),
       'nombreCompleto': nombreCompleto,
@@ -47,14 +40,12 @@ class ControladorUsuario {
       'esAdministrador': esAdministrador,
       'statusUsuario': statusUsuario,
     });
-    print('<---------- 11. Crea el usuario');
 
-/*    print('<---------- 12. Manda mail de verificacion');
+/*    print('<---------- VERIFICACION DE MAIL');
      FirebaseAuth.instance.currentUser
         .sendEmailVerification()
         .whenComplete(() => print('email de verificacion envaido'));
-*/    print('<---------- 13. Sale del crearUsuario');
-
+*/
   }
 
   Future<Usuario> obtenerUsuarioLogueado(String usuarioActualUID) async {
@@ -84,8 +75,6 @@ class ControladorUsuario {
         usuario.statusUsuario = _statusUsuario;
 
         return usuario;
-      } else {
-        print('usuario null');
       }
     });
 
@@ -95,10 +84,8 @@ class ControladorUsuario {
   Future<bool> isUsuarioAdministrador(String usuarioActualUID) async {
     usuario = await obtenerUsuarioLogueado(usuarioActualUID);
     if (usuario.esAdministrador == true) {
-      print('Obtuve usuario administrador');
       return true;
     } else {
-      print('NO obbtuve usuario administrador');
       return false;
     }
   }
@@ -108,19 +95,17 @@ class ControladorUsuario {
   Ver uso en AuthService/ signIn
    */
   Future<String> obtenerEstadoUsuario(String mail, BuildContext context) async {
-
     String usuarioEstado;
-      await firestore
-          .collection('usuarios')
-          .where('correo', isEqualTo: mail)
-          .get()
-          .then((query) {
-        query.docs.forEach((element) {
-          usuarioEstado = element.get('statusUsuario').toString();
-        });
+    await firestore
+        .collection('usuarios')
+        .where('correo', isEqualTo: mail)
+        .get()
+        .then((query) {
+      query.docs.forEach((element) {
+        usuarioEstado = element.get('statusUsuario').toString();
       });
-      return usuarioEstado;
-
+    });
+    return usuarioEstado;
   }
 
   Future<String> obtenerNombreUsuario(String usuarioActualUID) async {
@@ -128,11 +113,11 @@ class ControladorUsuario {
     return usuario.nombreCompleto;
   }
 
-  Future<List<Usuario>> obtenerTodosUsuarios() async{
+  Future<List<Usuario>> obtenerTodosUsuarios() async {
     List<Usuario> listaUsuarios = [];
-
     await firestore
-        .collection('usuarios').get()
+        .collection('usuarios')
+        .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         _uid = doc['usuarioUID'];
@@ -157,17 +142,14 @@ class ControladorUsuario {
         listaUsuarios.add(usuario);
       });
     });
-
     listaUsuarios.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
-
     return listaUsuarios;
   }
 
   Future<List<Usuario>> obtenerUsuariosPendiente() async {
     List<Usuario> listaUsuariosPendientes = [];
-
     await firestore
         .collection('usuarios')
         .where('statusUsuario', isEqualTo: 'PENDIENTE')
@@ -196,17 +178,14 @@ class ControladorUsuario {
         listaUsuariosPendientes.add(usuario);
       });
     });
-
     listaUsuariosPendientes.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
-
     return listaUsuariosPendientes;
   }
 
   Future<List<Usuario>> obtenerUsuariosActivos() async {
     List<Usuario> listaUsuariosActivos = [];
-
     Usuario usuarioLogueado =
         await obtenerUsuarioLogueado(firebaseAuth.currentUser.uid);
     await firestore
@@ -239,17 +218,14 @@ class ControladorUsuario {
         }
       });
     });
-
     listaUsuariosActivos.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
-
     return listaUsuariosActivos;
   }
 
   Future<List<Usuario>> obtenerUsuariosInactivos() async {
     List<Usuario> listaUsuariosInactivos = [];
-
     await firestore
         .collection('usuarios')
         .where('statusUsuario', isEqualTo: 'INACTIVO')
@@ -281,7 +257,6 @@ class ControladorUsuario {
     listaUsuariosInactivos.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
-
     return listaUsuariosInactivos;
   }
 
@@ -298,10 +273,7 @@ class ControladorUsuario {
     String especialidadNueva,
   ) async {
     Usuario usuario = await obtenerUsuarioPerfil(correoAnterior);
-
     String usuarioId = usuario.uid;
-    print(usuarioId);
-
     firestore.collection('usuarios').doc(usuarioId).update({
       'correo': correoNuevo,
       'nombreCompleto': nombreNuevo.trim(),
@@ -334,15 +306,12 @@ class ControladorUsuario {
         usuario.uid = _uid;
       });
     });
-
     return usuario;
   }
 
   void eliminarUsuarios(String correo) async {
     Usuario usuario = await obtenerUsuarioPerfil(correo);
     String docId = usuario.uid;
-
-    // Elimina documento
     await firestore
         .collection('usuarios')
         .doc(docId)
@@ -369,8 +338,6 @@ class ControladorUsuario {
   void reactivarUsuario(String correo, context) async {
     Usuario usuario = await obtenerUsuarioPerfil(correo);
     String docId = usuario.uid;
-
-    // Pasa el usuario a estado inactivo
     await firestore
         .collection('usuarios')
         .doc(docId)
@@ -392,8 +359,6 @@ class ControladorUsuario {
       String correo, String estado, bool esAdministrador) async {
     Usuario usuario = await obtenerUsuarioPerfil(correo);
     String docId = usuario.uid;
-
-    // Pasa el usuario a estado inactivo
     await firestore.collection('usuarios').doc(docId).update({
       'statusUsuario': estado,
       'esAdministrador': esAdministrador,
@@ -402,7 +367,6 @@ class ControladorUsuario {
 
   Future<List<Usuario>> obtenerUsuarios() async {
     List<Usuario> listaUsuarios = [];
-
     await firestore
         .collection('usuarios')
         .get()
@@ -439,7 +403,10 @@ class ControladorUsuario {
   Future<int> obtenerCantidadUsuariosActivos() async {
     int cantidadUsuariosActivos;
 
-    QuerySnapshot documentos = await firestore.collection('usuarios').where('statusUsuario', isEqualTo: 'ACTIVO').get();
+    QuerySnapshot documentos = await firestore
+        .collection('usuarios')
+        .where('statusUsuario', isEqualTo: 'ACTIVO')
+        .get();
     List<DocumentSnapshot> listaDeDocumentos = documentos.docs;
     cantidadUsuariosActivos = listaDeDocumentos.length;
 

@@ -6,8 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
 
-
-
 class ControladorContenido {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
@@ -24,15 +22,17 @@ class ControladorContenido {
   Se usa para obtener el objeto Contenido
   cuando entro a Visualizarla
    */
-  Future<Contenido> obtenerContenido(String tituloContenido, String descripcionContenido,
-      String categoriaContenido, String autorContenido) async {
+  Future<Contenido> obtenerContenido(
+      String tituloContenido,
+      String descripcionContenido,
+      String categoriaContenido,
+      String autorContenido) async {
     await firestore
         .collection('biblioteca')
         .where('titulo', isEqualTo: tituloContenido)
         .where('descripcion', isEqualTo: descripcionContenido)
         .where('categoria', isEqualTo: categoriaContenido)
         .where('autor', isEqualTo: autorContenido)
-
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -57,6 +57,7 @@ class ControladorContenido {
 
     return contenido;
   }
+
   void editarContenido(
       String tituloAnterior,
       String descripcionAnterior,
@@ -74,17 +75,18 @@ class ControladorContenido {
       'titulo': tituloNuevo.trim(),
       'descripcion': descripcionNueva,
       'categoria': categoriaNueva,
-      'autor' : autorNuevo.trim(),
+      'autor': autorNuevo.trim(),
     }).then((value) => print("Contenido Editado correctamente"));
   }
 
   void eliminarContenido(
-      String titulo,
-      String descripcion,
-      String categoria,
-      String autor,
-      ) async {
-    Contenido contenido = await obtenerContenido(titulo, descripcion, categoria, autor);
+    String titulo,
+    String descripcion,
+    String categoria,
+    String autor,
+  ) async {
+    Contenido contenido =
+        await obtenerContenido(titulo, descripcion, categoria, autor);
     String docId = contenido.documentID;
 
     // primero elimino el contenido
@@ -99,7 +101,7 @@ class ControladorContenido {
     await eliminarArchivoContenido(contenido.documentID);
   }
 
-  Future eliminarArchivoContenido(String docID) async{
+  Future eliminarArchivoContenido(String docID) async {
     await storage
         .ref("Biblioteca/$docID")
         .delete()
@@ -140,10 +142,9 @@ class ControladorContenido {
         'usuarioAlta': usuarioAlta,
         'titulo': titulo.trim(),
         'descripcion': descripcion,
-        'autor' : autor.trim(),
+        'autor': autor.trim(),
         'categoria': categoria,
         'archivoRef': downloadLink,
-
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
@@ -172,7 +173,8 @@ class ControladorContenido {
     String downloadLink;
     try {
       final ref = FirebaseStorage.instance.ref(destino);
-      subida = ref.putData(archivo, SettableMetadata(contentType: 'application/pdf'));
+      subida = ref.putData(
+          archivo, SettableMetadata(contentType: 'application/pdf'));
       downloadLink = await (await subida).ref.getDownloadURL();
       /*
       Creo la senia luego de obtener el link de la url
@@ -185,14 +187,12 @@ class ControladorContenido {
         'autor': autor.trim(),
         'categoria': categoria,
         'archivoRef': downloadLink,
-
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
       return null;
     }
   }
-
 
   Future<List<Contenido>> obtenerTodosContenido() async {
     List<Contenido> lista = [];
@@ -226,7 +226,4 @@ class ControladorContenido {
 
     return lista;
   }
-
-
-
 }

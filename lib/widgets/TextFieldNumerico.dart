@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class TextFieldNumerico extends StatefulWidget {
-
   final String nombre;
   final Function(String) valor;
   final Function(String) validacion;
@@ -13,30 +12,27 @@ class TextFieldNumerico extends StatefulWidget {
   final TextEditingController controlador;
   final bool habilitado;
 
-  TextFieldNumerico({
-    Key key,
-    this.nombre,
-    this.valor,
-    this.validacion,
-    this.icon,
-    this.controlador,
-    this.habilitado
-  }) : super(key: key);
+  TextFieldNumerico(
+      {Key key,
+      this.nombre,
+      this.valor,
+      this.validacion,
+      this.icon,
+      this.controlador,
+      this.habilitado})
+      : super(key: key);
 
   @override
   _TextFieldNumericoState createState() => _TextFieldNumericoState();
-
 }
 
-class _TextFieldNumericoState extends State<TextFieldNumerico>{
-
+class _TextFieldNumericoState extends State<TextFieldNumerico> {
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: TextFormField(
-        enabled: widget.habilitado,
+          enabled: widget.habilitado,
           controller: widget.controlador,
           decoration: InputDecoration(
               prefixIcon: widget.icon == null ? Icon(null) : widget.icon,

@@ -2,149 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 
-
 class DialogoAlerta extends StatelessWidget {
   final String tituloMensaje;
   final String mensaje;
   final Function onPressed;
 
-  const DialogoAlerta({Key key, this.tituloMensaje, this.mensaje, this.onPressed}) : super(key: key);
-
-@override
-Widget build(BuildContext context) {
-  return AlertDialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-    title: Text(tituloMensaje),
-    content: Text(mensaje),
-    actions: [
-      TextButton(
-        child: Text('Ok',
-            style: TextStyle(
-                color: Colores().colorAzul,
-                fontFamily: 'Trueno',
-                fontSize: 11.0,
-                decoration: TextDecoration.underline)),
-        onPressed: onPressed,
-      )
-    ],
-  );
-}
-
-}
-
-class AlertDialog_usrPendiente extends StatelessWidget {
-  final Widget child;
-
-  const AlertDialog_usrPendiente({Key key, this.child}) : super(key: key);
+  const DialogoAlerta(
+      {Key key, this.tituloMensaje, this.mensaje, this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        title: Text('Usuario pendiente'),
-        content: Column(mainAxisSize: MainAxisSize.min, children: [
-          Container(
-              height: 100.0,
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
-              child: Center(
-                  child: Text(
-                      'Usuario pendiente de aprobación. Entre en contacto con el Administrador'))),
-          Container(
-              height: 50.0,
-              child: Row(children: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('OK',
-                        style: TextStyle(
-                            color: Colores().colorAzul,
-                            fontFamily: 'Trueno',
-                            fontSize: 11.0,
-                            decoration: TextDecoration.underline)))
-              ]))
-        ]));
-  }
-}
-
-class AlertDialog_usrNoRegistrado extends StatelessWidget {
-  final Widget child;
-
-  const AlertDialog_usrNoRegistrado({Key key, this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        title: Text('Usuario no registrado'),
-        content: Column(mainAxisSize: MainAxisSize.min, children: [
-          Container(
-              height: 100.0,
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
-              child: Center(
-                  child:
-                      Text('El usuario informado no se encuentra registrado'))),
-          Container(
-              height: 50.0,
-              child: Row(children: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('OK',
-                        style: TextStyle(
-                            color: Colores().colorAzul,
-                            fontFamily: 'Trueno',
-                            fontSize: 11.0,
-                            decoration: TextDecoration.underline))),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navegacion(context).navegarARegistrarse();
-                    },
-                    child: Text('Registrarse',
-                        style: TextStyle(
-                            color: Colores().colorAzul,
-                            fontFamily: 'Trueno',
-                            fontSize: 11.0,
-                            decoration: TextDecoration.underline)))
-              ]))
-        ]));
-  }
-}
-
-class AlertDialog_resgistro extends StatelessWidget {
-  final Widget child;
-
-  const AlertDialog_resgistro({Key key, this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Registro realizado'),
-      content: Text('Por favor, verifica tu correo electrónico. '
-          '\nEl registro esta pendiente de aprobacion del administrador. Una vez autorizado, recibirás una notificación en tu correo. '),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      title: Text(tituloMensaje),
+      content: Text(mensaje),
       actions: [
         TextButton(
-            child: Text('OK',
-                style: TextStyle(
-                    color: Colores().colorAzul,
-                    fontFamily: 'Trueno',
-                    fontSize: 11.0,
-                    decoration: TextDecoration.underline)),
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navegacion(context).navegarAPrincipal();
-            }),
+          child: Text('Ok',
+              style: TextStyle(
+                  color: Colores().colorAzul,
+                  fontFamily: 'Trueno',
+                  fontSize: 11.0,
+                  decoration: TextDecoration.underline)),
+          onPressed: onPressed,
+        )
       ],
     );
   }
 }
-
+/*
 class AlertDialog_usrRegistrado extends StatelessWidget {
   final Widget child;
 
@@ -169,32 +56,6 @@ class AlertDialog_usrRegistrado extends StatelessWidget {
     );
   }
 }
-
-class AlertDialog_campoVacio extends StatelessWidget {
-  final Widget child;
-
-  const AlertDialog_campoVacio({Key key, this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Campos obligatorios'),
-      content: Text('Los campos usuario y contraseña son obligatorios'),
-      actions: [
-        TextButton(
-          child: Text('Ok',
-              style: TextStyle(
-                  color: Colores().colorAzul,
-                  fontFamily: 'Trueno',
-                  fontSize: 11.0,
-                  decoration: TextDecoration.underline)),
-          onPressed: Navegacion(context).navegarALogin,
-        ),
-      ],
-    );
-  }
-}
-
 
 class AlertDialog_cargaArchivo extends StatelessWidget {
   final Widget child;
@@ -247,33 +108,6 @@ class AlertDialog_altaConfirmacion extends StatelessWidget {
   }
 }
 
-class AlertDialog_validarAltaContenido extends StatelessWidget {
-  final Widget child;
-
-  const AlertDialog_validarAltaContenido({Key key, this.child})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Alta de Archivo'),
-      content: Text('Uno o más campos están vacíos. Por favor, verifique.'),
-      actions: [
-        TextButton(
-            child: Text('Ok',
-                style: TextStyle(
-                    color: Colores().colorAzul,
-                    fontFamily: 'Trueno',
-                    fontSize: 11.0,
-                    decoration: TextDecoration.underline)),
-            onPressed: () {
-              Navigator.of(context).pop();
-            })
-      ],
-    );
-  }
-}
-
 class AlertDialog_campoVacioCat extends StatelessWidget {
   final Widget child;
 
@@ -286,16 +120,15 @@ class AlertDialog_campoVacioCat extends StatelessWidget {
       content: Text('El nombre de la categoría no puede estar vacía'),
       actions: [
         TextButton(
-          child: Text('Ok',
-              style: TextStyle(
-                  color: Colores().colorAzul,
-                  fontFamily: 'Trueno',
-                  fontSize: 11.0,
-                  decoration: TextDecoration.underline)),
-          onPressed: (){
-            Navigator.of(context).pop();
-          }
-        ),
+            child: Text('Ok',
+                style: TextStyle(
+                    color: Colores().colorAzul,
+                    fontFamily: 'Trueno',
+                    fontSize: 11.0,
+                    decoration: TextDecoration.underline)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
       ],
     );
   }
@@ -310,7 +143,8 @@ class AlertDialog_catExistente extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Categoría Existente'),
-      content: Text('Por favor, verifique. La categoría que intenta ingresar ya existe'),
+      content: Text(
+          'Por favor, verifique. La categoría que intenta ingresar ya existe'),
       actions: [
         TextButton(
             child: Text('Ok',
@@ -319,11 +153,11 @@ class AlertDialog_catExistente extends StatelessWidget {
                     fontFamily: 'Trueno',
                     fontSize: 11.0,
                     decoration: TextDecoration.underline)),
-            onPressed: (){
+            onPressed: () {
               Navigator.of(context).pop();
-            }
-        ),
+            }),
       ],
     );
   }
 }
+*/

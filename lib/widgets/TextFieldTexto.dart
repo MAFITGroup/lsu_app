@@ -6,6 +6,7 @@ class TextFieldTexto extends StatefulWidget {
   final String nombre;
   final Function(String) valor;
   final Function(String) validacion;
+
   /*
   @onSaved se usa para las subCategorias
    */

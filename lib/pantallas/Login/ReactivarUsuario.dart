@@ -3,7 +3,6 @@ import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
-import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
@@ -15,7 +14,6 @@ class ReactivarUsuario extends StatefulWidget {
 }
 
 class _ReactivarUsuarioState extends State<ReactivarUsuario> {
-
   final formKey = new GlobalKey<FormState>();
 
   String email;

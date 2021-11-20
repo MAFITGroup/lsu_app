@@ -27,19 +27,19 @@ class SeleccionadorVideoState extends State<SeleccionadorVideo> {
 
     if (widget.file != null) {
       chewieController = ChewieController(
-          aspectRatio: kIsWeb ? 16 / 9 : 4 / 3,
-          allowMuting: true,
-          autoPlay: true,
-          looping: true,
-          showControls: true,
-          showControlsOnInitialize: true,
-          showOptions: true,
-          deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
-          placeholder: Container(
-            color: Colors.black,
-          ),
-          videoPlayerController: _controladorDeVideo =
-              VideoPlayerController.file(widget.file),
+        aspectRatio: kIsWeb ? 16 / 9 : 4 / 3,
+        allowMuting: true,
+        autoPlay: true,
+        looping: true,
+        showControls: true,
+        showControlsOnInitialize: true,
+        showOptions: true,
+        deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
+        placeholder: Container(
+          color: Colors.black,
+        ),
+        videoPlayerController: _controladorDeVideo =
+            VideoPlayerController.file(widget.file),
       );
 
       /*

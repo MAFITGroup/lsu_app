@@ -86,17 +86,30 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                           PopupMenuItem(
                               value: 0,
                               child: ListTile(
-                                  leading: Icon(!modoEditar
-                                      ? Icons.edit
-                                      : Icons.cancel_outlined, color: Colores().colorAzul),
-                                  title: Text(!modoEditar
-                                      ? "Editar Contenido"
-                                      : "Cancelar Editar",style: TextStyle(fontFamily: 'Trueno', fontSize: 14,color: Colores().colorSombraBotones)))),
+                                  leading: Icon(
+                                      !modoEditar
+                                          ? Icons.edit
+                                          : Icons.cancel_outlined,
+                                      color: Colores().colorAzul),
+                                  title: Text(
+                                      !modoEditar
+                                          ? "Editar Contenido"
+                                          : "Cancelar Editar",
+                                      style: TextStyle(
+                                          fontFamily: 'Trueno',
+                                          fontSize: 14,
+                                          color:
+                                              Colores().colorSombraBotones)))),
                           PopupMenuItem(
                             value: 1,
                             child: ListTile(
-                                leading: Icon(Icons.delete_forever_outlined, color: Colores().colorAzul),
-                                title: Text("Eliminar Contenido",style: TextStyle(fontFamily: 'Trueno', fontSize: 14,color: Colores().colorSombraBotones))),
+                                leading: Icon(Icons.delete_forever_outlined,
+                                    color: Colores().colorAzul),
+                                title: Text("Eliminar Contenido",
+                                    style: TextStyle(
+                                        fontFamily: 'Trueno',
+                                        fontSize: 14,
+                                        color: Colores().colorSombraBotones))),
                           )
                         ],
                       ),
@@ -280,11 +293,15 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                                        ventana de alta contenido
 
                                                          */
-                                                        Navigator.of(context).pushAndRemoveUntil(
+                                                        Navigator.of(context)
+                                                            .pushAndRemoveUntil(
                                                           MaterialPageRoute(
-                                                              builder: (BuildContext context) =>
+                                                              builder: (BuildContext
+                                                                      context) =>
                                                                   Biblioteca()),
-                                                          ModalRoute.withName('/'), );
+                                                          ModalRoute.withName(
+                                                              '/'),
+                                                        );
                                                       })
                                                 ],
                                               );
@@ -391,10 +408,10 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                     "El contenido ha sido eliminado correctamente.",
                                 onPressed: () {
                                   Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              Biblioteca()),
-                                      ModalRoute.withName('/'),
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            Biblioteca()),
+                                    ModalRoute.withName('/'),
                                   );
                                 },
                               );

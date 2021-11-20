@@ -24,6 +24,7 @@ class _VisualizarSeniasPorSubCategoriaState
   bool isUsuarioAdmin;
   List<Senia> listaSeniaPorSubCategoria = [];
   ControladorSenia _controladorSenia = new ControladorSenia();
+
   @override
   void initState() {
     obtenerUsuarioAdministrador();
@@ -64,8 +65,8 @@ class _VisualizarSeniasPorSubCategoriaState
                               return Card(
                                   child: ListTile(
                                 onTap: () {
-                                  incrementarVisualizacionSenia(listaSeniaPorSubCategoria[
-                                  index].nombre);
+                                  incrementarVisualizacionSenia(
+                                      listaSeniaPorSubCategoria[index].nombre);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -112,6 +113,6 @@ class _VisualizarSeniasPorSubCategoriaState
   }
 
   void incrementarVisualizacionSenia(String nombreSenia) async {
-      await _controladorSenia.incrementarVisualizacionSenia(nombreSenia);
+    await _controladorSenia.incrementarVisualizacionSenia(nombreSenia);
   }
 }

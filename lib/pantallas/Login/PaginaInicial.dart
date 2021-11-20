@@ -169,7 +169,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
                                       ": " +
                                       listaSenias[index]
                                           .cantidadVisualizaciones
-                                          .toString(),textAlign: TextAlign.center,
+                                          .toString(),
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontFamily: 'Trueno', fontSize: 16));
                             }),

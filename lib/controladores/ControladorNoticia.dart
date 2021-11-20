@@ -1,8 +1,6 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
-
 
 class ControladorNoticia {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -17,14 +15,8 @@ class ControladorNoticia {
 
   Noticia noticia;
 
-
-  Future<Noticia> obtenerNoticia(
-      String tipoNoticia,
-      String tituloNoticia,
-      String descripcionNoticia,
-      String linkNoticia
-      ) async {
-
+  Future<Noticia> obtenerNoticia(String tipoNoticia, String tituloNoticia,
+      String descripcionNoticia, String linkNoticia) async {
     await firestore
         .collection('noticias')
         .where('tipo', isEqualTo: tipoNoticia)
@@ -32,50 +24,41 @@ class ControladorNoticia {
         .where('descripcion', isEqualTo: descripcionNoticia)
         .where('link', isEqualTo: linkNoticia)
         .get()
-        .then(
-        (QuerySnapshot querySnapshot) {
-          querySnapshot.docs.forEach((doc) {
-            _tipo = doc['tipo'];
-            _titulo = doc['titulo'];
-            _descripcion = doc['descripcion'];
-            _link = doc['link'];
-            _usuarioAlta = doc['usuarioAlta'];
-            _uid = doc['documentID'];
-            _fechaSubida = doc['fechaSubida'];
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _tipo = doc['tipo'];
+        _titulo = doc['titulo'];
+        _descripcion = doc['descripcion'];
+        _link = doc['link'];
+        _usuarioAlta = doc['usuarioAlta'];
+        _uid = doc['documentID'];
+        _fechaSubida = doc['fechaSubida'];
 
-            noticia = new Noticia();
-            noticia.tipo = _tipo;
-            noticia.titulo = _titulo;
-            noticia.descripcion = _descripcion;
-            noticia.link = _link;
-            noticia.usuarioAlta = _usuarioAlta;
-            noticia.documentID = _uid;
-            noticia.fechaSubida = _fechaSubida;
-
-          });
-
-        });
+        noticia = new Noticia();
+        noticia.tipo = _tipo;
+        noticia.titulo = _titulo;
+        noticia.descripcion = _descripcion;
+        noticia.link = _link;
+        noticia.usuarioAlta = _usuarioAlta;
+        noticia.documentID = _uid;
+        noticia.fechaSubida = _fechaSubida;
+      });
+    });
     return noticia;
   }
 
-  
-  void crearNoticia(
-      String tipo,
-      String titulo,
-      String descripcion,
-      String link,
-      String usuarioAlta
-      ){
+  void crearNoticia(String tipo, String titulo, String descripcion, String link,
+      String usuarioAlta) {
     var fechaHoy = DateTime.now();
     String fechaSubida = '${fechaHoy.day}-${fechaHoy.month}-${fechaHoy.year}';
     String docId = new UniqueKey().toString();
     firestore.collection('noticias').doc(docId).set({
-      'tipo'       : tipo,
-      'titulo'     : titulo.trim(),
+      'tipo': tipo,
+      'titulo': titulo.trim(),
       'descripcion': descripcion,
-      'link'       : link.trim().toLowerCase(),
+      'link': link.trim().toLowerCase(),
       'usuarioAlta': usuarioAlta,
-      'documentID' : docId,
+      'documentID': docId,
       'fechaSubida': fechaSubida,
     });
   }
@@ -89,18 +72,12 @@ class ControladorNoticia {
       String tituloNuevo,
       String descripcionNueva,
       String linkNuevo) async {
-
     Noticia noticia = await obtenerNoticia(
-        tipoAnterior,
-        tituloAnterior,
-        descripcionAnterior,
-        linkAnterior);
+        tipoAnterior, tituloAnterior, descripcionAnterior, linkAnterior);
     String docId = noticia.documentID;
     print('docID: $docId');
 
-    firestore.collection("noticias")
-        .doc(docId)
-        .update({
+    firestore.collection("noticias").doc(docId).update({
       'titulo': tituloNuevo,
       'descripcion': descripcionNueva,
       'tipo': tipoNuevo,
@@ -109,11 +86,7 @@ class ControladorNoticia {
   }
 
   void eliminarNoticia(
-      String tipo,
-      String titulo,
-      String descripcion,
-      String link
-      ) async {
+      String tipo, String titulo, String descripcion, String link) async {
     Noticia noticia = await obtenerNoticia(tipo, titulo, descripcion, link);
     String docId = noticia.documentID;
 
@@ -123,9 +96,8 @@ class ControladorNoticia {
         .doc(docId)
         .delete()
         .then((value) => print("Noticia eliminado correctamente"));
-    
   }
-  
+
   Future<List<Noticia>> obtenerCharlas() async {
     List<Noticia> listaCharlas = [];
 
@@ -141,7 +113,7 @@ class ControladorNoticia {
         _link = doc['link'];
         _usuarioAlta = doc['usuarioAlta'];
         _fechaSubida = doc['fechaSubida'];
-        
+
         noticia = new Noticia();
 
         noticia.tipo = _tipo;
@@ -152,22 +124,17 @@ class ControladorNoticia {
         noticia.fechaSubida = _fechaSubida;
 
         listaCharlas.add(noticia);
-
       });
-
     });
-    listaCharlas.sort((a,b){
+    listaCharlas.sort((a, b) {
       return b.fechaSubida.compareTo(a.fechaSubida);
-
     });
-
 
     return listaCharlas;
   }
 
   Future<List<Noticia>> obtenerLlamados() async {
     List<Noticia> listaLlamados = [];
-
     await firestore
         .collection('noticias')
         .where('tipo', isEqualTo: 'LLAMADOS')
@@ -180,7 +147,7 @@ class ControladorNoticia {
         _link = doc['link'];
         _usuarioAlta = doc['usuarioAlta'];
         _fechaSubida = doc['fechaSubida'];
-        
+
         noticia = new Noticia();
 
         noticia.tipo = _tipo;
@@ -189,17 +156,13 @@ class ControladorNoticia {
         noticia.link = _link;
         noticia.usuarioAlta = _usuarioAlta;
         noticia.fechaSubida = _fechaSubida;
-        
+
         listaLlamados.add(noticia);
-
       });
-
     });
-    listaLlamados.sort((a,b){
+    listaLlamados.sort((a, b) {
       return b.fechaSubida.toString().compareTo(a.fechaSubida.toString());
-
     });
-
 
     return listaLlamados;
   }
@@ -229,14 +192,10 @@ class ControladorNoticia {
         noticia.fechaSubida = _fechaSubida;
 
         listaNoticias.add(noticia);
-
-
       });
-
     });
-    listaNoticias.sort((a,b){
+    listaNoticias.sort((a, b) {
       return b.fechaSubida.toString().compareTo(a.fechaSubida.toString());
-
     });
 
     return listaNoticias;
