@@ -37,7 +37,7 @@ class AuthService extends ChangeNotifier {
   signIn(String email, String password, context) async {
 
       final estadoUsuario = await manej
-          .obtenerEstadoUsuario(email)
+          .obtenerEstadoUsuario(email, context)
           .then((value) => value.toString());
 
       // Accion segun el tipo de usuario que se esta intentado logueando
@@ -167,6 +167,8 @@ class AuthService extends ChangeNotifier {
 
       manej.crearUsuario(userID, email, nombreCompleto, telefono, departamento,
           especialidad, esAdministrador, statusUsuario);
+
+
 
       showDialog(
           context: context,

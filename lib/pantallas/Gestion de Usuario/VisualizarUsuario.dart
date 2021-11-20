@@ -251,12 +251,6 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
 
                             )
                               : SizedBox(height: 1.0),
-                            TextButton(
-                              child: const Text('ATRÁS'),
-                              onPressed: (){
-                                Navigator.of(context).pop();
-                              },
-                            ),
                           ],
                         ),
                       ],
