@@ -47,7 +47,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
         child: Column(
           children: [
             BarraDeNavegacion(
-              titulo: Text('CATEGORIA' + " - " + categoria.nombre.toUpperCase(),
+              titulo: Text('CATEGORÍA' + " - " + categoria.nombre.toUpperCase(),
                   style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               listaWidget: [
                 PopupMenuButton<int>(
@@ -63,14 +63,14 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                           leading: Icon(
                               !modoEditar ? Icons.edit : Icons.cancel_outlined),
                           title: Text(!modoEditar
-                              ? "Editar Categoria"
+                              ? "Editar Categoría"
                               : "Cancelar Editar")),
                     ),
                     PopupMenuItem(
                       value: 1,
                       child: ListTile(
                           leading: Icon(Icons.delete_forever_outlined),
-                          title: Text("Eliminar Categoria")),
+                          title: Text("Eliminar Categoría")),
                     ),
                   ],
                 ),

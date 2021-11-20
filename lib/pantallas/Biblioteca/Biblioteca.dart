@@ -55,8 +55,13 @@ class _BibliotecaState extends State<Biblioteca> {
                     future: listarContenido(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Cargando...");
-
+                        return Center(
+                          child: Image.asset('recursos/logo-carga.gif'),
+                        );
+                      } else if (listaContenido.length <= 0) {
+                        return Center(
+                          child: Image.asset('recursos/VuelvePronto.png'),
+                        );
                       } else {
                         return ListView.builder(
                             itemCount: listaContenido.length,
@@ -73,8 +78,8 @@ class _BibliotecaState extends State<Biblioteca> {
                                               )));
                                     },
 
-                                    title: Text("Titulo: " + listaContenido[index].titulo),
-                                    subtitle: Text ("Autor: " + listaContenido[index].autor + '\nCategoría: ' + listaContenido[index].categoria),
+                                    title: Text("TÍTULO: " + listaContenido[index].titulo),
+                                    subtitle: Text ("AUTOR: " + listaContenido[index].autor + '\nCATEGORÍA: ' + listaContenido[index].categoria),
                                   ));
                             });
                       }

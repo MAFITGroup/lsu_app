@@ -138,7 +138,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                                     fontSize: 12,
                                     color: Colores().colorSombraBotones),
                                 hintText: "TIPO",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                prefixIcon: Icon(Icons.category_outlined),
                                 focusColor: Colores().colorSombraBotones,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -148,8 +148,8 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                         ),
                         SizedBox(height: 15.0),
                         TextFieldTexto(
-                          nombre: 'TITULO',
-                          icon: Icon(Icons.title),
+                          nombre: 'TÍTULO',
+                          icon: Icon(Icons.format_size_outlined),
                           botonHabilitado: modoEditar,
                           controlador: modoEditar
                             ? null
@@ -167,7 +167,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                         ),
                         SizedBox(height: 15.0),
                         TextFieldTexto(
-                          nombre: 'Link',
+                          nombre: 'LINK',
                           icon: Icon(Icons.link),
                           botonHabilitado: modoEditar,
                           controlador: modoEditar
@@ -187,8 +187,8 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
-                          nombre: 'DESCRIPCION',
-                          icon: Icon(Icons.description),
+                          nombre: 'DESCRIPCIÓN',
+                          icon: Icon(Icons.format_align_left_outlined),
                           botonHabilitado: modoEditar,
                           controlador: modoEditar
                             ? null
@@ -219,7 +219,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                               navegarALink(link, context);
                             }else{
                               DialogoAlerta(
-                                tituloMensaje: 'Navegacion',
+                                tituloMensaje: 'Navegación',
                                 mensaje: 'La noticia no tiene un link asociado.',
                                 onPressed: (){
                                   Navigator.of(context).pop();
@@ -368,7 +368,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
   Future compartir(RedesSociales redes) async {
 
     final asunto = 'Plataforma LSU';
-    final texto = 'Nuevas noticias publicadas en Plataforma LSU, no te las pierdas!';
+    final texto = 'Nuevas noticias publicadas en Plataforma LSU. ¡No te las pierdas!';
     final urlCompartir = Uri.encodeComponent('https://prueba.com');
 
     final urls = {
@@ -416,7 +416,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: [
-                  Text('Uds esta a punto de visitar un sitio web fuera de la app,'),
+                  Text('Uds está a punto de visitar un sitio web fuera de la app,'),
                   SizedBox(height: 10.0),
                   Text('¿Desea continuar?'),
                 ],
@@ -439,7 +439,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                       onPressed: (){
                         Navigator.of(context).pop();
                       },
-                      child: const Text('ATRAS')
+                      child: const Text('ATRÁS')
                   )
 
                 ],

@@ -154,7 +154,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                     fontSize: 12,
                                     color: Colores().colorSombraBotones),
                                 hintText: "TIPO",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                prefixIcon: Icon(Icons.category_outlined),
                                 focusColor: Colores().colorSombraBotones,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -164,8 +164,8 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                         ),
                         SizedBox(height: 15.0),
                         TextFieldTexto(
-                          nombre: 'TITULO',
-                          icon: Icon(Icons.title),
+                          nombre: 'TÍTULO',
+                          icon: Icon(Icons.format_size_outlined),
                           valor: (value) {
                             this._tituloNoticia = value;
                           },
@@ -174,8 +174,8 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
-                          nombre: 'DESCRIPCION',
-                          icon: Icon(Icons.description),
+                          nombre: 'DESCRIPCIÓN',
+                          icon: Icon(Icons.format_align_left_outlined),
                           valor: (value) {
                             this._descripcionNoticia = value;
                           },
@@ -185,7 +185,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                         ),
                         SizedBox(height: 15.0),
                         TextFieldTexto(
-                          nombre: 'Link',
+                          nombre: 'LINK',
                           icon: Icon(Icons.link),
                           valor: (value) {
                             if (value.contains('https')) {

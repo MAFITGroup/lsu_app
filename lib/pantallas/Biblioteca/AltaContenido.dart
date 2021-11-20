@@ -68,10 +68,6 @@ class _AltaContenidoState extends State<AltaContenido> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Center(
-                /*
-                Los campos estan dentro de un Form para que cuando
-                se presione guardar se validen los campos.
-                 */
                 child: Form(
                   key: formKey,
                   child: Container(
@@ -79,33 +75,34 @@ class _AltaContenidoState extends State<AltaContenido> {
                       children: [
                         SizedBox(height: 15.0),
                         TextFieldTexto(
-                          nombre: 'TITULO',
-                          icon: Icon(Iconos.hand),
+                          nombre: 'TÍTULO',
+                          icon: Icon(Icons.format_size_outlined),
                           valor: (value) {
                             this._tituloContenido = value;
                           },
                           validacion: ((value) =>
-                          value.isEmpty ? 'El título es requerido' : null),
+                              value.isEmpty ? 'El título es requerido' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
-                          nombre: 'DESCRIPCION',
-                          icon: Icon(Icons.description),
+                          nombre: 'DESCRIPCIÓN',
+                          icon: Icon(Icons.format_align_left_outlined),
                           valor: (value) {
                             this._descripcionContenido = value;
                           },
-                          validacion: ((value) =>
-                          value.isEmpty ? 'La descripción es requerida' : null),
+                          validacion: ((value) => value.isEmpty
+                              ? 'La descripción es requerida'
+                              : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldTexto(
                           nombre: 'AUTOR',
-                          icon: Icon(Iconos.hand),
+                          icon: Icon(Icons.person_outline_sharp),
                           valor: (value) {
                             this._autorContenido = value;
                           },
                           validacion: ((value) =>
-                          value.isEmpty ? 'El autor es requerido' : null),
+                              value.isEmpty ? 'El autor es requerido' : null),
                         ),
                         SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
@@ -118,8 +115,9 @@ class _AltaContenidoState extends State<AltaContenido> {
                                 _catSeleccionada = value;
                               });
                             },
-                            validator: ((value) =>
-                            value == null ? 'La categoría es requerida' : null),
+                            validator: ((value) => value == null
+                                ? 'La categoría es requerida'
+                                : null),
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,
                                 color: Colores().colorSombraBotones),
@@ -132,8 +130,8 @@ class _AltaContenidoState extends State<AltaContenido> {
                                     fontFamily: 'Trueno',
                                     fontSize: 12,
                                     color: Colores().colorSombraBotones),
-                                hintText: "CATEGORIA",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                hintText: "CATEGORÍA",
+                                prefixIcon: Icon(Icons.category_outlined),
                                 focusColor: Colores().colorSombraBotones,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -149,27 +147,25 @@ class _AltaContenidoState extends State<AltaContenido> {
                           },
                         ),
                         SizedBox(height: 5.0),
-                        Text(
-                            archivoNombre,
+                        Text(archivoNombre,
                             style: TextStyle(
-                                color: Colores().colorAzul,
-                                fontFamily: 'Trueno',
-                                fontSize: 11.0,
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
                             )),
                         SizedBox(height: 5.0),
                         Boton(
                             titulo: 'GUARDAR',
                             onTap: () {
-                              if (kIsWeb
-                                  ? fileWeb == null
-                                  : archivo == null) {
+                              if (kIsWeb ? fileWeb == null : archivo == null) {
                                 return showCupertinoDialog(
                                     context: context,
                                     barrierDismissible: true,
                                     builder: (context) {
                                       return DialogoAlerta(
                                         tituloMensaje: "Advertencia",
-                                        mensaje: "No ha seleccionado un archivo.",
+                                        mensaje:
+                                            "No ha seleccionado un archivo.",
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -183,12 +179,13 @@ class _AltaContenidoState extends State<AltaContenido> {
                                   (kIsWeb
                                       ? fileWeb != null
                                       : archivo != null) &&
-                                  _catSeleccionada != null && verificarFormato(fileExtension)) {
+                                  _catSeleccionada != null &&
+                                  verificarFormato(fileExtension)) {
                                 guardarContenido().then((userCreds) {
                                   showCupertinoDialog(
                                       useRootNavigator: false,
                                       context: context,
-                                      builder: (BuildContext contextR){
+                                      builder: (BuildContext contextR) {
                                         return AlertDialog(
                                           title: Text('Alta de Contenido'),
                                           content: Text(
@@ -198,12 +195,12 @@ class _AltaContenidoState extends State<AltaContenido> {
                                                 child: Text('Ok',
                                                     style: TextStyle(
                                                         color:
-                                                        Colores().colorAzul,
+                                                            Colores().colorAzul,
                                                         fontFamily: 'Trueno',
                                                         fontSize: 11.0,
                                                         decoration:
-                                                        TextDecoration
-                                                            .underline)),
+                                                            TextDecoration
+                                                                .underline)),
                                                 onPressed: () {
                                                   /*Al presionar Ok, cierro la el dialogo y cierro la
                                                    ventana de alta contenido
@@ -212,7 +209,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (BuildContext
-                                                      context) {
+                                                          context) {
                                                         return Biblioteca();
                                                       },
                                                     ),
@@ -226,12 +223,10 @@ class _AltaContenidoState extends State<AltaContenido> {
                                                 })
                                           ],
                                         );
-                                      }
-                                  );
+                                      });
                                 });
                               }
-                            }
-                        ),
+                            }),
                       ],
                     ),
                   ),
@@ -248,7 +243,7 @@ class _AltaContenidoState extends State<AltaContenido> {
     String docID = new UniqueKey().toString();
     final destino = 'Biblioteca/$docID';
     String nombreUsuario =
-    await _controladorUsuario.obtenerNombreUsuario(_usuarioUID);
+        await _controladorUsuario.obtenerNombreUsuario(_usuarioUID);
 
     /*ESTOY EN LA WEB*/
 
@@ -318,9 +313,7 @@ class _AltaContenidoState extends State<AltaContenido> {
           setState(() {
             archivoNombre;
           });
-
         }
-
       }
     } else {
       if (result != null) {
@@ -361,14 +354,12 @@ class _AltaContenidoState extends State<AltaContenido> {
                   archivoNombre = 'Seleccione un archivo en formato pdf';
                 });
                 Navigator.of(context).pop();
-
               },
             );
           });
       archivo = null;
       this._url = null;
       return false;
-
     } else {
       return true;
     }

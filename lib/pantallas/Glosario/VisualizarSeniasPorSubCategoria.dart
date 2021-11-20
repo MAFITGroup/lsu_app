@@ -42,7 +42,7 @@ class _VisualizarSeniasPorSubCategoriaState
             children: [
               BarraDeNavegacion(
                 titulo: Text(
-                    "SEÑAS " + "- SUB CATEGORIA: " + widget.nombreSubCategoria,
+                    "SEÑAS " + "- SUBCATEGORÍA: " + widget.nombreSubCategoria,
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               ),
               Expanded(
@@ -55,9 +55,9 @@ class _VisualizarSeniasPorSubCategoriaState
                           child: Image.asset('recursos/logo-carga.gif'),
                         );
                       } else if (listaSeniaPorSubCategoria.length <= 0) {
-                        return Text(
-                            "NO EXISTEN SEÑAS DENTRO DE LA SUB CATEGORIA: " +
-                                widget.nombreSubCategoria);
+                        return Center(
+                          child: Image.asset('recursos/VuelvePronto.png'),
+                        );
                       } else {
                         return ListView.builder(
                             itemCount: listaSeniaPorSubCategoria.length,

@@ -48,14 +48,14 @@ class _PerfilState extends State<Perfil> {
     'LAVALLEJA',
     'MALDONADO',
     'MONTEVIDEO',
-    'PAYSANDU',
+    'PAYSANDÚ',
     'RIO NEGRO',
     'RIVERA',
     'ROCHA',
     'SALTO',
     'SORIANO',
-    'SAN JOSE',
-    'TACUAREMBO',
+    'SAN JOSÉ',
+    'TACUAREMBÓ',
     'TREINTA Y TRES'
   ];
 
@@ -309,7 +309,7 @@ class _PerfilState extends State<Perfil> {
                     leading: Icon(Icons.no_accounts),
                     title: Text('Inactivar usuario'),
                     subtitle: Text(
-                        'Mediante esta opción el usuario pasa a modo inactivo, los datos se '
+                        'Mediante esta opción el usuario pasa a modo inactivo. Los datos se '
                         'conservan en la base de datos y se puede reactivar en cualquier momento.'),
                   ),
                   SizedBox(height: 10),
@@ -317,7 +317,7 @@ class _PerfilState extends State<Perfil> {
                     leading: Icon(Icons.delete),
                     title: Text('Eliminar usuario'),
                     subtitle: Text(
-                        'Mediante esta opción se eliminarán todos los datos del usuario'),
+                        'Mediante esta opción se eliminarán definitivamente los datos del usuario'),
                   ),
                   SizedBox(height: 10),
                   Column(

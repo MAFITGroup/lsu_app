@@ -25,8 +25,8 @@ class _RegistrarseState extends State<Registrarse> {
   String _localidad;
   String _especialidad;
   List departamentos = ['ARTIGAS', 'CANELONES', 'CERRO LARGO', 'COLONIA', 'DURAZNO', 'FLORES', 'FLORIDA',
-    'LAVALLEJA', 'MALDONADO', 'MONTEVIDEO', 'PAYSANDU', 'RIO NEGRO', 'RIVERA', 'ROCHA', 'SALTO', 'SORIANO',
-    'SAN JOSE', 'TACUAREMBO', 'TREINTA Y TRES'];
+    'LAVALLEJA', 'MALDONADO', 'MONTEVIDEO', 'PAYSANDÚ', 'RÍO NEGRO', 'RIVERA', 'ROCHA', 'SALTO', 'SORIANO',
+    'SAN JOSÉ', 'TACUAREMBÓ', 'TREINTA Y TRES'];
 
   bool isChecked = false;
 
@@ -166,7 +166,7 @@ class _RegistrarseState extends State<Registrarse> {
                 TextButton(
                     onPressed: (){
                   Navegacion(context).navegarTerminosCondiciones();
-                }, child: Text('TERMINOS Y CONDICIONES DE USO', style: TextStyle(
+                }, child: Text('TÉRMINOS Y CONDICIONES DE USO', style: TextStyle(
                     color: Colores()
                         .colorAzul,
                     fontFamily:
@@ -207,9 +207,9 @@ class _RegistrarseState extends State<Registrarse> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Terminos y Condiciones de Uso'),
+                            title: Text('Términos y Condiciones de Uso'),
                             content: Text(
-                                'Para completar el registro es necesario aceptar los Terminos y Condiciones de uso'),
+                                'Para completar el registro es necesario aceptar los Términos y Condiciones de uso'),
                             actions: [
                               TextButton(onPressed: () {
                                 Navigator.of(context).pop();

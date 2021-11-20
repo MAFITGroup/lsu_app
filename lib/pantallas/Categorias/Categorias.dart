@@ -27,7 +27,7 @@ class _CategoriasState extends State<Categorias> {
       body: Column(
         children: [
           BarraDeNavegacion(
-            titulo: Text("CATEGORIAS",
+            titulo: Text("CATEGORÍAS",
                 style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
             listaWidget: [
               IconButton(
@@ -47,7 +47,13 @@ class _CategoriasState extends State<Categorias> {
                 future: listarCategorias(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("Cargando...");
+                    return Center(
+                      child: Image.asset('recursos/logo-carga.gif'),
+                    );
+                  } else if (listaCategorias.length <= 0) {
+                  return Center(
+                  child: Image.asset('recursos/VuelvePronto.png'),
+                  );
                   } else {
                     return ListView.builder(
                         itemCount: listaCategorias.length,

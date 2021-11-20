@@ -98,7 +98,7 @@ class _LoginState extends State<Login> {
                   alignment: Alignment.bottomCenter,
                   padding: EdgeInsets.only(top: 15.0, left: 20.0),
                   child: InkWell(
-                      child: Text('OLVIDE MI CONTRASEÑA',
+                      child: Text('OLVIDÉ MI CONTRASEÑA',
                           style: TextStyle(
                               color: Colores().colorAzul,
                               fontFamily: 'Trueno',
@@ -110,7 +110,7 @@ class _LoginState extends State<Login> {
                   alignment: Alignment.bottomCenter,
                   padding: EdgeInsets.only(top: 15.0, left: 20.0),
                   child: InkWell(
-                      child: Text('ATRAS',
+                      child: Text('ATRÁS',
                           style: TextStyle(
                               color: Colores().colorAzul,
                               fontFamily: 'Trueno',

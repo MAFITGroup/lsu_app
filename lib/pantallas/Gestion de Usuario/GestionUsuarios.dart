@@ -73,7 +73,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
               statusBarIconBrightness: Brightness.light,
               statusBarBrightness: Brightness.light),
           backgroundColor: Colores().colorAzul,
-          title: Text("GESTION DE USUARIOS",style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
+          title: Text("GESTIÓN DE USUARIOS",style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
           actions: [
             IconButton(
                 onPressed: () {

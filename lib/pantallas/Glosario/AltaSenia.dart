@@ -103,7 +103,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                         SizedBox(height: 8.0),
                         TextFieldTexto(
                           nombre: 'NOMBRE',
-                          icon: Icon(Iconos.hand),
+                          icon: Icon(Icons.format_size_outlined),
                           valor: (value) {
                             this._nombreSenia = value;
                           },
@@ -112,8 +112,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                         ),
                         SizedBox(height: 8.0),
                         TextFieldDescripcion(
-                          nombre: 'DESCRIPCION',
-                          icon: Icon(Icons.description),
+                          nombre: 'DESCRIPCIÓN',
+                          icon: Icon(Icons.format_align_left_outlined),
                           valor: (value) {
                             this._descripcionSenia = value;
                           },
@@ -156,8 +156,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                                     fontFamily: 'Trueno',
                                     fontSize: 12,
                                     color: Colores().colorSombraBotones),
-                                hintText: "CATEGORIA",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                hintText: "CATEGORÍA",
+                                prefixIcon: Icon(Icons.category_outlined),
                                 focusColor: Colores().colorSombraBotones,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -165,7 +165,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                 )),
                             validator: (dynamic valor) {
                               if (valor == null) {
-                                return "La categoria es requerida";
+                                return "La categoría es requerida";
                               } else {
                                 return null;
                               }
@@ -197,8 +197,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                                     fontFamily: 'Trueno',
                                     fontSize: 12,
                                     color: Colores().colorSombraBotones),
-                                hintText: "SUB CATEGORIA",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                hintText: "SUBCATEGORÍA",
+                                prefixIcon: Icon(Icons.category_outlined),
                                 focusColor: Colores().colorSombraBotones,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -206,7 +206,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                 )),
                             validator: (dynamic valor) {
                               if (valor == null) {
-                                return "La sub categoria es requerida";
+                                return "La subcategoría es requerida";
                               } else {
                                 return null;
                               }

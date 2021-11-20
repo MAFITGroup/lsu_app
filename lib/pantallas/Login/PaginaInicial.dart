@@ -49,18 +49,12 @@ class _PaginaInicialState extends State<PaginaInicial> {
         body: SingleChildScrollView(
       child: Column(children: [
         BarraDeNavegacion(
-          titulo: Text("MENU",
+          titulo: Text("MENÚ",
               style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
           listaWidget: [
             PopupMenuButton<int>(
               onSelected: (item) => onSelected(context, item),
               itemBuilder: (context) => [
-                PopupMenuItem(
-                    value: 0,
-                    child: ListTile(
-                      leading: Icon(Icons.logout),
-                      title: Text('Cerrar Sesión'),
-                    )),
                 PopupMenuItem(
                     value: 1,
                     child: ListTile(
@@ -70,7 +64,13 @@ class _PaginaInicialState extends State<PaginaInicial> {
                     value: 2,
                     child: ListTile(
                       leading: Icon(Icons.picture_as_pdf_outlined),
-                      title: Text("Ayuda"),
+                      title: Text("Ayuda")
+                    )),
+                PopupMenuItem(
+                    value: 0,
+                    child: ListTile(
+                        leading: Icon(Icons.logout),
+                        title: Text('Cerrar Sesión')
                     )),
               ],
             ),
@@ -110,7 +110,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                             titulo: 'NOTICIAS'),
                         Boton(
                             onTap: Navegacion(context).navegarACategorias,
-                            titulo: 'CATEGORIAS'),
+                            titulo: 'CATEGORÍAS'),
                         Boton(
                             onTap: Navegacion(context)
                                 .navegarAPaginaGestionUsuario,

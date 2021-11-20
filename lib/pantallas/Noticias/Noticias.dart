@@ -146,7 +146,7 @@ class _NoticiasState extends State<Noticias> {
                       ]
                     ),
                     child: ListTile(
-                      title: Text('Titulo: ' + listaLlamados[index].titulo),
+                      title: Text('TÍtulo: ' + listaLlamados[index].titulo),
                       subtitle: Text(
                           'Descripción: ' + listaLlamados[index].descripcion +
                               '\nLink: ' + listaLlamados[index].link +
@@ -188,6 +188,10 @@ class _NoticiasState extends State<Noticias> {
               return Center(
                 child:  Image.asset('recursos/logo-carga.gif'),
               );
+            } else if (listaCharlas.length <= 0) {
+              return Center(
+                child: Image.asset('recursos/VuelvePronto.png'),
+              );
             }else {
               return ListView.builder(
                 itemCount: listaCharlas.length,
@@ -207,7 +211,7 @@ class _NoticiasState extends State<Noticias> {
                     ),
                     child: ListTile(
 
-                      title: Text('Titulo: ' + listaCharlas[index].titulo),
+                      title: Text('TÍtulo: ' + listaCharlas[index].titulo),
                       subtitle: Text(
                           'Descripción: ' + listaCharlas[index].descripcion +
                         '\nLink: ' + listaCharlas[index].link +
@@ -249,6 +253,10 @@ class _NoticiasState extends State<Noticias> {
               return Center(
                 child:  Image.asset('recursos/logo-carga.gif'),
               );
+            } else if (listaNoticias.length <= 0) {
+              return Center(
+                child: Image.asset('recursos/VuelvePronto.png'),
+              );
             }else {
               return ListView.builder(
                 itemCount: listaNoticias.length,
@@ -268,7 +276,7 @@ class _NoticiasState extends State<Noticias> {
                     ),
                     child: ListTile(
 
-                      title: Text('Titulo: ' + listaNoticias[index].titulo),
+                      title: Text('TÍtulo: ' + listaNoticias[index].titulo),
                       subtitle: Text(
                           'Descripción: ' + listaNoticias[index].descripcion +
                         '\nLink: ' + listaNoticias[index].link +

@@ -70,8 +70,8 @@ class Principal extends StatelessWidget {
           ListTile(
               subtitle: Center(
                 child: Text(
-                    'Única plataforma Uruguaya para intérpretes de Lengua de Señas donde encontrarás, con un solo clic, la información que requieras para tu cotidianidad',
-                    ),
+                    'Única plataforma Uruguaya para intérpretes de Lengua de Señas donde encontrarás, con un solo clic, la información que requieras para tu cotidianidad.',
+                    ) ,
               )),
         ],
       ),

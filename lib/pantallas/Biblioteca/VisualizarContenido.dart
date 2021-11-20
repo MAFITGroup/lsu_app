@@ -115,8 +115,8 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                       children: [
                         SizedBox(height: 15.0),
                         TextFieldTexto(
-                          nombre: 'TITULO',
-                          icon: Icon(Iconos.hand),
+                          nombre: 'TÍTULO',
+                          icon: Icon(Icons.format_size_outlined),
                           botonHabilitado: modoEditar,
                           controlador: modoEditar
                               ? null
@@ -127,12 +127,12 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             });
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El titulo es requerido' : null),
+                              value.isEmpty ? 'El título es requerido' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
-                          nombre: 'DESCRIPCION',
-                          icon: Icon(Icons.description),
+                          nombre: 'DESCRIPCIÓN',
+                          icon: Icon(Icons.format_align_left_outlined),
                           botonHabilitado: modoEditar,
                           controlador: modoEditar
                               ? null
@@ -150,7 +150,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                         SizedBox(height: 15.0),
                         TextFieldTexto(
                           nombre: 'AUTOR',
-                          icon: Icon(Iconos.hand),
+                          icon: Icon(Icons.person_outline_sharp),
                           botonHabilitado: modoEditar,
                           controlador: modoEditar
                               ? null
@@ -191,8 +191,8 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                     fontFamily: 'Trueno',
                                     fontSize: 12,
                                     color: Colores().colorSombraBotones),
-                                hintText: "CATEGORIA",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                hintText: "CATEGORÍA",
+                                prefixIcon: Icon(Icons.category_outlined),
                                 focusColor: Colores().colorSombraBotones,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -365,7 +365,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Eliminacion de Contenido'),
+                title: Text('Eliminación de Contenido'),
                 content: Text(
                     '¿Confirma que desea eliminar el contenido seleccionado?'),
                 actions: [

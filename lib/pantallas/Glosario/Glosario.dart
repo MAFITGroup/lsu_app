@@ -77,6 +77,10 @@ class _GlosarioState extends State<Glosario> {
                         return Center(
                           child: Image.asset('recursos/logo-carga.gif'),
                         );
+                      } else if (listaCategorias.length <= 0) {
+                        return Center(
+                          child: Image.asset('recursos/VuelvePronto.png'),
+                        );
                       } else {
                         return ListView.builder(
                             itemCount: listaCategorias.length,

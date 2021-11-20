@@ -14,7 +14,7 @@ class TerminosCondiciones extends StatelessWidget {
             statusBarIconBrightness: Brightness.light,
             statusBarBrightness: Brightness.light),
           backgroundColor: Colores().colorAzul,
-          title:Text('TERMINO Y CONDICIONES',
+          title:Text('TÉRMINOS Y CONDICIONES',
               style:TextStyle( fontFamily:'Trueno', fontSize: 14)),
         ),
         body: Container(
