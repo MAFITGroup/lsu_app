@@ -209,7 +209,8 @@ class _AltaCategoria extends State<AltaCategoria> {
   agregarWidgetSubCategoria() {
     setState(() {
       listaDinamicaWidgetSubCategoria.add(new SubCategoriaDinamica(
-          listaSubcategorias: listaDeSubcategoriasClaseDinamica));
+          listaSubcategorias: listaDeSubcategoriasClaseDinamica,
+      modoAlta: true,modoEditar: false,));
     });
   }
 
