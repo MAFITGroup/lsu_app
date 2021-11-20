@@ -168,6 +168,8 @@ class AuthService extends ChangeNotifier {
       manej.crearUsuario(userID, email, nombreCompleto, telefono, departamento,
           especialidad, esAdministrador, statusUsuario);
 
+      usuario.sendEmailVerification();
+
 
 
       showDialog(

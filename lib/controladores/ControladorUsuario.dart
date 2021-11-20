@@ -44,7 +44,7 @@ class ControladorUsuario {
       'especialidad': especialidad,
       'esAdministrador': esAdministrador,
       'statusUsuario': statusUsuario,
-    }).then((value) => user.sendEmailVerification());
+    });
   }
 
   Future<Usuario> obtenerUsuarioLogueado(String usuarioActualUID) async {
