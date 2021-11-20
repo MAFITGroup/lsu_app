@@ -26,6 +26,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
   List<_ChartData> data;
   TooltipBehavior _tooltip;
 
+  get onClickedNotification => null;
+
   @override
   void initState() {
     usuariosActivos();
@@ -113,7 +115,6 @@ class _PaginaInicialState extends State<PaginaInicial> {
                             onTap: Navegacion(context)
                                 .navegarAPaginaGestionUsuario,
                             titulo: 'GESTIÓN DE USUARIOS'),
-                        SizedBox(height: 50),
                       ],
                     )),
         ),

@@ -1,14 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/servicios/GoogleAuthApi.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/gmail.dart';
+
 
 class VisualizarUsuario extends StatefulWidget {
 
@@ -168,6 +171,10 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                               titulo: 'GUARDAR',
                               onTap: () {
                                 Navigator.of(context).pop();
+                                if(usuario.statusUsuario == 'ACTIVO'){
+                                  String tipo = 'aceptada';
+                                  disparadorEmail(usuario.correo, tipo);
+                                }
 
                                 ControladorUsuario().administrarUsuario(usuario.correo, usuario.statusUsuario, usuario.esAdministrador);
 
@@ -206,7 +213,10 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                               ? Boton(
                               titulo: 'ELIMINAR USUARIO',
                               onTap: (){
-                                ControladorUsuario().eliminarUsuarios(usuario.correo);
+                                String estado = 'DENEGADO';
+                                String tipo = 'denagada';
+                                disparadorEmail(usuario.correo, tipo);
+                                ControladorUsuario().administrarUsuario(usuario.correo, estado, usuario.esAdministrador);
 
                                 showDialog(
                                     barrierDismissible: true,
@@ -258,5 +268,33 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
         ),
       ),
     );
+  }
+
+  Future disparadorEmail (String correo, String tipo) async {
+
+    GoogleAuthApi.signOut();
+    final user = await GoogleAuthApi.singIn();
+
+    if (user == null ) return;
+    final email = user.email;
+    final auth = await user.authentication;
+    String token = auth.accessToken;
+    
+    final smtpServer = gmailSaslXoauth2(email, token);
+
+    final message = Message()
+        ..from = Address(email, 'Plataforma LSU')
+        ..recipients = [correo]
+        ..subject = 'Solicitud de Acceso $tipo'
+        ..text = 'Su solicitud de acceso a la Plataforma ha sido $tipo por el usuario administrador' +
+            '\n Plataforma LSU';
+
+    try {
+      await send(message, smtpServer);
+      print('mail envidado');
+    } on MailerException catch (e){
+      print(e);
+    }
+
   }
 }

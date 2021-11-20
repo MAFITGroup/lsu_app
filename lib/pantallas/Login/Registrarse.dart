@@ -200,6 +200,7 @@ class _RegistrarseState extends State<Registrarse> {
                         false,
                         _statusUsuario,
                         context);
+
                   }
                   else {
                     showDialog(
@@ -234,4 +235,5 @@ class _RegistrarseState extends State<Registrarse> {
       ),
     );
   }
+
 }

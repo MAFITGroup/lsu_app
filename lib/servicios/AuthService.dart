@@ -1,14 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
-import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/pantallas/Login/Principal.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
-
 
 import 'ErrorHandler.dart';
 
@@ -38,111 +35,115 @@ class AuthService extends ChangeNotifier {
 
   //Iniciar Sesion
   signIn(String email, String password, context) async {
-    final estadoUsuario = await manej
-        .obtenerEstadoUsuario(email)
-        .then((value) => value.toString());
 
-    // Accion segund el tipo de usuario que se esta intentado logueando
-    switch (estadoUsuario) {
-      case 'PENDIENTE':
-        {
-          return showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (context) {
-                return AlertDialog_usrPendiente();
-              });
-        }
-        break;
+      final estadoUsuario = await manej
+          .obtenerEstadoUsuario(email)
+          .then((value) => value.toString());
 
-      case 'ACTIVO':
-        {
-          firebaseAuth
-              .signInWithEmailAndPassword(email: email, password: password)
-              .then((val) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return PaginaInicial();
-                },
-              ),
-            );
-            Navigator.of(context).pop();
-          }).catchError((e) {
-            String error = e.toString();
-            ErrorHandler().errorDialog(e, context);
+      // Accion segun el tipo de usuario que se esta intentado logueando
+      switch (estadoUsuario) {
+        case 'PENDIENTE':
+          {
+            return showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog_usrPendiente();
+                });
+          }
+          break;
 
-            if (error.contains('too-many-requests')) {
-              ErrorHandler().errorDialogTooManyRequest(e, context);
-            }
-            if (error.contains('wrong-password')) {
-              ErrorHandler().errorDialogWrongPassword(e, context);
-            }
-          });
-        }
-        break;
+        case 'ACTIVO':
+          {
+            firebaseAuth
+                .signInWithEmailAndPassword(email: email, password: password)
+                .then((val) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return PaginaInicial();
+                  },
+                ),
+              );
+              Navigator.of(context).pop();
+            }).catchError((e) {
+              String error = e.toString();
+              ErrorHandler().errorDialog(e, context);
 
-      case 'INACTIVO':
-        {
-          return showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (context) {
-                return AlertDialog(
-                    shape:
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                    title: Text('Usuario inactivo'),
-                    content: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Container(
-                          height: 100.0,
-                          decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
-                          child: Center(
-                              child: Text(
-                                  '¿Desea reactiviar su usuario?'))),
-                      Container(
-                          height: 50.0,
-                          child: Row(children: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('ATRAS',
-                                    style: TextStyle(
-                                        color: Colores().colorAzul,
-                                        fontFamily: 'Trueno',
-                                        fontSize: 11.0,
-                                        decoration: TextDecoration.underline))),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navegacion(context).navegarAReactivarUsuario();
+              if (error.contains('too-many-requests')) {
+                ErrorHandler().errorDialogTooManyRequest(e, context);
+              }
+              if (error.contains('wrong-password')) {
+                ErrorHandler().errorDialogWrongPassword(e, context);
+              }
+            });
+          }
+          break;
 
-                                },
-                                child: Text('REACTIVAR USUARIO',
-                                    style: TextStyle(
-                                        color: Colores().colorAzul,
-                                        fontFamily: 'Trueno',
-                                        fontSize: 11.0,
-                                        decoration: TextDecoration.underline)))
-                          ]))
-                    ]));
-              });
-        }
-        break;
+        case 'INACTIVO':
+          {
+            return showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      title: Text('Usuario inactivo'),
+                      content:
+                          Column(mainAxisSize: MainAxisSize.min, children: [
+                        Container(
+                            height: 100.0,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            child: Center(
+                                child: Text('¿Desea reactiviar su usuario?'))),
+                        Container(
+                            height: 50.0,
+                            child: Row(children: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('ATRAS',
+                                      style: TextStyle(
+                                          color: Colores().colorAzul,
+                                          fontFamily: 'Trueno',
+                                          fontSize: 11.0,
+                                          decoration:
+                                              TextDecoration.underline))),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navegacion(context)
+                                        .navegarAReactivarUsuario();
+                                  },
+                                  child: Text('REACTIVAR USUARIO',
+                                      style: TextStyle(
+                                          color: Colores().colorAzul,
+                                          fontFamily: 'Trueno',
+                                          fontSize: 11.0,
+                                          decoration:
+                                              TextDecoration.underline)))
+                            ]))
+                      ]));
+                });
+          }
+          break;
 
-      default:
-        {
-          return showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (context) {
-                return AlertDialog_usrNoRegistrado();
-              });
-        }
-        break;
-    }
+        default:
+          {
+            return showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog_usrNoRegistrado();
+                });
+          }
+          break;
+      }
+
   }
 
   //Iniciar sesion con usuario nuevo
@@ -156,11 +157,12 @@ class AuthService extends ChangeNotifier {
       String especialidad,
       bool esAdministrador,
       String statusUsuario,
-      context)  {
+      context) {
     return firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      String userID = firebaseAuth.currentUser.uid;
+      String userID = usuario.uid;
+
       //creo mi nuevo usuario
 
       manej.crearUsuario(userID, email, nombreCompleto, telefono, localidad,
@@ -174,17 +176,6 @@ class AuthService extends ChangeNotifier {
     }).catchError((e) {
       ErrorHandler().errorDialog3(context, e);
     });
-
-
-  }
-  
-  void enviarMailVerificacion() async {
-    if(usuario != null && usuario.emailVerified){
-      await usuario.sendEmailVerification();
-      print(' Mail de verificacion enviado ');
-
-    }
-
   }
 
   //Resetear Password
@@ -206,7 +197,4 @@ class AuthService extends ChangeNotifier {
       ErrorHandler().errorDialog2(context, e);
     });
   }
-
-
 }
-
