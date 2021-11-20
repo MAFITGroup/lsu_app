@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -96,19 +97,58 @@ class ControladorUsuario {
   Se usa al iniciar sesion, si el usuario.
   Ver uso en AuthService/ signIn
    */
-  Future<String> obtenerEstadoUsuario(String mail) async {
-    String usuarioEstado;
+  Future<String> obtenerEstadoUsuario(String mail, BuildContext context) async {
 
-    await firestore
-        .collection('usuarios')
-        .where('correo', isEqualTo: mail)
-        .get()
-        .then((query) {
-      query.docs.forEach((element) {
-        usuarioEstado = element.get('statusUsuario').toString();
+    print('<-------------- usario verificado ' + user.emailVerified.toString());
+
+    String usuarioEstado;
+    if(!user.emailVerified) {
+      DialogoAlerta(
+        tituloMensaje: 'Usuario no verificado',
+        mensaje: "El correo del usuario no ha sido verificado.",
+        onPressed: () {
+          Row(
+            children: [
+              TextButton(
+                onPressed: (){
+                  user.sendEmailVerification();
+                  Navigator.of(context).pop();
+                },
+                child: Text('VERIFICAR CORREO',
+                    style: TextStyle(
+                        color: Colores().colorAzul,
+                        fontFamily: 'Trueno',
+                        fontSize: 11.0,
+                        decoration: TextDecoration.underline)),
+              ),
+              TextButton(
+                onPressed: (){
+                  Navigator.of(context).pop();
+                },
+                child: Text('ATRAS',
+                    style: TextStyle(
+                        color: Colores().colorAzul,
+                        fontFamily: 'Trueno',
+                        fontSize: 11.0,
+                        decoration: TextDecoration.underline)),
+              )
+            ],
+          );
+        },
+      );
+
+    }else {
+      await firestore
+          .collection('usuarios')
+          .where('correo', isEqualTo: mail)
+          .get()
+          .then((query) {
+        query.docs.forEach((element) {
+          usuarioEstado = element.get('statusUsuario').toString();
+        });
       });
-    });
-    return usuarioEstado;
+      return usuarioEstado;
+    }
   }
 
   Future<String> obtenerNombreUsuario(String usuarioActualUID) async {
