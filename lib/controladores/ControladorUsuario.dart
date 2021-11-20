@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +116,6 @@ class ControladorUsuario {
 
   Future<List<Usuario>> obtenerTodosUsuarios() async {
     List<Usuario> listaUsuarios = [];
-
     await firestore
         .collection('usuarios')
         .get()
@@ -190,7 +188,7 @@ class ControladorUsuario {
   Future<List<Usuario>> obtenerUsuariosActivos() async {
     List<Usuario> listaUsuariosActivos = [];
     Usuario usuarioLogueado =
-    await obtenerUsuarioLogueado(firebaseAuth.currentUser.uid);
+        await obtenerUsuarioLogueado(firebaseAuth.currentUser.uid);
     await firestore
         .collection('usuarios')
         .where('statusUsuario', isEqualTo: 'ACTIVO')
@@ -263,16 +261,18 @@ class ControladorUsuario {
     return listaUsuariosInactivos;
   }
 
-  void editarPerfil(String correoAnterior,
-      String nombreAnterior,
-      String celularAnterior,
-      String departamentoAnterior,
-      String especialidadAnterior,
-      String correoNuevo,
-      String nombreNuevo,
-      String celularNuevo,
-      String departamentoNuevo,
-      String especialidadNueva,) async {
+  void editarPerfil(
+    String correoAnterior,
+    String nombreAnterior,
+    String celularAnterior,
+    String departamentoAnterior,
+    String especialidadAnterior,
+    String correoNuevo,
+    String nombreNuevo,
+    String celularNuevo,
+    String departamentoNuevo,
+    String especialidadNueva,
+  ) async {
     Usuario usuario = await obtenerUsuarioPerfil(correoAnterior);
     String usuarioId = usuario.uid;
     firestore.collection('usuarios').doc(usuarioId).update({
@@ -342,23 +342,32 @@ class ControladorUsuario {
     await firestore
         .collection('usuarios')
         .doc(docId)
-        .update({'statusUsuario': 'PENDIENTE'}).then((value) =>
-    {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return DialogoAlerta(
-              tituloMensaje: "Solicitud de reactivación de usuario",
-              mensaje:
-              "Su solicitud esta pendiente de aprobación del administrador",
-              onPressed: Navegacion(context).navegarALoginDest,
-            );
-          })
-    });
+        .update({'statusUsuario': 'PENDIENTE'}).then((value) => {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogoAlerta(
+                      tituloMensaje: "Solicitud de reactivación de usuario",
+                      mensaje:
+                          "Su solicitud esta pendiente de aprobación del administrador",
+                      acciones: [
+                        TextButton(
+                          child: Text('OK',
+                              style: TextStyle(
+                                  color: Colores().colorAzul,
+                                  fontFamily: 'Trueno',
+                                  fontSize: 11.0,
+                                  decoration: TextDecoration.underline)),
+                          onPressed: Navegacion(context).navegarALoginDest,
+                        )
+                      ],
+                    );
+                  })
+            });
   }
 
-  void administrarUsuario(String correo, String estado,
-      bool esAdministrador) async {
+  void administrarUsuario(
+      String correo, String estado, bool esAdministrador) async {
     Usuario usuario = await obtenerUsuarioPerfil(correo);
     String docId = usuario.uid;
     await firestore.collection('usuarios').doc(docId).update({

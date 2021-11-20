@@ -11,6 +11,7 @@ import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
@@ -243,11 +244,11 @@ class _PerfilState extends State<Perfil> {
                                         useRootNavigator: false,
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('Perfil actualzado'),
-                                            content: Text(
-                                                'Los datos han sido guardados correctamente'),
-                                            actions: [
+                                          return DialogoAlerta(
+                                            tituloMensaje: 'Perfil actualzado',
+                                            mensaje:
+                                                'Los datos han sido guardados correctamente',
+                                            acciones: [
                                               TextButton(
                                                   child: Text('OK',
                                                       style: TextStyle(

@@ -29,10 +29,10 @@ class AltaContenido extends StatefulWidget {
 
 class _AltaContenidoState extends State<AltaContenido> {
   List _categorias = [
-    'PAPERS',
-    'TESIS',
-    'INVESTIGACIONES',
-    'OTROS'
+    'Papers',
+    'Tesis',
+    'Investigaciones',
+    'Otros'
   ]; // Lista de las categorias dentro de biblioteca. Hardcodeadas xq son únicas.
   ControladorContenido _controladorContenido = new ControladorContenido();
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
@@ -165,9 +165,20 @@ class _AltaContenidoState extends State<AltaContenido> {
                                         tituloMensaje: "Advertencia",
                                         mensaje:
                                             "No ha seleccionado un archivo.",
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
+                                        acciones: [
+                                          TextButton(
+                                            child: Text('OK',
+                                                style: TextStyle(
+                                                    color: Colores().colorAzul,
+                                                    fontFamily: 'Trueno',
+                                                    fontSize: 11.0,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
                                       );
                                     });
                               }
@@ -185,11 +196,11 @@ class _AltaContenidoState extends State<AltaContenido> {
                                       useRootNavigator: false,
                                       context: context,
                                       builder: (BuildContext contextR) {
-                                        return AlertDialog(
-                                          title: Text('Alta de Contenido'),
-                                          content: Text(
-                                              'El contenido ha sido ingresado correctamente \nEl mismo podrá tardar unos minutos en visualizarse.'),
-                                          actions: [
+                                        return DialogoAlerta(
+                                          tituloMensaje: 'Alta de Contenido',
+                                          mensaje:
+                                              'El contenido ha sido guardado correctamente \n El mismo podrá tardar unos minutos en visualizarse.',
+                                          acciones: [
                                             TextButton(
                                                 child: Text('OK',
                                                     style: TextStyle(
@@ -309,9 +320,6 @@ class _AltaContenidoState extends State<AltaContenido> {
           archivoNombre = p.basename(fileName);
           fileExtension = p.extension(fileName);
           verificarFormato(fileExtension);
-          setState(() {
-            archivoNombre;
-          });
         }
       }
     } else {
@@ -348,12 +356,22 @@ class _AltaContenidoState extends State<AltaContenido> {
               tituloMensaje: "Formato Incorrecto",
               mensaje: "El formato del archivo seleccionado no es correcto."
                   "\nEl formato debe ser: pdf",
-              onPressed: () {
-                setState(() {
-                  archivoNombre = 'Seleccione un archivo en formato pdf';
-                });
-                Navigator.of(context).pop();
-              },
+              acciones: [
+                TextButton(
+                  child: Text('OK',
+                      style: TextStyle(
+                          color: Colores().colorAzul,
+                          fontFamily: 'Trueno',
+                          fontSize: 11.0,
+                          decoration: TextDecoration.underline)),
+                  onPressed: () {
+                    setState(() {
+                      archivoNombre = 'Seleccione un archivo en formato pdf';
+                    });
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
             );
           });
       archivo = null;

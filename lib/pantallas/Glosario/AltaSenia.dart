@@ -231,9 +231,20 @@ class _AltaSeniaState extends State<AltaSenia> {
                                         tituloMensaje: "Advertencia",
                                         mensaje:
                                             "No ha seleccionado un archivo.",
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
+                                        acciones: [
+                                          TextButton(
+                                            child: Text('OK',
+                                                style: TextStyle(
+                                                    color: Colores().colorAzul,
+                                                    fontFamily: 'Trueno',
+                                                    fontSize: 11.0,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
                                       );
                                     });
                               }
@@ -255,12 +266,12 @@ class _AltaSeniaState extends State<AltaSenia> {
                                       useRootNavigator: false,
                                       context: context,
                                       builder: (BuildContext contextR) {
-                                        return AlertDialog(
-                                          title: Text('Alta de Seña'),
-                                          content: Text(
-                                              'La seña ha sido ingresada correctamente.'
-                                              '\nLa misma podrá tardar unos minutos en visualizarse.'),
-                                          actions: [
+                                        return DialogoAlerta(
+                                          tituloMensaje: 'Alta de Seña',
+                                          mensaje:
+                                              'La seña ha sido guardada correctamente.'
+                                              '\nLa misma podrá tardar unos minutos en visualizarse.',
+                                          acciones: [
                                             TextButton(
                                                 child: Text('OK',
                                                     style: TextStyle(
@@ -457,12 +468,22 @@ class _AltaSeniaState extends State<AltaSenia> {
               tituloMensaje: "Formato Incorrecto",
               mensaje: "El formato del archivo seleccionado no es correcto."
                   "\nEl formato debe ser: mp4, avi, wmv, mov.",
-              onPressed: () {
-                archivoDeVideo = null;
-                fileWeb = null;
-                this._url = null;
-                Navigator.of(context).pop();
-              },
+              acciones: [
+                TextButton(
+                  child: Text('OK',
+                      style: TextStyle(
+                          color: Colores().colorAzul,
+                          fontFamily: 'Trueno',
+                          fontSize: 11.0,
+                          decoration: TextDecoration.underline)),
+                  onPressed: () {
+                    archivoDeVideo = null;
+                    fileWeb = null;
+                    this._url = null;
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
             );
           });
       return false;

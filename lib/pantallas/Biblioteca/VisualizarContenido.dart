@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorContenido.dart';
-import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
@@ -39,14 +38,13 @@ class VisualizarContenido extends StatefulWidget {
 
 class _VisualizarContenidoState extends State<VisualizarContenido> {
   List _categorias = [
-    'PAPERS',
-    'TESIS',
-    'INVESTIGACIONES',
-    'OTROS'
-  ];
+    'Papers',
+    'Tesis',
+    'Investigaciones',
+    'Otros'
+  ]; // Lista de las categorias dentro de biblioteca. Hardcodeadas xq son únicas.
   bool modoEditar;
   ControladorContenido _controladorContenido = new ControladorContenido();
-  ControladorUsuario _controladorUsuario = new ControladorUsuario();
   final formKey = new GlobalKey<FormState>();
 
   //usadas para editar
@@ -271,14 +269,13 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                             useRootNavigator: false,
                                             context: context,
                                             builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                    'Editar Contenido'),
-                                                content: Text(
-                                                    'Los datos han sido guardados correctamente'),
-                                                actions: [
+                                              return DialogoAlerta(
+                                                tituloMensaje:
+                                                    'Edicion de Contenido',
+                                                mensaje:'El contenido ha sido modificado correctamente',
+                                                acciones: [
                                                   TextButton(
-                                                      child: Text('Ok',
+                                                      child: Text('OK',
                                                           style: TextStyle(
                                                               color: Colores()
                                                                   .colorAzul,
@@ -370,10 +367,6 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
   }
 
   void onSelected(BuildContext context, int item) {
-    String titulo = widget.contenido.titulo;
-    String descripcion = widget.contenido.descripcion;
-    String categoria = widget.contenido.categoria;
-    String autor = widget.contenido.autor;
     switch (item) {
       case 0:
         !modoEditar ? editarContenido() : canelarEditar();
@@ -383,13 +376,12 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
             useRootNavigator: false,
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Eliminar Contenido'),
-                content: Text(
-                    '¿¿Desea eliminar el contenido $titulo ?'),
-                actions: [
+              return DialogoAlerta(
+                tituloMensaje: 'Eliminación de Contenido',
+                mensaje: '¿Confirma que desea eliminar el contenido seleccionado?',
+                acciones: [
                   TextButton(
-                      child: Text('Ok',
+                      child: Text('OK',
                           style: TextStyle(
                               color: Colores().colorAzul,
                               fontFamily: 'Trueno',
@@ -398,10 +390,10 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         eliminarContenido(
-                            titulo,
-                            descripcion,
-                            categoria,
-                            autor);
+                            widget.contenido.titulo,
+                            widget.contenido.descripcion,
+                            widget.contenido.categoria,
+                            widget.contenido.autor);
                         showCupertinoDialog(
                             context: context,
                             barrierDismissible: true,
@@ -410,14 +402,24 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                 tituloMensaje: "Contenido Eliminado",
                                 mensaje:
                                     "El contenido ha sido eliminado correctamente.",
-                                onPressed: () {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            Biblioteca()),
-                                    ModalRoute.withName('/'),
-                                  );
-                                },
+                                acciones: [
+                                  TextButton(
+                                    child: Text('OK',
+                                        style: TextStyle(
+                                            color: Colores().colorAzul,
+                                            fontFamily: 'Trueno',
+                                            fontSize: 11.0,
+                                            decoration: TextDecoration.underline)),
+                                      onPressed: () {
+                                        Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  Biblioteca()),
+                                          ModalRoute.withName('/'),
+                                        );
+                                      },
+                                  )
+                                ],
                               );
                             }).catchError((e) {
                           ErrorHandler().errorDialog(context, e);

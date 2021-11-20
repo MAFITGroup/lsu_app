@@ -132,7 +132,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
         ),
         Center(
             child: Container(
-                height: 100,
+                height: 600,
                 width: 600,
                 child: Column(children: [
                   Card(
@@ -157,9 +157,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
                               fontFamily: 'Trueno',
                               fontSize: 16,
                               color: Colores().colorAzul)),
-                      SizedBox(height: 5),
                       Container(
-                        height: 105,
+                        height: 130,
                         alignment: Alignment.center,
                         child: ListView.builder(
                             itemCount: listaSenias.length,
@@ -175,7 +174,6 @@ class _PaginaInicialState extends State<PaginaInicial> {
                                       fontFamily: 'Trueno', fontSize: 16));
                             }),
                       ),
-                      SizedBox(height: 5),
                     ],
                   )),
                   Card(

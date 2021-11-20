@@ -7,6 +7,7 @@ import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
@@ -213,11 +214,11 @@ class _RegistrarseState extends State<Registrarse> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Términos y Condiciones de Uso'),
-                            content: Text(
-                                'Para completar el registro es necesario aceptar los Términos y Condiciones de uso'),
-                            actions: [
+                          return DialogoAlerta(
+                            tituloMensaje: 'Términos y Condiciones de Uso',
+                            mensaje:
+                                'Para completar el registro es necesario aceptar los Términos y Condiciones de uso',
+                            acciones: [
                               TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();

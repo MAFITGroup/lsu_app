@@ -197,7 +197,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                             Navegacion(context)
                                                 .navegarAPaginaGestionUsuarioDest();
                                           },
-                                          child: Text('Ok',
+                                          child: Text('OK',
                                               style: TextStyle(
                                                   color: Colores().colorAzul,
                                                   fontFamily: 'Trueno',
@@ -243,7 +243,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                                   Navegacion(context)
                                                       .navegarAPaginaGestionUsuarioDest();
                                                 },
-                                                child: Text('Ok',
+                                                child: Text('OK',
                                                     style: TextStyle(
                                                         color:
                                                             Colores().colorAzul,

@@ -58,9 +58,8 @@ class _AltaCategoria extends State<AltaCategoria> {
                               //me guardo el valor en el metodo para hacer el chequeo.
                               existeCategoria(_nombreCategoria);
                             },
-                            validacion: ((value) => value.isEmpty
-                                ? 'La categoría es requerida'
-                                : null),
+                            validacion: ((value) =>
+                                value.isEmpty ? 'Campo Obligatorio' : null),
                           ),
                         ),
                         Container(
@@ -88,9 +87,8 @@ class _AltaCategoria extends State<AltaCategoria> {
                                   _nombreSubCategoria = value;
                                 });
                               },
-                              validacion: ((value) => value.isEmpty
-                                  ? 'La subcategoría es requerida'
-                                  : null),
+                              validacion: ((value) =>
+                                  value.isEmpty ? 'Campo Obligatorio' : null),
                               onSaved: (value) {
                                 listaDeSubcategorias.add(
                                     _nombreSubCategoria.toUpperCase().trim());
@@ -143,17 +141,28 @@ class _AltaCategoria extends State<AltaCategoria> {
                                       return DialogoAlerta(
                                         tituloMensaje: "Alta de Categoría",
                                         mensaje:
-                                            "La categoría ha sido ingresada correctamente",
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
+                                            "La categoría ha sido guardada correctamente",
+                                        acciones: [
+                                          TextButton(
+                                            child: Text('OK',
+                                                style: TextStyle(
+                                                    color: Colores().colorAzul,
+                                                    fontFamily: 'Trueno',
+                                                    fontSize: 11.0,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
                                                         Categorias()),
-                                            ModalRoute.withName('/'),
-                                          );
-                                        },
+                                                ModalRoute.withName('/'),
+                                              );
+                                            },
+                                          )
+                                        ],
                                       );
                                     });
                                 //TODO mensaje si falla.
@@ -171,10 +180,21 @@ class _AltaCategoria extends State<AltaCategoria> {
                                     return DialogoAlerta(
                                       tituloMensaje: "Advertencia",
                                       mensaje:
-                                          "Una de las subcategorías ingresadas se encuentra repetida.",
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
+                                          "Una de las subcategorías ingresadas está repetida.",
+                                      acciones: [
+                                        TextButton(
+                                          child: Text('OK',
+                                              style: TextStyle(
+                                                  color: Colores().colorAzul,
+                                                  fontFamily: 'Trueno',
+                                                  fontSize: 11.0,
+                                                  decoration: TextDecoration
+                                                      .underline)),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
                                     );
                                   });
                             }
@@ -188,9 +208,20 @@ class _AltaCategoria extends State<AltaCategoria> {
                                     mensaje: "La categoría ingresada " +
                                         _nombreCategoria +
                                         " ya existe.",
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
+                                    acciones: [
+                                      TextButton(
+                                        child: Text('OK',
+                                            style: TextStyle(
+                                                color: Colores().colorAzul,
+                                                fontFamily: 'Trueno',
+                                                fontSize: 11.0,
+                                                decoration: TextDecoration
+                                                    .underline)),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
                                   );
                                 });
                           }

@@ -29,8 +29,6 @@ class AltaNoticias extends StatefulWidget {
 }
 
 class _AltaNoticiasState extends State<AltaNoticias> {
-  TextEditingController _textEditingController = new TextEditingController();
-
   final formKey = new GlobalKey<FormState>();
 
   List _tipo = ['CHARLAS', 'LLAMADOS'];
@@ -94,7 +92,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
     flutterLocalNotificationsPlugin.show(
         0,
         'Plataforma LSU',
-        'Nuevas noticias han sido publicadas en tu Plataforma LSU. ¡No te las pierdas!',
+        'Nuevas noticias han sido publicadas en tu Plataforma LSU, no te las pierdas!',
         NotificationDetails(
             android: AndroidNotificationDetails(channel.id, channel.name,
                 //channel.description,
@@ -133,7 +131,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                               });
                             },
                             validator: ((value) =>
-                                value == null ? 'El tipo es requerido' : null),
+                                value == null ? 'El tipo es requerid0' : null),
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,
                                 color: Colores().colorSombraBotones),
@@ -211,17 +209,28 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                       return DialogoAlerta(
                                         tituloMensaje: "Alta de Noticia",
                                         mensaje:
-                                            "La noticia ha sido ingresada correctamente",
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
+                                            "La noticia ha sido creada correctamente",
+                                        acciones: [
+                                          TextButton(
+                                            child: Text('OK',
+                                                style: TextStyle(
+                                                    color: Colores().colorAzul,
+                                                    fontFamily: 'Trueno',
+                                                    fontSize: 11.0,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
                                                         Noticias()),
-                                            ModalRoute.withName('/'),
-                                          );
-                                        },
+                                                ModalRoute.withName('/'),
+                                              );
+                                            },
+                                          )
+                                        ],
                                       );
                                     });
                               } else {
@@ -231,19 +240,34 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                     builder: (context) {
                                       return DialogoAlerta(
                                         tituloMensaje: 'Alta de Archivo',
-                                        mensaje: 'Uno o más campos están vacíos. Por favor, verifique.',
-                                        onPressed: (){
+                                        mensaje:
+                                            'Uno o más campos están vacíos. Por favor, verifique.',
+                                        acciones: [
                                           TextButton(
-                                              child: Text('Ok',
-                                                  style: TextStyle(
-                                                      color: Colores().colorAzul,
-                                                      fontFamily: 'Trueno',
-                                                      fontSize: 11.0,
-                                                      decoration: TextDecoration.underline)),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              });
-                                        },
+                                            child: Text('OK',
+                                                style: TextStyle(
+                                                    color: Colores().colorAzul,
+                                                    fontFamily: 'Trueno',
+                                                    fontSize: 11.0,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            onPressed: () {
+                                              TextButton(
+                                                  child: Text('OK',
+                                                      style: TextStyle(
+                                                          color: Colores()
+                                                              .colorAzul,
+                                                          fontFamily: 'Trueno',
+                                                          fontSize: 11.0,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline)),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  });
+                                            },
+                                          )
+                                        ],
                                       );
                                     });
                               }

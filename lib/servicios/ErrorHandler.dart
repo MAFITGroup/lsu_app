@@ -30,7 +30,7 @@ class ErrorHandler {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text('Ok',
+                          child: Text('OK',
                               style: TextStyle(
                                   color: Colores().colorAzul,
                                   fontFamily: 'Trueno',
@@ -53,7 +53,7 @@ class ErrorHandler {
               content: Text('El correo ingresado no se encuentra registrado'),
               actions: [
                 TextButton(
-                  child: Text('Ok',
+                  child: Text('OK',
                       style: TextStyle(
                           color: Colores().colorAzul,
                           fontFamily: 'Trueno',
@@ -61,7 +61,7 @@ class ErrorHandler {
                           decoration: TextDecoration.underline)),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navegacion(context).navegarAResetPassword;
+                    Navegacion(context).navegarAResetPassword();
                   },
                 )
               ]);
@@ -80,7 +80,7 @@ class ErrorHandler {
               content: Text('El correo informado se encuentra registrado'),
               actions: [
                 TextButton(
-                    child: Text('Ok',
+                    child: Text('OK',
                         style: TextStyle(
                             color: Colores().colorAzul,
                             fontFamily: 'Trueno',
@@ -142,7 +142,7 @@ class ErrorHandler {
               content: Text('Usuario o contraseña incorrectas'),
               actions: [
                 TextButton(
-                  child: Text('ok',
+                  child: Text('OK',
                       style: TextStyle(
                           color: Colores().colorAzul,
                           fontFamily: 'Trueno',
@@ -169,7 +169,7 @@ class ErrorHandler {
                   'Ocurrió un error durante la modificación de datos, intente nuevamente'),
               actions: [
                 TextButton(
-                  child: Text('ok',
+                  child: Text('OK',
                       style: TextStyle(
                           color: Colores().colorAzul,
                           fontFamily: 'Trueno',

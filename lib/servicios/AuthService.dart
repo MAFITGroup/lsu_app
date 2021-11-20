@@ -49,19 +49,21 @@ class AuthService extends ChangeNotifier {
               builder: (context) {
                 return DialogoAlerta(
                   tituloMensaje: 'Usuario pendiente',
-                  mensaje: 'Usuario pendiente de aprobación. Entre en contacto con el Administrador',
-                  onPressed: (){
+                  mensaje:
+                      'Usuario pendiente de aprobación. Entre en contacto con el Administrador',
+                  acciones: [
                     TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('OK',
-                            style: TextStyle(
-                                color: Colores().colorAzul,
-                                fontFamily: 'Trueno',
-                                fontSize: 11.0,
-                                decoration: TextDecoration.underline)));
-                  },
+                      child: Text('OK',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration.underline)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
                 );
               });
         }
@@ -154,7 +156,8 @@ class AuthService extends ChangeNotifier {
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Usuario no registrado'),
-                  content: Text('El usuario informado no se encuentra registrado'),
+                  content:
+                      Text('El usuario informado no se encuentra registrado'),
                   actions: [
                     TextButton(
                         onPressed: () {
@@ -216,7 +219,7 @@ class AuthService extends ChangeNotifier {
               mensaje:
                   'El registro esta pendiente de aprobacion del administrador. '
                   '\nUna vez autorizado, recibirás una notificación en tu correo.',
-              onPressed: () {
+              acciones: [
                 TextButton(
                     child: Text('OK',
                         style: TextStyle(
@@ -227,8 +230,8 @@ class AuthService extends ChangeNotifier {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navegacion(context).navegarAPrincipal();
-                    });
-              },
+                    })
+              ],
             );
           });
     }).catchError((e) {
@@ -247,7 +250,17 @@ class AuthService extends ChangeNotifier {
                     return DialogoAlerta(
                       tituloMensaje: "Solicitud de nueva contraseña",
                       mensaje: "Link enviado a su casilla de correo",
-                      onPressed: Navegacion(context).navegarALoginDest,
+                      acciones: [
+                        TextButton(
+                          child: Text('OK',
+                              style: TextStyle(
+                                  color: Colores().colorAzul,
+                                  fontFamily: 'Trueno',
+                                  fontSize: 11.0,
+                                  decoration: TextDecoration.underline)),
+                          onPressed: Navegacion(context).navegarALoginDest,
+                        )
+                      ],
                     );
                   })
             })
