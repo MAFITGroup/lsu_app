@@ -153,7 +153,7 @@ class AuthService extends ChangeNotifier {
       String password,
       String nombreCompleto,
       String telefono,
-      String localidad,
+      String departamento,
       String especialidad,
       bool esAdministrador,
       String statusUsuario,
@@ -165,7 +165,7 @@ class AuthService extends ChangeNotifier {
 
       //creo mi nuevo usuario
 
-      manej.crearUsuario(userID, email, nombreCompleto, telefono, localidad,
+      manej.crearUsuario(userID, email, nombreCompleto, telefono, departamento,
           especialidad, esAdministrador, statusUsuario);
 
       showDialog(

@@ -17,7 +17,7 @@ class TextFieldTexto extends StatefulWidget {
   setearle un valor por defecto,etc.
    */
   final TextEditingController controlador;
-  final bool botonHabilitado;
+  final bool habilitado;
 
   TextFieldTexto({
     Key key,
@@ -26,7 +26,7 @@ class TextFieldTexto extends StatefulWidget {
     this.validacion,
     this.icon,
     this.controlador,
-    this.botonHabilitado,
+    this.habilitado,
     this.onSaved,
   }) : super(key: key);
 
@@ -40,7 +40,7 @@ class _TextFieldTextoState extends State<TextFieldTexto> {
     return Padding(
       padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: TextFormField(
-        enabled: widget.botonHabilitado,
+        enabled: widget.habilitado,
         controller: widget.controlador,
         //La primera letra siempre mayus
         textCapitalization: TextCapitalization.sentences,

@@ -105,7 +105,7 @@ class _LoginState extends State<Login> {
                               fontSize: 11.0,
                               decoration: TextDecoration.underline))))),
           TextButton(
-              onPressed: Navegacion(context).navegarAPrincipalDest,
+              onPressed: Navegacion(context).navegarAPrincipal,
               child: Container(
                   alignment: Alignment.bottomCenter,
                   padding: EdgeInsets.only(top: 15.0, left: 20.0),

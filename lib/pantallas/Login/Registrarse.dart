@@ -22,7 +22,7 @@ class _RegistrarseState extends State<Registrarse> {
   String _password;
   String _nombreCompleto;
   String _telefono;
-  String _localidad;
+  String _departamento;
   String _especialidad;
   List departamentos = ['ARTIGAS', 'CANELONES', 'CERRO LARGO', 'COLONIA', 'DURAZNO', 'FLORES', 'FLORIDA',
     'LAVALLEJA', 'MALDONADO', 'MONTEVIDEO', 'PAYSANDÚ', 'RÍO NEGRO', 'RIVERA', 'ROCHA', 'SALTO', 'SORIANO',
@@ -106,7 +106,7 @@ class _RegistrarseState extends State<Registrarse> {
               items: departamentos,
               onChanged: (value){
                 setState(() {
-                  this._localidad = value;
+                  this._departamento = value;
                 });
               },
               validator: ((dynamic value) {
@@ -195,7 +195,7 @@ class _RegistrarseState extends State<Registrarse> {
                         _password,
                         _nombreCompleto,
                         _telefono,
-                        _localidad,
+                        _departamento,
                         _especialidad,
                         false,
                         _statusUsuario,

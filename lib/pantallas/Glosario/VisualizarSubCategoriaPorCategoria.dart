@@ -77,8 +77,10 @@ class _VisualizarSubCategoriaPorCategoriaState
                                                         .nombre,
                                               )));
                                 },
-                                title: Text(listaSubCategoriaPorCategoria[index]
-                                    .nombre),
+                                title: Text(
+                                    listaSubCategoriaPorCategoria[index].nombre,
+                                    style: TextStyle(
+                                        fontFamily: 'Trueno', fontSize: 14)),
                               ));
                             });
                       }

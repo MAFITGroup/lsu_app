@@ -10,7 +10,6 @@ import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
-
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
@@ -112,7 +111,7 @@ class _PerfilState extends State<Perfil> {
                       TextFieldTexto(
                         nombre: 'CORREO',
                         icon: Icon(Icons.alternate_email_rounded),
-                        botonHabilitado: false,
+                        habilitado: false,
                         controlador: modoEditar
                             ? null
                             : TextEditingController(text: usuario.correo),
@@ -121,7 +120,7 @@ class _PerfilState extends State<Perfil> {
                       TextFieldTexto(
                           nombre: 'NOMBRE COMPLETO',
                           icon: Icon(Icons.person),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(
@@ -138,7 +137,7 @@ class _PerfilState extends State<Perfil> {
                       TextFieldNumerico(
                           nombre: 'CELULAR',
                           icon: Icon(Icons.phone),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(text: usuario.telefono),
@@ -197,7 +196,7 @@ class _PerfilState extends State<Perfil> {
                       TextFieldTexto(
                           nombre: 'ESPECIALIDAD',
                           icon: Icon(Icons.military_tech_outlined),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(
@@ -264,10 +263,17 @@ class _PerfilState extends State<Perfil> {
                                                                 TextDecoration
                                                                     .underline)),
                                                     onPressed: () {
+                                                      /*
+                                                      elimino dialogo
+                                                       */
                                                       Navigator.of(context)
                                                           .pop();
-                                                      Navegacion(context)
-                                                          .navegarAPaginaInicialDest();
+                                                      /*
+                                                      elimino ventana perfil
+                                                       */
+                                                      Navigator.of(context)
+                                                          .pop();
+
                                                     })
                                               ],
                                             );
@@ -325,7 +331,7 @@ class _PerfilState extends State<Perfil> {
                       Boton(
                         titulo: 'Inactivar',
                         onTap: () {
-                          Navegacion(context).navegarAPrincipalDest();
+                          Navegacion(context).navegarAPrincipal();
                           AuthService().signOut();
                           inactivarUsuario(widget.usuario.correo);
                         },
@@ -335,7 +341,7 @@ class _PerfilState extends State<Perfil> {
                         titulo: 'Eliminar',
                         onTap: () {
                           eliminarUsuario(widget.usuario.correo);
-                          Navegacion(context).navegarAPrincipalDest();
+                          Navegacion(context).navegarAPrincipal();
                           AuthService().signOut();
                         },
                       )

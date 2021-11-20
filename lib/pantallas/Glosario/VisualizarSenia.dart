@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
@@ -55,7 +54,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
   @override
   void initState() {
     isSubCategoriaSeleccionada = true;
-    listarCateogiras();
+    listarCategorias();
     setState(() {
       modoEditar = false;
     });
@@ -85,18 +84,30 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                           PopupMenuItem(
                             value: 0,
                             child: ListTile(
-                                leading: Icon(!modoEditar
-                                    ? Icons.edit
-                                    : Icons.cancel_outlined),
-                                title: Text(!modoEditar
-                                    ? "Editar Seña"
-                                    : "Cancelar Editar")),
+                                leading: Icon(
+                                    !modoEditar
+                                        ? Icons.edit
+                                        : Icons.cancel_outlined,
+                                    color: Colores().colorAzul),
+                                title: Text(
+                                    !modoEditar
+                                        ? "Editar Seña"
+                                        : "Cancelar Editar",
+                                    style: TextStyle(
+                                        fontFamily: 'Trueno',
+                                        fontSize: 14,
+                                        color: Colores().colorSombraBotones))),
                           ),
                           PopupMenuItem(
                             value: 1,
                             child: ListTile(
-                                leading: Icon(Icons.delete_forever_outlined),
-                                title: Text("Eliminar Seña")),
+                                leading: Icon(Icons.delete_forever_outlined,
+                                    color: Colores().colorAzul),
+                                title: Text("Eliminar Seña",
+                                    style: TextStyle(
+                                        fontFamily: 'Trueno',
+                                        fontSize: 14,
+                                        color: Colores().colorSombraBotones))),
                           ),
                         ],
                       ),
@@ -122,7 +133,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                         TextFieldTexto(
                           nombre: 'NOMBRE',
                           icon: Icon(Icons.format_size_outlined),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(text: senia.nombre),
@@ -136,9 +147,9 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
-                          nombre: 'DESCRIPCIÓN',
-                          icon: Icon(Icons.format_align_left_outlined),
-                          botonHabilitado: modoEditar,
+                          nombre: 'DESCRIPCION',
+                          icon: Icon(Icons.description),
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(text: senia.descripcion),
@@ -158,7 +169,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                             enabled: modoEditar,
                             selectedItem: senia.categoria,
                             onChanged: (value) async {
-                              await listarSubCateogiras(value);
+                              await listarSubCategorias(value);
                               subCategoriaKey.currentState.clear();
                               setState(() {
                                 nuevaCategoriaSenia = value;
@@ -310,57 +321,55 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                                        ventana de alta seña
 
                                                          */
-                                                        Navigator
-                                                            .pushReplacement(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              return Glosario();
-                                                            },
-                                                          ),
-                                                        );
-                                                        /*
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return Glosario();
+                                                          },
+                                                        ),
+                                                      );
+                                                      /*
                                                         Cuatro POP, uno para el diologo y los demas
                                                         para la volver a la
                                                         pantalla de glosario
                                                          */
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      })
-                                                ],
-                                              );
-                                            });
-                                        //TODO mensaje si falla.
-                                      }).catchError((e) {
-                                        ErrorHandler().errorDialog(context, e);
-                                      });
-                                  }
-                                })
-                            : Container(),
-                      ],
-                    ),
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    })
+                                              ],
+                                            );
+                                          });
+                                      //TODO mensaje si falla.
+                                    }).catchError((e) {
+                                      ErrorHandler().errorDialog(context, e);
+                                    });
+                                }
+                              })
+                          : Container(),
+                    ],
                   ),
                 ),
               ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Future<void> listarCateogiras() async {
+  Future<void> listarCategorias() async {
     listaCategorias = await ControladorCategoria().listarCategorias();
   }
 
-  Future<void> listarSubCateogiras(String nombreCategoria) async {
+  Future<void> listarSubCategorias(String nombreCategoria) async {
     listaSubCategorias = await ControladorCategoria()
         .listarSubCategoriasPorCategoriaList(nombreCategoria);
   }
@@ -377,9 +386,10 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
     });
   }
 
-  Future eliminarSenia(
-      String nombre, String descripcion, String categoria) async {
-    _controladorSenia.eliminarSenia(nombre, descripcion, categoria);
+  Future eliminarSenia(String nombre, String descripcion, String categoria,
+      String subCategoria) async {
+    _controladorSenia.eliminarSenia(
+        nombre, descripcion, categoria, subCategoria);
   }
 
   /*
@@ -430,8 +440,11 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                               fontSize: 11.0,
                               decoration: TextDecoration.underline)),
                       onPressed: () {
-                        eliminarSenia(widget.senia.nombre,
-                            widget.senia.descripcion, widget.senia.categoria)
+                        eliminarSenia(
+                            widget.senia.nombre,
+                            widget.senia.descripcion,
+                            widget.senia.categoria,
+                            widget.senia.subCategoria)
                           ..then((userCreds) {
                             /*
                                     Luego de eliminar la seña,

@@ -83,15 +83,15 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                       child: ListTile(
                           leading: Icon(!modoEditar
                               ? Icons.edit
-                              : Icons.cancel_outlined),
+                              : Icons.cancel_outlined, color: Colores().colorAzul),
                           title: Text(!modoEditar
                               ? "Editar Noticia"
-                              : "Cancelar Editar"))),
+                              : "Cancelar Editar",style: TextStyle(fontFamily: 'Trueno', fontSize: 14,color: Colores().colorSombraBotones)))),
                   PopupMenuItem(
                     value: 1,
                     child: ListTile(
-                        leading: Icon(Icons.delete_forever_outlined),
-                        title: Text("Eliminar Noticia")),
+                        leading: Icon(Icons.delete_forever_outlined, color: Colores().colorAzul),
+                        title: Text("Eliminar Noticia",style: TextStyle(fontFamily: 'Trueno', fontSize: 14,color: Colores().colorSombraBotones))),
                   )
                 ],
               ),
@@ -150,7 +150,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                         TextFieldTexto(
                           nombre: 'TÍTULO',
                           icon: Icon(Icons.format_size_outlined),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                             ? null
                             : TextEditingController(
@@ -169,7 +169,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                         TextFieldTexto(
                           nombre: 'LINK',
                           icon: Icon(Icons.link),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                             ? null
                             : TextEditingController(
@@ -189,7 +189,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                         TextFieldDescripcion(
                           nombre: 'DESCRIPCIÓN',
                           icon: Icon(Icons.format_align_left_outlined),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                             ? null
                             : TextEditingController(

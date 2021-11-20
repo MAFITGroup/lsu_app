@@ -1,21 +1,13 @@
 
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/buscadores/BuscadorNoticias.dart';
 import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
-import 'package:lsu_app/widgets/Boton.dart';
-import 'package:lsu_app/widgets/DialogoAlerta.dart';
-import 'package:lsu_app/widgets/RedesBotones.dart';
-import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
-import 'package:lsu_app/widgets/TextFieldTexto.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'VisualizarNoticia.dart';
 
@@ -67,6 +59,7 @@ class _NoticiasState extends State<Noticias> {
     }
     final tabBar = new TabBar(labelColor: Colores().colorBlanco,
       indicatorColor: Colores().colorBlanco,
+      labelStyle: TextStyle(fontFamily: 'Trueno', fontSize: 14),
       onTap: _onItemTappedForTabBar,
       tabs: <Widget>[
         new Tab(

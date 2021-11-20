@@ -51,6 +51,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
     }
     final tabBar = new TabBar(labelColor: Colores().colorBlanco,
       indicatorColor: Colores().colorBlanco,
+      labelStyle: TextStyle(fontFamily: 'Trueno', fontSize: 14),
       onTap: _onItemTappedForTabBar,
       tabs: <Widget>[
         new Tab(

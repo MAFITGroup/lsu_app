@@ -6,6 +6,7 @@ class Senia {
   String _subCategoria;
   String _urlVideo;
   String _documentID;
+  int _cantidadVisualizaciones;
 
   Senia();
 
@@ -24,7 +25,7 @@ class Senia {
 
   String get documentID => _documentID;
 
-
+  int get cantidadVisualizaciones=> _cantidadVisualizaciones;
 
   set usuarioAlta(String value) {
     _usuarioAlta = value;
@@ -52,5 +53,9 @@ class Senia {
 
   set documentID(String value) {
     _documentID = value;
+  }
+
+  set cantidadVisualizaciones(int value) {
+    _cantidadVisualizaciones = value;
   }
 }

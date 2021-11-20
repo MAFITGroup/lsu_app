@@ -59,18 +59,18 @@ class _AltaCategoria extends State<AltaCategoria> {
                               existeCategoria(_nombreCategoria);
                             },
                             validacion: ((value) => value.isEmpty
-                                ? 'El nombre de la categoría es requerido'
+                                ? 'Campo Obligatorio'
                                 : null),
                           ),
                         ),
                         Container(
                             child: FloatingActionButton(
-                          heroTag: "btnAgregar",
-                          onPressed: agregarWidgetSubCategoria,
-                          child: Icon(Icons.add),
-                          backgroundColor: Colores().colorAzul,
-                          splashColor: Colores().colorSombraBotones,
-                        )),
+                              heroTag: "btnAgregar",
+                              onPressed: agregarWidgetSubCategoria,
+                              child: Icon(Icons.add),
+                              backgroundColor: Colores().colorAzul,
+                              splashColor: Colores().colorSombraBotones,
+                            )),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -89,7 +89,7 @@ class _AltaCategoria extends State<AltaCategoria> {
                                 });
                               },
                               validacion: ((value) => value.isEmpty
-                                  ? 'El nombre de la Subcategoría es requerido'
+                                  ? 'Campo Obligatorio'
                                   : null),
                               onSaved: (value) {
                                 listaDeSubcategorias.add(_nombreSubCategoria.toUpperCase().trim());

@@ -65,7 +65,7 @@ class Navegacion {
   }
 
   void navegarAPerfil(Usuario usuario) {
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => Perfil(usuario: usuario),
@@ -164,7 +164,7 @@ class Navegacion {
         ));
   }
 
-  void navegarAPrincipalDest() {
+  void navegarAPrincipal() {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(

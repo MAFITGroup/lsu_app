@@ -1,15 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
+import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
+import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class PaginaInicial extends StatefulWidget {
   @override
@@ -19,28 +20,24 @@ class PaginaInicial extends StatefulWidget {
 class _PaginaInicialState extends State<PaginaInicial> {
   bool isUsuarioAdmin = false;
   ControladorUsuario controladorUsuario = new ControladorUsuario();
-
+  ControladorSenia controladorSenia = new ControladorSenia();
   Usuario usuario = new Usuario();
-  int activoUsuarios;
+  int cantidadUsuariosActivos;
+  int cantidadUsuariosRegistrados;
 
-  List<_ChartData> data;
-  TooltipBehavior _tooltip;
+  List<Usuario> listaUsuarios = [];
+  List<Senia> listaSenias = [];
 
   get onClickedNotification => null;
 
   @override
   void initState() {
-    usuariosActivos();
+    obtenerCantidadUsuariosActivos();
+    obtenerCantidadUsuariosRegistrados();
     obtenerUsuarioAdministrador();
-    datosUsuario();
-    data = [
-      _ChartData('MONTEVIDEO', 12),
-      _ChartData('CANELONES', 15),
-      _ChartData('MALDONADO', 30),
-      _ChartData('LAVALLEJA', 6.4),
-      _ChartData('PAYSANDÚ', 14)
-    ];
-    _tooltip = TooltipBehavior(enable: true);
+    obtenerDatosUsuarioLogueado();
+    obtenerCantidadUsuarios();
+    obtenerVisualizacionesSenia();
   }
 
   @override
@@ -58,19 +55,33 @@ class _PaginaInicialState extends State<PaginaInicial> {
                 PopupMenuItem(
                     value: 1,
                     child: ListTile(
-                        leading: Icon(Icons.account_circle_outlined),
-                        title: Text("Perfil"))),
+                      leading: Icon(Icons.picture_as_pdf_outlined,
+                          color: Colores().colorAzul),
+                      title: Text("Ayuda",
+                          style: TextStyle(
+                              fontFamily: 'Trueno',
+                              fontSize: 14,
+                              color: Colores().colorSombraBotones)),
+                    )),
                 PopupMenuItem(
                     value: 2,
                     child: ListTile(
-                      leading: Icon(Icons.picture_as_pdf_outlined),
-                      title: Text("Ayuda")
-                    )),
+                        leading: Icon(Icons.account_circle_outlined,
+                            color: Colores().colorAzul),
+                        title: Text("Perfil",
+                            style: TextStyle(
+                                fontFamily: 'Trueno',
+                                fontSize: 14,
+                                color: Colores().colorSombraBotones)))),
                 PopupMenuItem(
                     value: 0,
                     child: ListTile(
-                        leading: Icon(Icons.logout),
-                        title: Text('Cerrar Sesión')
+                      leading: Icon(Icons.logout, color: Colores().colorAzul),
+                      title: Text('Cerrar Sesión',
+                          style: TextStyle(
+                              fontFamily: 'Trueno',
+                              fontSize: 14,
+                              color: Colores().colorSombraBotones)),
                     )),
               ],
             ),
@@ -115,6 +126,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                             onTap: Navegacion(context)
                                 .navegarAPaginaGestionUsuario,
                             titulo: 'GESTIÓN DE USUARIOS'),
+                        SizedBox(height: 30),
                       ],
                     )),
         ),
@@ -126,59 +138,91 @@ class _PaginaInicialState extends State<PaginaInicial> {
                   Card(
                       child: ListTile(
                     title: Text(
-                      "USUARIOS REGISTRADOS: " +  activoUsuarios.toString(),
+                      "USUARIOS REGISTRADOS: $cantidadUsuariosRegistrados",
                       textAlign: TextAlign.center,
-
                     ),
-                  ))
-                ]))),
-        Center(
-            child: Container(
-                height: 500,
-                width: 600,
-                child: Column(children: [
-                  //Initialize the chart widget
-                  SfCartesianChart(
-                      primaryXAxis: CategoryAxis(),
-                      primaryYAxis:
-                          NumericAxis(minimum: 0, maximum: 40, interval: 10),
-                      title: ChartTitle(
-                          text: 'USUARIOS DISTRIBUIDOS EN NUESTRO PAÍS',
-                          textStyle: TextStyle(
+                  )),
+                  Card(
+                      child: ListTile(
+                    title: Text(
+                      "USUARIOS ACTIVOS: $cantidadUsuariosActivos",
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+                  Card(
+                      child: Column(
+                    children: [
+                      Text('SEÑAS MAS VISUALIZADAS',
+                          style: TextStyle(
                               fontFamily: 'Trueno',
-                              fontSize: 14,
-                              color: Color.fromRGBO(0, 65, 116, 1))),
-                      tooltipBehavior: _tooltip,
-                      series: <ChartSeries<_ChartData, String>>[
-                        ColumnSeries<_ChartData, String>(
-                            dataSource: data,
-                            xValueMapper: (_ChartData data, _) => data.x,
-                            yValueMapper: (_ChartData data, _) => data.y,
-                            name: 'Gold',
-                            color: Color.fromRGBO(0, 65, 116, 1))
-                      ]),
-                ])))
+                              fontSize: 16,
+                              color: Colores().colorAzul)),
+                      SizedBox(height: 5),
+                      Container(
+                        height: 105,
+                        alignment: Alignment.center,
+                        child: ListView.builder(
+                            itemCount: listaSenias.length,
+                            itemBuilder: (context, index) {
+                              return Text(
+                                  listaSenias[index].nombre +
+                                      ": " +
+                                      listaSenias[index]
+                                          .cantidadVisualizaciones
+                                          .toString(),textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Trueno', fontSize: 16));
+                            }),
+                      ),
+                      SizedBox(height: 5),
+                    ],
+                  )),
+                  Card(
+                    child: SfCartesianChart(
+                        primaryXAxis: CategoryAxis(),
+                        primaryYAxis:
+                            NumericAxis(minimum: 0, maximum: 70, interval: 10),
+                        tooltipBehavior: TooltipBehavior(enable: true),
+                        title: ChartTitle(
+                            text: 'USUARIOS DISTRIBUIDOS EN NUESTRO PAÍS',
+                            textStyle: TextStyle(
+                                fontFamily: 'Trueno',
+                                fontSize: 14,
+                                color: Colores().colorAzul)),
+                        series: <ChartSeries<Usuario, String>>[
+                          ColumnSeries<Usuario, String>(
+                              dataSource: listaUsuarios,
+                              xValueMapper: (Usuario usuario, _) =>
+                                  usuario.departamento,
+                              yValueMapper: (Usuario usuario, _) =>
+                                  obtenerCantidadUsuariosPorDepartamento(
+                                      usuario.departamento),
+                              name: usuario.departamento,
+                              color: Colores().colorAzul)
+                        ]),
+                  )
+                ]))),
       ]),
     ));
   }
 
   void onSelected(BuildContext context, int item) {
     switch (item) {
-      case 0:
-        AuthService().signOut();
-        Navegacion(context).navegarAPrincipalDest();
-        break;
       case 1:
-        Navegacion(context).navegarAPerfil(usuario);
+        Navegacion(context).navegarManualDeUsuario();
         break;
       case 2:
-        Navegacion(context).navegarManualDeUsuario();
+        Navegacion(context).navegarAPerfil(usuario);
+        break;
+      case 3:
+        AuthService().signOut();
+        Navegacion(context).navegarAPrincipal();
         break;
     }
   }
 
   Future<void> obtenerUsuarioAdministrador() async {
-    isUsuarioAdmin = await ControladorUsuario()
+    isUsuarioAdmin = await controladorUsuario
         .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
@@ -188,7 +232,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
     });
   }
 
-  Future<void> datosUsuario() async {
+  Future<void> obtenerDatosUsuarioLogueado() async {
     usuario = await controladorUsuario
         .obtenerUsuarioLogueado(FirebaseAuth.instance.currentUser.uid);
 
@@ -198,15 +242,35 @@ class _PaginaInicialState extends State<PaginaInicial> {
     }
   }
 
-  Future<void> usuariosActivos() async {
-    activoUsuarios =
-        await ControladorUsuario().obtenerCantidadUsuariosActivos();
+  void obtenerCantidadUsuariosActivos() async {
+    cantidadUsuariosActivos =
+        await controladorUsuario.obtenerCantidadUsuariosActivos();
   }
-}
 
-class _ChartData {
-  _ChartData(this.x, this.y);
+  void obtenerCantidadUsuariosRegistrados() async {
+    cantidadUsuariosRegistrados =
+        await controladorUsuario.obtenerCantidadUsuariosRegistrados();
+  }
 
-  final String x;
-  final double y;
+  /*
+  Para Grafica de Usuarios por Departamento
+   */
+  void obtenerCantidadUsuarios() async {
+    listaUsuarios = await controladorUsuario.obtenerTodosUsuarios();
+  }
+
+  int obtenerCantidadUsuariosPorDepartamento(String nombreDepartamento) {
+    int cantidadUsuariosPorDepartamento = 0;
+
+    for (Usuario usuario in listaUsuarios) {
+      if (usuario.departamento == nombreDepartamento) {
+        cantidadUsuariosPorDepartamento++;
+      }
+    }
+    return cantidadUsuariosPorDepartamento;
+  }
+
+  void obtenerVisualizacionesSenia() async {
+    listaSenias = await controladorSenia.obtenerVisualizacionesSenia();
+  }
 }

@@ -8,7 +8,7 @@ class TextFieldDescripcion extends StatelessWidget {
   final Function(String) validacion;
   final Icon icon;
   final TextEditingController controlador;
-  final bool botonHabilitado;
+  final bool habilitado;
 
   TextFieldDescripcion({
     Key key,
@@ -17,7 +17,7 @@ class TextFieldDescripcion extends StatelessWidget {
     this.validacion,
     this.icon,
     this.controlador,
-    this.botonHabilitado,
+    this.habilitado,
   }) : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class TextFieldDescripcion extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: TextFormField(
-          enabled: botonHabilitado,
+          enabled: habilitado,
           controller: controlador,
           //La primera letra siempre mayus
           //La primera letra siempre mayus

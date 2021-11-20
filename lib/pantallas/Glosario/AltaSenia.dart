@@ -63,7 +63,7 @@ class _AltaSeniaState extends State<AltaSenia> {
 
   @override
   void initState() {
-    listarCateogiras();
+    listarCategorias();
     isCategoriaSeleccionada = false;
   }
 
@@ -131,7 +131,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                             key: categoriaKey,
                             items: listaCategorias,
                             onChanged: (value) async {
-                              await listarSubCateogiras(value);
+                              await listarSubCategorias(value);
                               subCategoriaKey.currentState.clear();
                               setState(() {
                                 _catSeleccionada = value;
@@ -342,7 +342,7 @@ class _AltaSeniaState extends State<AltaSenia> {
             _subCatSeleccionada,
             nombreUsuario,
             destino,
-            fileWeb);
+            fileWeb,0);
       }
     } else {
       /*
@@ -359,7 +359,7 @@ class _AltaSeniaState extends State<AltaSenia> {
             _subCatSeleccionada,
             nombreUsuario,
             destino,
-            archivoDeVideo);
+            archivoDeVideo,0);
       }
     }
   }
@@ -470,11 +470,11 @@ class _AltaSeniaState extends State<AltaSenia> {
     }
   }
 
-  void listarCateogiras() async {
+  void listarCategorias() async {
     listaCategorias = widget.listaCategorias;
   }
 
-  Future<void> listarSubCateogiras(String nombreCategoria) async {
+  Future<void> listarSubCategorias(String nombreCategoria) async {
     listaSubCategorias = await ControladorCategoria()
         .listarSubCategoriasPorCategoriaList(nombreCategoria);
   }

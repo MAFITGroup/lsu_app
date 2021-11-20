@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Iconos.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
 import 'package:lsu_app/pantallas/Biblioteca/Biblioteca.dart';
@@ -90,15 +88,15 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                               child: ListTile(
                                   leading: Icon(!modoEditar
                                       ? Icons.edit
-                                      : Icons.cancel_outlined),
+                                      : Icons.cancel_outlined, color: Colores().colorAzul),
                                   title: Text(!modoEditar
                                       ? "Editar Contenido"
-                                      : "Cancelar Editar"))),
+                                      : "Cancelar Editar",style: TextStyle(fontFamily: 'Trueno', fontSize: 14,color: Colores().colorSombraBotones)))),
                           PopupMenuItem(
                             value: 1,
                             child: ListTile(
-                                leading: Icon(Icons.delete_forever_outlined),
-                                title: Text("Eliminar Contenido")),
+                                leading: Icon(Icons.delete_forever_outlined, color: Colores().colorAzul),
+                                title: Text("Eliminar Contenido",style: TextStyle(fontFamily: 'Trueno', fontSize: 14,color: Colores().colorSombraBotones))),
                           )
                         ],
                       ),
@@ -117,7 +115,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                         TextFieldTexto(
                           nombre: 'TÍTULO',
                           icon: Icon(Icons.format_size_outlined),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(text: contenido.titulo),
@@ -133,7 +131,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                         TextFieldDescripcion(
                           nombre: 'DESCRIPCIÓN',
                           icon: Icon(Icons.format_align_left_outlined),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(
@@ -151,7 +149,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                         TextFieldTexto(
                           nombre: 'AUTOR',
                           icon: Icon(Icons.person_outline_sharp),
-                          botonHabilitado: modoEditar,
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(text: contenido.autor),

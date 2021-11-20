@@ -11,7 +11,7 @@ class TextFieldNumerico extends StatefulWidget {
   final Icon icon;
 
   final TextEditingController controlador;
-  final bool botonHabilitado;
+  final bool habilitado;
 
   TextFieldNumerico({
     Key key,
@@ -20,7 +20,7 @@ class TextFieldNumerico extends StatefulWidget {
     this.validacion,
     this.icon,
     this.controlador,
-    this.botonHabilitado
+    this.habilitado
   }) : super(key: key);
 
   @override
@@ -36,7 +36,7 @@ class _TextFieldNumericoState extends State<TextFieldNumerico>{
     return Padding(
       padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: TextFormField(
-        enabled: widget.botonHabilitado,
+        enabled: widget.habilitado,
           controller: widget.controlador,
           decoration: InputDecoration(
               prefixIcon: widget.icon == null ? Icon(null) : widget.icon,

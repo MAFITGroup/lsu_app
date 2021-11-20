@@ -10,10 +10,6 @@ class Usuario {
 
   Usuario();
 
-  /* Usuario(this._uid, this._correo, this._nombreCompleto, this._telefono,
-      this._localidad, this._especialidad, this._esAdministrador);
-   */
-
   String get uid => _uid;
 
   String get correo => _correo;
@@ -61,4 +57,5 @@ class Usuario {
   set statusUsuario(String value){
     _statusUsuario = value;
   }
+
 }

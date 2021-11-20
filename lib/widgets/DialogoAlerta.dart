@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 
@@ -138,7 +137,7 @@ class AlertDialog_resgistro extends StatelessWidget {
                     decoration: TextDecoration.underline)),
             onPressed: () {
               Navigator.of(context).pop();
-              Navegacion(context).navegarAPrincipalDest();
+              Navegacion(context).navegarAPrincipal();
             }),
       ],
     );
@@ -195,30 +194,6 @@ class AlertDialog_campoVacio extends StatelessWidget {
   }
 }
 
-class AlertDialog_EdicionSuccess extends StatelessWidget {
-  final Widget child;
-
-  const AlertDialog_EdicionSuccess({Key key, this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Edición Realizada'),
-      content: Text('Su edición se ha guardado correctamente'),
-      actions: [
-        TextButton(
-          child: Text('Ok',
-              style: TextStyle(
-                  color: Colores().colorAzul,
-                  fontFamily: 'Trueno',
-                  fontSize: 11.0,
-                  decoration: TextDecoration.underline)),
-          onPressed: Navegacion(context).navegarAPaginaInicialDest,
-        ),
-      ],
-    );
-  }
-}
 
 class AlertDialog_cargaArchivo extends StatelessWidget {
   final Widget child;

@@ -41,13 +41,60 @@ class ControladorCategoria {
     });
   }
 
-  void editarCategoria(String nombreAnterior, String nombreNuevo) async {
+  void editarCategoria(String nombreAnterior, String nombreNuevo,
+  List<dynamic> listaDeSubsAnterior, List<dynamic> listaDeSubsNueva) async {
     Categoria categoria = await obtenerCategoriaPorNombre(nombreAnterior);
     String docId = categoria.documentID;
 
+    int index = 0;
+    Map<String, String> subCategorias =
+        new Map<String, String>(); //map para armar las subCategorias
+
+    for(String nombreSubAnterior in listaDeSubsAnterior){
+      bool existeNombreSubEnSenia = await existeSubCategoriaEnSenia(nombreSubAnterior);
+      if(existeNombreSubEnSenia){
+        editarSubCategoriaEnSenia(nombreSubAnterior, nombreNuevo);
+      }
+
+    }
+
+    for (String nombreSubNueva in listaDeSubsNueva) {
+      index++;
+      subCategorias.putIfAbsent(
+          "nombreSub_$index", () => nombreSubNueva.toUpperCase().trim());
+    }
+
     firestore.collection("categorias").doc(docId).update({
-      'nombre': nombreNuevo,
-    }).then((value) => print("Categoria Editada correctamente"));
+      'nombre': nombreNuevo.trim().toUpperCase().trim(),
+      'subCategorias': subCategorias,
+    }).then((value) =>
+        /*
+        Edito el nombre de la categoria en la senia
+         */
+        editarCategoriaEnSenia(nombreAnterior, nombreNuevo));
+  }
+
+  Future eliminarSubCategoria(String nombreCategoria, String nombreSubCategoria,
+      List<dynamic> listaDeSubs) async {
+    Categoria categoria = await obtenerCategoriaPorNombre(nombreCategoria);
+    String docId = categoria.documentID;
+
+    int index = 0;
+    Map<String, String> subCategorias =
+        new Map<String, String>(); //map para armar las subCategorias
+
+    for (String nombre in listaDeSubs) {
+      index++;
+      subCategorias.putIfAbsent(
+          "nombreSub_$index", () => nombre.toUpperCase().trim());
+    }
+
+    /*
+    hago un update con las nuevas subcategorias
+     */
+    firestore.collection("categorias").doc(docId).update({
+      'subCategorias': subCategorias,
+    });
   }
 
   void eliminarCategoria(String nombre) async {
@@ -230,7 +277,7 @@ class ControladorCategoria {
     return subCategorias;
   }
 
-  void obtenerSeniaModifCat(String nombreAnterior, String nombreNuevo) async {
+  void editarCategoriaEnSenia(String nombreAnterior, String nombreNuevo) async {
     await firestore
         .collection('senias')
         .where('categoria', isEqualTo: nombreAnterior)
@@ -240,7 +287,21 @@ class ControladorCategoria {
                     firestore
                         .collection('senias')
                         .doc(doc.id)
-                        .update({'categoria': nombreNuevo})
+                        .update({'categoria': nombreNuevo.toUpperCase().trim()})
+                  })
+            });
+  }
+
+  void editarSubCategoriaEnSenia(
+      String nombreAnterior, String nombreNuevo) async {
+    await firestore
+        .collection('senias')
+        .where('subCategoria', isEqualTo: nombreAnterior)
+        .get()
+        .then((response) => {
+              response.docs.forEach((doc) => {
+                    firestore.collection('senias').doc(doc.id).update(
+                        {'subCategoria': nombreNuevo.toUpperCase().trim()})
                   })
             });
   }
@@ -285,6 +346,25 @@ class ControladorCategoria {
       });
     }
     return existeCategoriaEnSenia;
+  }
+
+  Future<bool> existeSubCategoriaEnSenia(String nombreSubCategoria) async {
+    bool existeSubCategoriaEnSenia = false;
+    String nombreSubCat;
+
+    await firestore
+        .collection('senias')
+        .where('subCategoria', isEqualTo: nombreSubCategoria)
+        .get()
+        .then((query) {
+      query.docs.forEach((element) {
+        nombreSubCat = element.get('subCategoria').toString();
+        if (nombreSubCat != null) {
+          existeSubCategoriaEnSenia = true;
+        }
+      });
+    });
+    return existeSubCategoriaEnSenia;
   }
 
   Future<bool> existeSubCategoria(String nombreSubCategoria) async {
