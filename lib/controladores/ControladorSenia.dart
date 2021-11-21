@@ -378,6 +378,7 @@ class ControladorSenia {
 
     await firestore
         .collection('senias')
+        .orderBy('cantidadVisualizaciones',descending: true)
         .limit(5)
         .get()
         .then((QuerySnapshot querySnapshot) {
@@ -406,12 +407,6 @@ class ControladorSenia {
       });
     });
 
-    /*
-    Ordeno por cantidad visualizaciones
-     */
-    lista.sort((a, b) {
-      return b.cantidadVisualizaciones.compareTo(a.cantidadVisualizaciones);
-    });
 
     return lista;
   }
