@@ -28,7 +28,7 @@ class Navegacion {
 
   Navegacion(this.context);
 
-  void _cerrarSesion() {
+  void cerrarSesion() {
     AuthService().signOut();
   }
 

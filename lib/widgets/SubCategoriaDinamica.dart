@@ -42,7 +42,7 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30, right: 90),
+            padding: EdgeInsets.only(left: 30, right: modoEditar ? 40 : 90),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

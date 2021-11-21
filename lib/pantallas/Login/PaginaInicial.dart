@@ -7,6 +7,7 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/pantallas/Glosario/VisualizarSenia.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -132,7 +133,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
         ),
         Center(
             child: Container(
-                height: 600,
+                height: 900,
                 width: 600,
                 child: Column(children: [
                   Card(
@@ -152,48 +153,47 @@ class _PaginaInicialState extends State<PaginaInicial> {
                   Card(
                       child: Column(
                     children: [
-                      Text('SEÑAS MAS VISUALIZADAS',
+                      Text('TOP 5 SEÑAS MAS VISUALIZADAS',
                           style: TextStyle(
                               fontFamily: 'Trueno',
                               fontSize: 16,
                               color: Colores().colorAzul)),
                       Container(
-                        height: 130,
+                        height: 300,
                         alignment: Alignment.center,
                         child: ListView.builder(
                             itemCount: listaSenias.length,
                             itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Colores().colorBlanco,
-                                    boxShadow: <BoxShadow>[
-                                      BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 15,
-                                          offset: Offset(0, 0))
-                                    ]),
-                                child: ListTile(
-                                  title: Text(listaSenias[index].nombre),
-                                  subtitle: Text('Categoria: ' + listaSenias[index].categoria +
-                                  '\nSubcategoria: ' + listaSenias[index].subCategoria),
-                                  onTap: (){
-
-                                  },
-                                ),
+                              return ListTile(
+                                title: Text(
+                                    listaSenias[index].nombre +
+                                        ": " +
+                                        listaSenias[index]
+                                            .cantidadVisualizaciones
+                                            .toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'Trueno', fontSize: 12)),
+                                subtitle: Text('Categoría: ' +
+                                    listaSenias[index].categoria +
+                                    '\nSubcategoría: ' +
+                                    listaSenias[index].subCategoria),
+                                trailing: IconButton(
+                                    onPressed: () {
+                                      incrementarVisualizacionSenia(
+                                          listaSenias[index].nombre);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  VisualizarSenia(
+                                                    senia: listaSenias[index],
+                                                    isUsuarioAdmin:
+                                                        isUsuarioAdmin,
+                                                  )));
+                                    },
+                                    icon: Icon(Icons.navigate_next_outlined)),
                               );
-
-                              /*  Text(
-                                  listaSenias[index].nombre +
-                                      ": " +
-                                      listaSenias[index]
-                                          .cantidadVisualizaciones
-                                          .toString(),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: 'Trueno', fontSize: 16));
-                           */ }),
+                            }),
                       ),
                     ],
                   )),
@@ -210,7 +210,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                                 fontSize: 14,
                                 color: Colores().colorAzul)),
                         series: <ChartSeries<Usuario, String>>[
-                          ColumnSeries<Usuario, String>(
+                          BarSeries<Usuario, String>(
                               dataSource: listaUsuarios,
                               xValueMapper: (Usuario usuario, _) =>
                                   usuario.departamento,
@@ -235,8 +235,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
         Navegacion(context).navegarAPerfil(usuario);
         break;
       case 0:
-        AuthService().signOut();
-        Navegacion(context).navegarAPrincipal();
+        Navegacion(context).cerrarSesion();
         break;
     }
   }
@@ -292,5 +291,9 @@ class _PaginaInicialState extends State<PaginaInicial> {
 
   void obtenerVisualizacionesSenia() async {
     listaSenias = await controladorSenia.obtenerVisualizacionesSenia();
+  }
+
+  void incrementarVisualizacionSenia(String nombreSenia) async {
+    await controladorSenia.incrementarVisualizacionSenia(nombreSenia);
   }
 }
