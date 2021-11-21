@@ -1,22 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
-import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
-class ResetPassword extends StatefulWidget {
+class ReactivarUsuario extends StatefulWidget {
+  const ReactivarUsuario({Key key}) : super(key: key);
+
   @override
-  _ResetPasswordState createState() => _ResetPasswordState();
+  _ReactivarUsuarioState createState() => _ReactivarUsuarioState();
 }
 
-class _ResetPasswordState extends State<ResetPassword> {
+class _ReactivarUsuarioState extends State<ReactivarUsuario> {
   final formKey = new GlobalKey<FormState>();
 
-  String _email;
-  List<String> listaCorreos = [];
+  String email;
 
   checkFields() {
     final form = formKey.currentState;
@@ -40,22 +40,26 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            //height: MediaQuery.of(context).size.height,
-            //width: MediaQuery.of(context).size.width,
-            child: Form(key: formKey, child: formResetarPassword())));
+      body: Container(
+        child: Form(
+          key: formKey,
+          child: formReactivarUsuario(),
+        ),
+      ),
+    );
   }
 
-  formResetarPassword() {
+  formReactivarUsuario() {
     return Padding(
-        padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-        child: ListView(children: [
+      padding: const EdgeInsets.only(left: 25.0, right: 25.0),
+      child: ListView(
+        children: [
           SizedBox(height: 150.0),
           TextFieldTexto(
             nombre: 'EMAIL',
             icon: Icon(Icons.alternate_email_rounded),
             valor: (value) {
-              this._email = value;
+              this.email = value;
             },
             validacion: (value) => value.isEmpty
                 ? 'El email es requerido'
@@ -66,7 +70,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             titulo: 'CONFIRMAR',
             onTap: () {
               if (checkFields()) {
-                AuthService().resetPasswordLink(_email, context);
+                ControladorUsuario().reactivarUsuario(email, context);
               } // if(checkField)
             }, // onTap
           ),
@@ -83,6 +87,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                         fontSize: 11.0,
                         decoration: TextDecoration.underline)),
               ))
-        ]));
+        ],
+      ),
+    );
   }
 }

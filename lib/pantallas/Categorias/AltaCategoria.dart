@@ -35,7 +35,7 @@ class _AltaCategoria extends State<AltaCategoria> {
             child: Column(
       children: [
         BarraDeNavegacion(
-          titulo: Text("ALTA DE CATEGORIA",
+          titulo: Text("ALTA DE CATEGORÍA",
               style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
         ),
         Form(
@@ -51,16 +51,15 @@ class _AltaCategoria extends State<AltaCategoria> {
                       children: [
                         Expanded(
                           child: TextFieldTexto(
-                            nombre: 'NOMBRE CATEGORIA',
-                            icon: Icon(Icons.account_tree_outlined),
+                            nombre: 'NOMBRE CATEGORÍA',
+                            icon: Icon(Icons.category_outlined),
                             valor: (value) {
                               this._nombreCategoria = value;
                               //me guardo el valor en el metodo para hacer el chequeo.
                               existeCategoria(_nombreCategoria);
                             },
-                            validacion: ((value) => value.isEmpty
-                                ? 'El nombre de la categoria es requerido'
-                                : null),
+                            validacion: ((value) =>
+                                value.isEmpty ? 'Campo Obligatorio' : null),
                           ),
                         ),
                         Container(
@@ -81,18 +80,18 @@ class _AltaCategoria extends State<AltaCategoria> {
                         children: [
                           Expanded(
                             child: TextFieldTexto(
-                              nombre: 'NOMBRE SUBCATEGORIA',
-                              icon: Icon(Icons.account_tree_outlined),
+                              nombre: 'NOMBRE SUBCATEGORÍA',
+                              icon: Icon(Icons.category_outlined),
                               valor: (value) {
                                 setState(() {
                                   _nombreSubCategoria = value;
                                 });
                               },
-                              validacion: ((value) => value.isEmpty
-                                  ? 'El nombre de la Sub Categoria es requerido'
-                                  : null),
+                              validacion: ((value) =>
+                                  value.isEmpty ? 'Campo Obligatorio' : null),
                               onSaved: (value) {
-                                listaDeSubcategorias.add(_nombreSubCategoria.toUpperCase().trim());
+                                listaDeSubcategorias.add(
+                                    _nombreSubCategoria.toUpperCase().trim());
                               },
                             ),
                           ),
@@ -140,19 +139,30 @@ class _AltaCategoria extends State<AltaCategoria> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return DialogoAlerta(
-                                        tituloMensaje: "Alta de Categoria",
+                                        tituloMensaje: "Alta de Categoría",
                                         mensaje:
-                                            "La categoria ha sido guardada correctamente",
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
+                                            "La categoría ha sido guardada correctamente",
+                                        acciones: [
+                                          TextButton(
+                                            child: Text('OK',
+                                                style: TextStyle(
+                                                    color: Colores().colorAzul,
+                                                    fontFamily: 'Trueno',
+                                                    fontSize: 11.0,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
                                                         Categorias()),
-                                            ModalRoute.withName('/'),
-                                          );
-                                        },
+                                                ModalRoute.withName('/'),
+                                              );
+                                            },
+                                          )
+                                        ],
                                       );
                                     });
                                 //TODO mensaje si falla.
@@ -170,10 +180,21 @@ class _AltaCategoria extends State<AltaCategoria> {
                                     return DialogoAlerta(
                                       tituloMensaje: "Advertencia",
                                       mensaje:
-                                          "Una de las sub categorias ingresadas esta repetida.",
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
+                                          "Una de las subcategorías ingresadas está repetida.",
+                                      acciones: [
+                                        TextButton(
+                                          child: Text('OK',
+                                              style: TextStyle(
+                                                  color: Colores().colorAzul,
+                                                  fontFamily: 'Trueno',
+                                                  fontSize: 11.0,
+                                                  decoration: TextDecoration
+                                                      .underline)),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
                                     );
                                   });
                             }
@@ -184,12 +205,23 @@ class _AltaCategoria extends State<AltaCategoria> {
                                 builder: (context) {
                                   return DialogoAlerta(
                                     tituloMensaje: "Advertencia",
-                                    mensaje: "La categoria ingresada " +
+                                    mensaje: "La categoría ingresada " +
                                         _nombreCategoria +
                                         " ya existe.",
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
+                                    acciones: [
+                                      TextButton(
+                                        child: Text('OK',
+                                            style: TextStyle(
+                                                color: Colores().colorAzul,
+                                                fontFamily: 'Trueno',
+                                                fontSize: 11.0,
+                                                decoration: TextDecoration
+                                                    .underline)),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
                                   );
                                 });
                           }
@@ -209,7 +241,10 @@ class _AltaCategoria extends State<AltaCategoria> {
   agregarWidgetSubCategoria() {
     setState(() {
       listaDinamicaWidgetSubCategoria.add(new SubCategoriaDinamica(
-          listaSubcategorias: listaDeSubcategoriasClaseDinamica));
+        listaSubcategorias: listaDeSubcategoriasClaseDinamica,
+        modoAlta: true,
+        modoEditar: false,
+      ));
     });
   }
 

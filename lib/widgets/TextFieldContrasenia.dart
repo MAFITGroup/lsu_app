@@ -10,17 +10,16 @@ class TextFieldContrasenia extends StatefulWidget {
   final Icon icon;
 
   final TextEditingController controlador;
-  final bool botonHabilitado;
+  final bool habilitado;
 
-  TextFieldContrasenia({
-    Key key,
-    this.nombre,
-    this.valor,
-    this.validacion,
-    this.icon,
-    this.controlador,
-    this.botonHabilitado
-  })
+  TextFieldContrasenia(
+      {Key key,
+      this.nombre,
+      this.valor,
+      this.validacion,
+      this.icon,
+      this.controlador,
+      this.habilitado})
       : super(key: key);
 
   @override
@@ -33,7 +32,7 @@ class _TextFieldContraseniaState extends State<TextFieldContrasenia> {
     return Padding(
       padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: TextFormField(
-        enabled: widget.botonHabilitado,
+          enabled: widget.habilitado,
           controller: widget.controlador,
           obscureText: widget.verContrasenia,
           decoration: InputDecoration(

@@ -16,7 +16,6 @@ import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/pantallas/Glosario/Glosario.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
@@ -63,7 +62,7 @@ class _AltaSeniaState extends State<AltaSenia> {
 
   @override
   void initState() {
-    listarCateogiras();
+    listarCategorias();
     isCategoriaSeleccionada = false;
   }
 
@@ -103,7 +102,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                         SizedBox(height: 8.0),
                         TextFieldTexto(
                           nombre: 'NOMBRE',
-                          icon: Icon(Iconos.hand),
+                          icon: Icon(Icons.format_size_outlined),
                           valor: (value) {
                             this._nombreSenia = value;
                           },
@@ -112,8 +111,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                         ),
                         SizedBox(height: 8.0),
                         TextFieldDescripcion(
-                          nombre: 'DESCRIPCION',
-                          icon: Icon(Icons.description),
+                          nombre: 'DESCRIPCIÓN',
+                          icon: Icon(Icons.format_align_left_outlined),
                           valor: (value) {
                             this._descripcionSenia = value;
                           },
@@ -131,7 +130,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                             key: categoriaKey,
                             items: listaCategorias,
                             onChanged: (value) async {
-                              await listarSubCateogiras(value);
+                              await listarSubCategorias(value);
                               subCategoriaKey.currentState.clear();
                               setState(() {
                                 _catSeleccionada = value;
@@ -156,8 +155,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                                     fontFamily: 'Trueno',
                                     fontSize: 12,
                                     color: Colores().colorSombraBotones),
-                                hintText: "CATEGORIA",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                hintText: "CATEGORÍA",
+                                prefixIcon: Icon(Icons.category_outlined),
                                 focusColor: Colores().colorSombraBotones,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -165,7 +164,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                 )),
                             validator: (dynamic valor) {
                               if (valor == null) {
-                                return "La categoria es requerida";
+                                return "La categoría es requerida";
                               } else {
                                 return null;
                               }
@@ -197,8 +196,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                                     fontFamily: 'Trueno',
                                     fontSize: 12,
                                     color: Colores().colorSombraBotones),
-                                hintText: "SUB CATEGORIA",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                hintText: "SUBCATEGORÍA",
+                                prefixIcon: Icon(Icons.category_outlined),
                                 focusColor: Colores().colorSombraBotones,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -206,7 +205,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                 )),
                             validator: (dynamic valor) {
                               if (valor == null) {
-                                return "La sub categoria es requerida";
+                                return "La subcategoría es requerida";
                               } else {
                                 return null;
                               }
@@ -232,9 +231,20 @@ class _AltaSeniaState extends State<AltaSenia> {
                                         tituloMensaje: "Advertencia",
                                         mensaje:
                                             "No ha seleccionado un archivo.",
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
+                                        acciones: [
+                                          TextButton(
+                                            child: Text('OK',
+                                                style: TextStyle(
+                                                    color: Colores().colorAzul,
+                                                    fontFamily: 'Trueno',
+                                                    fontSize: 11.0,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
                                       );
                                     });
                               }
@@ -256,14 +266,14 @@ class _AltaSeniaState extends State<AltaSenia> {
                                       useRootNavigator: false,
                                       context: context,
                                       builder: (BuildContext contextR) {
-                                        return AlertDialog(
-                                          title: Text('Alta de Seña'),
-                                          content: Text(
+                                        return DialogoAlerta(
+                                          tituloMensaje: 'Alta de Seña',
+                                          mensaje:
                                               'La seña ha sido guardada correctamente.'
-                                              '\nLa misma podrá tardar unos minutos en visualizarse.'),
-                                          actions: [
+                                              '\nLa misma podrá tardar unos minutos en visualizarse.',
+                                          acciones: [
                                             TextButton(
-                                                child: Text('Ok',
+                                                child: Text('OK',
                                                     style: TextStyle(
                                                         color:
                                                             Colores().colorAzul,
@@ -342,7 +352,8 @@ class _AltaSeniaState extends State<AltaSenia> {
             _subCatSeleccionada,
             nombreUsuario,
             destino,
-            fileWeb);
+            fileWeb,
+            0);
       }
     } else {
       /*
@@ -359,7 +370,8 @@ class _AltaSeniaState extends State<AltaSenia> {
             _subCatSeleccionada,
             nombreUsuario,
             destino,
-            archivoDeVideo);
+            archivoDeVideo,
+            0);
       }
     }
   }
@@ -456,12 +468,22 @@ class _AltaSeniaState extends State<AltaSenia> {
               tituloMensaje: "Formato Incorrecto",
               mensaje: "El formato del archivo seleccionado no es correcto."
                   "\nEl formato debe ser: mp4, avi, wmv, mov.",
-              onPressed: () {
-                archivoDeVideo = null;
-                fileWeb = null;
-                this._url = null;
-                Navigator.of(context).pop();
-              },
+              acciones: [
+                TextButton(
+                  child: Text('OK',
+                      style: TextStyle(
+                          color: Colores().colorAzul,
+                          fontFamily: 'Trueno',
+                          fontSize: 11.0,
+                          decoration: TextDecoration.underline)),
+                  onPressed: () {
+                    archivoDeVideo = null;
+                    fileWeb = null;
+                    this._url = null;
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
             );
           });
       return false;
@@ -470,11 +492,11 @@ class _AltaSeniaState extends State<AltaSenia> {
     }
   }
 
-  void listarCateogiras() async {
+  void listarCategorias() async {
     listaCategorias = widget.listaCategorias;
   }
 
-  Future<void> listarSubCateogiras(String nombreCategoria) async {
+  Future<void> listarSubCategorias(String nombreCategoria) async {
     listaSubCategorias = await ControladorCategoria()
         .listarSubCategoriasPorCategoriaList(nombreCategoria);
   }

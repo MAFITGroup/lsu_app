@@ -1,15 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class ManualDeUsuario extends StatefulWidget {
-  @override
-  _ManualDeUsuarioState createState() => _ManualDeUsuarioState();
-}
+class TerminosCondiciones extends StatelessWidget {
+  const TerminosCondiciones({Key key}) : super(key: key);
 
-class _ManualDeUsuarioState extends State<ManualDeUsuario> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,11 +15,12 @@ class _ManualDeUsuarioState extends State<ManualDeUsuario> {
               statusBarIconBrightness: Brightness.light,
               statusBarBrightness: Brightness.light),
           backgroundColor: Colores().colorAzul,
-          title: Text('MANUAL DE USUARIO',
+          title: Text('TÉRMINOS Y CONDICIONES',
               style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
         ),
         body: Container(
-            child: SfPdfViewer.asset('recursos/ManualUsuarioLSUApp.pdf',
+            child: SfPdfViewer.asset(
+                'recursos/TerminosCondicionesDeUsoPlataformaLSU.pdf',
                 pageSpacing: 2)));
   }
 }

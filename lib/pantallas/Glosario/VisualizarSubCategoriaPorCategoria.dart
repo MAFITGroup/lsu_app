@@ -41,9 +41,7 @@ class _VisualizarSubCategoriaPorCategoriaState
             children: [
               BarraDeNavegacion(
                 titulo: Text(
-                    "SUB CATEGORIAS " +
-                        "- CATEGORIA: " +
-                        widget.nombreCategoria,
+                    "SUBCATEGORÍAS " + "- CATEGORÍA: " + widget.nombreCategoria,
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               ),
               Expanded(
@@ -56,9 +54,9 @@ class _VisualizarSubCategoriaPorCategoriaState
                           child: Image.asset('recursos/logo-carga.gif'),
                         );
                       } else if (listaSubCategoriaPorCategoria.length <= 0) {
-                        return Text(
-                            "NO EXISTEN SUB CATEGORIAS DENTRO DE LA CATEGORIA: " +
-                                widget.nombreCategoria);
+                        return Center(
+                          child: Image.asset('recursos/VuelvePronto.png'),
+                        );
                       } else {
                         return ListView.builder(
                             itemCount: listaSubCategoriaPorCategoria.length,
@@ -77,8 +75,10 @@ class _VisualizarSubCategoriaPorCategoriaState
                                                         .nombre,
                                               )));
                                 },
-                                title: Text(listaSubCategoriaPorCategoria[index]
-                                    .nombre),
+                                title: Text("SUBCATEGORÍA: " +
+                                    listaSubCategoriaPorCategoria[index].nombre,
+                                    style: TextStyle(
+                                        fontFamily: 'Trueno', fontSize: 14)),
                               ));
                             });
                       }

@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/MyFlutterApp.ttf
 ///
-/// 
+///
 /// * Material Design Icons, Copyright (C) Google, Inc
 ///         Author:    Google
 ///         License:   Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
@@ -25,5 +25,6 @@ class Iconos {
   static const _kFontFam = 'HandIconFont';
   static const String _kFontPkg = null;
 
-  static const IconData hand = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData hand =
+      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

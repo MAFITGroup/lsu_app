@@ -1,41 +1,52 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 
 class ControladorUsuario {
   String _uid;
   String _correo;
   String _nombreCompleto;
   String _telefono;
-  String _localidad;
+  String _departamento;
   String _especialidad;
   bool _esAdministrador;
   String _statusUsuario;
   Usuario usuario = new Usuario();
 
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  User user = FirebaseAuth.instance.currentUser;
 
   void crearUsuario(
-      String uid,
-      String email,
-      String nombreCompleto,
-      String telefono,
-      String localidad,
-      String especialidad,
-      bool esAdministrador,
-      String statusUsuario) {
-    //creo mi nuevo usuario
-    firestore.collection("usuarios").doc(firebaseAuth.currentUser.uid).set({
+    String uid,
+    String email,
+    String nombreCompleto,
+    String telefono,
+    String departamento,
+    String especialidad,
+    bool esAdministrador,
+    String statusUsuario,
+  ) async {
+    await firestore.collection("usuarios").doc(uid).set({
       'usuarioUID': uid,
       'correo': email.trim(),
       'nombreCompleto': nombreCompleto,
       'telefono': telefono,
-      'localidad': localidad,
+      'departamento': departamento,
       'especialidad': especialidad,
       'esAdministrador': esAdministrador,
       'statusUsuario': statusUsuario,
     });
+
+/*    print('<---------- VERIFICACION DE MAIL');
+     FirebaseAuth.instance.currentUser
+        .sendEmailVerification()
+        .whenComplete(() => print('email de verificacion envaido'));
+*/
   }
 
   Future<Usuario> obtenerUsuarioLogueado(String usuarioActualUID) async {
@@ -50,7 +61,7 @@ class ControladorUsuario {
         _correo = documentSnapshot['correo'];
         _nombreCompleto = documentSnapshot['nombreCompleto'];
         _telefono = documentSnapshot['telefono'];
-        _localidad = documentSnapshot['localidad'];
+        _departamento = documentSnapshot['departamento'];
         _especialidad = documentSnapshot['especialidad'];
         _esAdministrador = documentSnapshot['esAdministrador'];
         _statusUsuario = documentSnapshot['statusUsuario'];
@@ -59,14 +70,12 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
 
         return usuario;
-      } else {
-        print('usuario null');
       }
     });
 
@@ -76,10 +85,8 @@ class ControladorUsuario {
   Future<bool> isUsuarioAdministrador(String usuarioActualUID) async {
     usuario = await obtenerUsuarioLogueado(usuarioActualUID);
     if (usuario.esAdministrador == true) {
-      print('Obtuve usuario administrador');
       return true;
     } else {
-      print('NO obbtuve usuario administrador');
       return false;
     }
   }
@@ -88,9 +95,8 @@ class ControladorUsuario {
   Se usa al iniciar sesion, si el usuario.
   Ver uso en AuthService/ signIn
    */
-  Future<String> obtenerEstadoUsuario(String mail) async {
+  Future<String> obtenerEstadoUsuario(String mail, BuildContext context) async {
     String usuarioEstado;
-
     await firestore
         .collection('usuarios')
         .where('correo', isEqualTo: mail)
@@ -108,9 +114,43 @@ class ControladorUsuario {
     return usuario.nombreCompleto;
   }
 
+  Future<List<Usuario>> obtenerTodosUsuarios() async {
+    List<Usuario> listaUsuarios = [];
+    await firestore
+        .collection('usuarios')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _uid = doc['usuarioUID'];
+        _correo = doc['correo'];
+        _nombreCompleto = doc['nombreCompleto'];
+        _telefono = doc['telefono'];
+        _departamento = doc['departamento'];
+        _especialidad = doc['especialidad'];
+        _esAdministrador = doc['esAdministrador'];
+        _statusUsuario = doc['statusUsuario'];
+
+        usuario = new Usuario();
+        usuario.uid = _uid;
+        usuario.correo = _correo;
+        usuario.nombreCompleto = _nombreCompleto;
+        usuario.telefono = _telefono;
+        usuario.departamento = _departamento;
+        usuario.especialidad = _especialidad;
+        usuario.esAdministrador = _esAdministrador;
+        usuario.statusUsuario = _statusUsuario;
+
+        listaUsuarios.add(usuario);
+      });
+    });
+    listaUsuarios.sort((a, b) {
+      return a.nombreCompleto.compareTo(b.nombreCompleto);
+    });
+    return listaUsuarios;
+  }
+
   Future<List<Usuario>> obtenerUsuariosPendiente() async {
     List<Usuario> listaUsuariosPendientes = [];
-
     await firestore
         .collection('usuarios')
         .where('statusUsuario', isEqualTo: 'PENDIENTE')
@@ -121,7 +161,7 @@ class ControladorUsuario {
         _correo = doc['correo'];
         _nombreCompleto = doc['nombreCompleto'];
         _telefono = doc['telefono'];
-        _localidad = doc['localidad'];
+        _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _esAdministrador = doc['esAdministrador'];
         _statusUsuario = doc['statusUsuario'];
@@ -131,7 +171,7 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
@@ -139,17 +179,14 @@ class ControladorUsuario {
         listaUsuariosPendientes.add(usuario);
       });
     });
-
     listaUsuariosPendientes.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
-
     return listaUsuariosPendientes;
   }
 
   Future<List<Usuario>> obtenerUsuariosActivos() async {
     List<Usuario> listaUsuariosActivos = [];
-
     Usuario usuarioLogueado =
         await obtenerUsuarioLogueado(firebaseAuth.currentUser.uid);
     await firestore
@@ -162,7 +199,7 @@ class ControladorUsuario {
         _correo = doc['correo'];
         _nombreCompleto = doc['nombreCompleto'];
         _telefono = doc['telefono'];
-        _localidad = doc['localidad'];
+        _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _esAdministrador = doc['esAdministrador'];
         _statusUsuario = doc['statusUsuario'];
@@ -172,7 +209,7 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
@@ -182,17 +219,14 @@ class ControladorUsuario {
         }
       });
     });
-
     listaUsuariosActivos.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
-
     return listaUsuariosActivos;
   }
 
   Future<List<Usuario>> obtenerUsuariosInactivos() async {
     List<Usuario> listaUsuariosInactivos = [];
-
     await firestore
         .collection('usuarios')
         .where('statusUsuario', isEqualTo: 'INACTIVO')
@@ -203,7 +237,7 @@ class ControladorUsuario {
         _correo = doc['correo'];
         _nombreCompleto = doc['nombreCompleto'];
         _telefono = doc['telefono'];
-        _localidad = doc['localidad'];
+        _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _esAdministrador = doc['esAdministrador'];
         _statusUsuario = doc['statusUsuario'];
@@ -213,7 +247,7 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.esAdministrador = _esAdministrador;
         usuario.statusUsuario = _statusUsuario;
@@ -224,7 +258,6 @@ class ControladorUsuario {
     listaUsuariosInactivos.sort((a, b) {
       return a.nombreCompleto.compareTo(b.nombreCompleto);
     });
-
     return listaUsuariosInactivos;
   }
 
@@ -241,15 +274,12 @@ class ControladorUsuario {
     String especialidadNueva,
   ) async {
     Usuario usuario = await obtenerUsuarioPerfil(correoAnterior);
-
     String usuarioId = usuario.uid;
-    print(usuarioId);
-
     firestore.collection('usuarios').doc(usuarioId).update({
       'correo': correoNuevo,
       'nombreCompleto': nombreNuevo.trim(),
       'telefono': celularNuevo.trim(),
-      'localidad': departamentoNuevo,
+      'departamento': departamentoNuevo,
       'especialidad': especialidadNueva.trim(),
     }).then((value) => print('Usuario editado correctamente'));
   }
@@ -264,7 +294,7 @@ class ControladorUsuario {
         _correo = doc['correo'];
         _nombreCompleto = doc['nombreCompleto'];
         _telefono = doc['telefono'];
-        _localidad = doc['localidad'];
+        _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _uid = doc['usuarioUID'];
 
@@ -272,20 +302,17 @@ class ControladorUsuario {
         usuario.correo = _correo;
         usuario.nombreCompleto = _nombreCompleto;
         usuario.telefono = _telefono;
-        usuario.localidad = _localidad;
+        usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.uid = _uid;
       });
     });
-
     return usuario;
   }
 
   void eliminarUsuarios(String correo) async {
     Usuario usuario = await obtenerUsuarioPerfil(correo);
     String docId = usuario.uid;
-
-    // Elimina documento
     await firestore
         .collection('usuarios')
         .doc(docId)
@@ -306,18 +333,104 @@ class ControladorUsuario {
         .collection('usuarios')
         .doc(docId)
         .update({'statusUsuario': 'INACTIVO'}).then(
-            (value) => print('Usuario elimiando correctamente'));
+            (value) => print('Usuario modificado correctamente'));
+  }
+
+  void reactivarUsuario(String correo, context) async {
+    Usuario usuario = await obtenerUsuarioPerfil(correo);
+    String docId = usuario.uid;
+    await firestore
+        .collection('usuarios')
+        .doc(docId)
+        .update({'statusUsuario': 'PENDIENTE'}).then((value) => {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogoAlerta(
+                      tituloMensaje: "Solicitud de reactivación de usuario",
+                      mensaje:
+                          "Su solicitud esta pendiente de aprobación del administrador",
+                      acciones: [
+                        TextButton(
+                          child: Text('OK',
+                              style: TextStyle(
+                                  color: Colores().colorAzul,
+                                  fontFamily: 'Trueno',
+                                  fontSize: 11.0,
+                                  decoration: TextDecoration.underline)),
+                          onPressed: Navegacion(context).navegarALoginDest,
+                        )
+                      ],
+                    );
+                  })
+            });
   }
 
   void administrarUsuario(
       String correo, String estado, bool esAdministrador) async {
     Usuario usuario = await obtenerUsuarioPerfil(correo);
     String docId = usuario.uid;
-
-    // Pasa el usuario a estado inactivo
     await firestore.collection('usuarios').doc(docId).update({
       'statusUsuario': estado,
       'esAdministrador': esAdministrador,
     }).then((value) => print('Usuario actualizado correctamente'));
+  }
+
+  Future<List<Usuario>> obtenerUsuarios() async {
+    List<Usuario> listaUsuarios = [];
+    await firestore
+        .collection('usuarios')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _nombreCompleto = doc['nombreCompleto'];
+        _correo = doc['correo'];
+        _departamento = doc['departamento'];
+        _esAdministrador = doc['esAdministrador'];
+        _especialidad = doc['especialidad'];
+        _statusUsuario = doc['statusUsuario'];
+        _telefono = doc['telefono'];
+
+        usuario = new Usuario();
+
+        usuario.nombreCompleto = _nombreCompleto;
+        usuario.correo = _correo;
+        usuario.departamento = _departamento;
+        usuario.esAdministrador = _esAdministrador;
+        usuario.especialidad = _especialidad;
+        usuario.statusUsuario = _statusUsuario;
+        usuario.telefono = _telefono;
+
+        listaUsuarios.add(usuario);
+      });
+    });
+    listaUsuarios.sort((a, b) {
+      return a.nombreCompleto.toString().compareTo(b.nombreCompleto.toString());
+    });
+
+    return listaUsuarios;
+  }
+
+  Future<int> obtenerCantidadUsuariosActivos() async {
+    int cantidadUsuariosActivos;
+
+    QuerySnapshot documentos = await firestore
+        .collection('usuarios')
+        .where('statusUsuario', isEqualTo: 'ACTIVO')
+        .get();
+    List<DocumentSnapshot> listaDeDocumentos = documentos.docs;
+    cantidadUsuariosActivos = listaDeDocumentos.length;
+
+    return cantidadUsuariosActivos;
+  }
+
+  Future<int> obtenerCantidadUsuariosRegistrados() async {
+    int cantidadUsuariosRegistrados;
+
+    QuerySnapshot documentos = await firestore.collection('usuarios').get();
+    List<DocumentSnapshot> listaDeDocumentos = documentos.docs;
+    cantidadUsuariosRegistrados = listaDeDocumentos.length;
+
+    return cantidadUsuariosRegistrados;
   }
 }

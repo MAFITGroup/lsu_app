@@ -15,19 +15,40 @@ class visualizarPDF extends StatefulWidget {
 }
 
 class _visualizarPDFState extends State<visualizarPDF> {
+  PdfViewerController _pdfViewerController;
+  final GlobalKey<SfPdfViewerState> _pdfViewerStateKey = GlobalKey();
+
+  @override
+  void initState() {
+    _pdfViewerController = PdfViewerController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(systemOverlayStyle: SystemUiOverlayStyle(
+    return SafeArea(
+        child: Scaffold(
+      body: Container(
+          child: SfPdfViewer.network(widget.archivoRef, pageSpacing: 2)),
+      appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.light,
             statusBarBrightness: Brightness.light),
-            backgroundColor: Colores().colorAzul,
-            title:Text('ARCHIVO - ' + widget.titulo.toUpperCase(),
-              style:TextStyle( fontFamily:'Trueno', fontSize: 14)),
-        ),
-        body: Container(
-            child: SfPdfViewer.network( widget.archivoRef,
-                pageSpacing: 2)));
+        backgroundColor: Colores().colorAzul,
+        title: Text('ARCHIVO - ' + widget.titulo.toUpperCase(),
+            style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                _pdfViewerController.zoomLevel = 1.25;
+              },
+              icon: Icon(
+                Icons.zoom_in,
+                color: Colors.white,
+              ))
+        ],
+      ),
+    ));
   }
 }

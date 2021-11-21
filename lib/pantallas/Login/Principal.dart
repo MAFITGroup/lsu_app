@@ -10,23 +10,23 @@ class Principal extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
 //        color: Color.fromRGBO(159, 206, 255, 0.5),
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            margin: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                _imageInicio(),
-                SizedBox(height: 10),
-                _infoInicio(),
-                SizedBox(height: 10),
-                Boton(titulo: 'LOGIN', onTap: Navegacion(context).navegarALogin),
-                SizedBox(height: 10),
-                Boton(
-                    titulo: 'REGISTRARSE',
-                    onTap: Navegacion(context).navegarARegistrarse),
-              ],
-            ),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          margin: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              _imageInicio(),
+              SizedBox(height: 10),
+              _infoInicio(),
+              SizedBox(height: 10),
+              Boton(titulo: 'LOGIN', onTap: Navegacion(context).navegarALogin),
+              SizedBox(height: 10),
+              Boton(
+                  titulo: 'REGISTRARSE',
+                  onTap: Navegacion(context).navegarARegistrarse),
+            ],
           ),
+        ),
       ),
     );
   }
@@ -69,10 +69,10 @@ class Principal extends StatelessWidget {
         children: [
           ListTile(
               subtitle: Center(
-                child: Text(
-                    'Única plataforma Uruguaya para intérpretes de Lengua de Señas donde encontrarás, con un solo clic, la información que requieras para tu cotidianidad',
-                    ),
-              )),
+            child: Text(
+              'Única plataforma Uruguaya para intérpretes de Lengua de Señas donde encontrarás, con un solo clic, la información que requieras para tu cotidianidad.',
+            ),
+          )),
         ],
       ),
     );

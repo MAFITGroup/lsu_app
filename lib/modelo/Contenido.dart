@@ -9,7 +9,6 @@ class Contenido {
 
   Contenido();
 
-
   String get usuarioAlta => _usuarioAlta;
 
   String get titulo => _titulo;
@@ -23,8 +22,6 @@ class Contenido {
   String get urlarchivo => _urlarchivo;
 
   String get documentID => _documentID;
-
-
 
   set usuarioAlta(String value) {
     _usuarioAlta = value;

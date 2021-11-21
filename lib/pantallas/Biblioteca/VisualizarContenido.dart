@@ -3,10 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorContenido.dart';
-import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Iconos.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
 import 'package:lsu_app/pantallas/Biblioteca/Biblioteca.dart';
@@ -48,7 +45,6 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
   ]; // Lista de las categorias dentro de biblioteca. Hardcodeadas xq son únicas.
   bool modoEditar;
   ControladorContenido _controladorContenido = new ControladorContenido();
-  ControladorUsuario _controladorUsuario = new ControladorUsuario();
   final formKey = new GlobalKey<FormState>();
 
   //usadas para editar
@@ -88,17 +84,30 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                           PopupMenuItem(
                               value: 0,
                               child: ListTile(
-                                  leading: Icon(!modoEditar
-                                      ? Icons.edit
-                                      : Icons.cancel_outlined),
-                                  title: Text(!modoEditar
-                                      ? "Editar Contenido"
-                                      : "Cancelar Editar"))),
+                                  leading: Icon(
+                                      !modoEditar
+                                          ? Icons.edit
+                                          : Icons.cancel_outlined,
+                                      color: Colores().colorAzul),
+                                  title: Text(
+                                      !modoEditar
+                                          ? "Editar Contenido"
+                                          : "Cancelar Editar",
+                                      style: TextStyle(
+                                          fontFamily: 'Trueno',
+                                          fontSize: 14,
+                                          color:
+                                              Colores().colorSombraBotones)))),
                           PopupMenuItem(
                             value: 1,
                             child: ListTile(
-                                leading: Icon(Icons.delete_forever_outlined),
-                                title: Text("Eliminar Contenido")),
+                                leading: Icon(Icons.delete_forever_outlined,
+                                    color: Colores().colorAzul),
+                                title: Text("Eliminar Contenido",
+                                    style: TextStyle(
+                                        fontFamily: 'Trueno',
+                                        fontSize: 14,
+                                        color: Colores().colorSombraBotones))),
                           )
                         ],
                       ),
@@ -115,9 +124,9 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                       children: [
                         SizedBox(height: 15.0),
                         TextFieldTexto(
-                          nombre: 'TITULO',
-                          icon: Icon(Iconos.hand),
-                          botonHabilitado: modoEditar,
+                          nombre: 'TÍTULO',
+                          icon: Icon(Icons.format_size_outlined),
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(text: contenido.titulo),
@@ -127,13 +136,13 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             });
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El titulo es requerido' : null),
+                              value.isEmpty ? 'El título es requerido' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
-                          nombre: 'DESCRIPCION',
-                          icon: Icon(Icons.description),
-                          botonHabilitado: modoEditar,
+                          nombre: 'DESCRIPCIÓN',
+                          icon: Icon(Icons.format_align_left_outlined),
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(
@@ -150,8 +159,8 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                         SizedBox(height: 15.0),
                         TextFieldTexto(
                           nombre: 'AUTOR',
-                          icon: Icon(Iconos.hand),
-                          botonHabilitado: modoEditar,
+                          icon: Icon(Icons.person_outline_sharp),
+                          habilitado: modoEditar,
                           controlador: modoEditar
                               ? null
                               : TextEditingController(text: contenido.autor),
@@ -191,8 +200,8 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                     fontFamily: 'Trueno',
                                     fontSize: 12,
                                     color: Colores().colorSombraBotones),
-                                hintText: "CATEGORIA",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
+                                hintText: "CATEGORÍA",
+                                prefixIcon: Icon(Icons.category_outlined),
                                 focusColor: Colores().colorSombraBotones,
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -260,14 +269,13 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                             useRootNavigator: false,
                                             context: context,
                                             builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                    'Edicion de Contenido'),
-                                                content: Text(
-                                                    'El contenido ha sido modificado correctamente'),
-                                                actions: [
+                                              return DialogoAlerta(
+                                                tituloMensaje:
+                                                    'Edicion de Contenido',
+                                                mensaje:'El contenido ha sido modificado correctamente',
+                                                acciones: [
                                                   TextButton(
-                                                      child: Text('Ok',
+                                                      child: Text('OK',
                                                           style: TextStyle(
                                                               color: Colores()
                                                                   .colorAzul,
@@ -282,11 +290,15 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                                        ventana de alta contenido
 
                                                          */
-                                                        Navigator.of(context).pushAndRemoveUntil(
+                                                        Navigator.of(context)
+                                                            .pushAndRemoveUntil(
                                                           MaterialPageRoute(
-                                                              builder: (BuildContext context) =>
+                                                              builder: (BuildContext
+                                                                      context) =>
                                                                   Biblioteca()),
-                                                          ModalRoute.withName('/'), );
+                                                          ModalRoute.withName(
+                                                              '/'),
+                                                        );
                                                       })
                                                 ],
                                               );
@@ -364,13 +376,12 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
             useRootNavigator: false,
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Eliminacion de Contenido'),
-                content: Text(
-                    '¿Confirma que desea eliminar el contenido seleccionado?'),
-                actions: [
+              return DialogoAlerta(
+                tituloMensaje: 'Eliminación de Contenido',
+                mensaje: '¿Confirma que desea eliminar el contenido seleccionado?',
+                acciones: [
                   TextButton(
-                      child: Text('Ok',
+                      child: Text('OK',
                           style: TextStyle(
                               color: Colores().colorAzul,
                               fontFamily: 'Trueno',
@@ -391,14 +402,24 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                 tituloMensaje: "Contenido Eliminado",
                                 mensaje:
                                     "El contenido ha sido eliminado correctamente.",
-                                onPressed: () {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              Biblioteca()),
-                                      ModalRoute.withName('/'),
-                                  );
-                                },
+                                acciones: [
+                                  TextButton(
+                                    child: Text('OK',
+                                        style: TextStyle(
+                                            color: Colores().colorAzul,
+                                            fontFamily: 'Trueno',
+                                            fontSize: 11.0,
+                                            decoration: TextDecoration.underline)),
+                                      onPressed: () {
+                                        Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  Biblioteca()),
+                                          ModalRoute.withName('/'),
+                                        );
+                                      },
+                                  )
+                                ],
                               );
                             }).catchError((e) {
                           ErrorHandler().errorDialog(context, e);

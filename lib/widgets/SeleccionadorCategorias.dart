@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class SeleccionadorCategorias extends StatefulWidget {
-
   final List list;
   final String nombre;
   final dynamic catSeleccionada;
@@ -37,10 +36,9 @@ class SeleccionadorCategoriasState extends State<SeleccionadorCategorias> {
           });
         },
         showSearchBox: true,
-        clearButton: Icon(Icons.close,
-            color: Colores().colorSombraBotones),
-        dropDownButton: Icon(Icons.arrow_drop_down,
-            color: Colores().colorSombraBotones),
+        clearButton: Icon(Icons.close, color: Colores().colorSombraBotones),
+        dropDownButton:
+            Icon(Icons.arrow_drop_down, color: Colores().colorSombraBotones),
         showClearButton: true,
         mode: Mode.DIALOG,
         dropdownSearchDecoration: InputDecoration(
@@ -50,6 +48,4 @@ class SeleccionadorCategoriasState extends State<SeleccionadorCategorias> {
       ),
     );
   }
-
-
 }

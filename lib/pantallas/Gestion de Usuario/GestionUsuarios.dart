@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lsu_app/buscadores/BuscadorUsuario.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/pantallas/Gestion%20de%20Usuario/VisualizarUsuario.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 
 class GestionUsuarios extends StatefulWidget {
@@ -17,8 +20,10 @@ class _GestionUsuarios extends State<GestionUsuarios> {
   List<Usuario> pendienteUsuarios = [];
   List<Usuario> activoUsuarios = [];
   List<Usuario> inactivoUsuarios = [];
+  List<Usuario> listaUsuarios = [];
 
   Usuario usuario;
+  bool isUsuarioAdmin;
 
   int _selectedIndexForBottomNavigationBar = 0;
   int _selectedIndexForTabBar = 0;
@@ -31,7 +36,8 @@ class _GestionUsuarios extends State<GestionUsuarios> {
     listPendientes();
     listInactivos();
     listActivos();
-
+    listUsuarios();
+    obtenerUsuarioAdministrador();
     super.initState();
   }
 
@@ -43,8 +49,11 @@ class _GestionUsuarios extends State<GestionUsuarios> {
         _selectedIndexForBottomNavigationBar = 0;
       });
     }
-    final tabBar = new TabBar(labelColor: Colores().colorBlanco,
+
+    final tabBar = new TabBar(
+      labelColor: Colores().colorBlanco,
       indicatorColor: Colores().colorBlanco,
+      labelStyle: TextStyle(fontFamily: 'Trueno', fontSize: 14),
       onTap: _onItemTappedForTabBar,
       tabs: <Widget>[
         new Tab(
@@ -59,82 +68,99 @@ class _GestionUsuarios extends State<GestionUsuarios> {
       ],
     );
 
-    return new DefaultTabController(length: 3, child: new Scaffold(
-      appBar: AppBar(
-          bottom:tabBar ,
-          systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.light,
-              statusBarBrightness: Brightness.light),
-          backgroundColor: Colores().colorAzul,
-          title: Text("GESTION DE USUARIOS",style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
-/*          actions: [
-            IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.search)),
-          ]
-*/      ),
-      body: TabBarView(
-        children: [
-          listActivos(),
-          listPendientes(),
-          listInactivos()
-        ],
+    return new DefaultTabController(
+      length: 3,
+      child: new Scaffold(
+        appBar: AppBar(
+            bottom: tabBar,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+                statusBarBrightness: Brightness.light),
+            backgroundColor: Colores().colorAzul,
+            title: Text("GESTIÓN DE USUARIOS",
+                style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    showSearch(
+                        context: context,
+                        delegate: BuscardorUsuario(
+                            listaUsuarios, listaUsuarios, isUsuarioAdmin));
+                  },
+                  icon: Icon(Icons.search)),
+            ]),
+        body: TabBarView(
+          children: [listActivos(), listPendientes(), listInactivos()],
+        ),
       ),
-
-    ),
-
     );
-
   }
 
   Widget listPendientes() {
-
     return Scaffold(
       body: Container(
         child: FutureBuilder(
             future: usuariosPendientes(),
             builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child:  Image.asset('recursos/logo-carga.gif'),
-            );
-          } else {
-            return ListView.builder(
-                itemCount: pendienteUsuarios.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colores().colorBlanco,
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 15,
-                              offset: Offset(0, 0))
-                        ]),
-                    child: ListTile(
-                      title: Text(pendienteUsuarios[index].nombreCompleto),
-                      subtitle: Text('Correo : ' + pendienteUsuarios[index].correo +
-                          '\nCelular: ' + pendienteUsuarios[index].telefono  +
-                          '\nDepartamento: ' + pendienteUsuarios[index].localidad +
-                          '\nEspecialidad: ' + pendienteUsuarios[index].especialidad),
-                      onTap: () {
-
-                        String nombre = pendienteUsuarios[index].nombreCompleto;
-                        String correo = pendienteUsuarios[index].correo;
-                        String estado = pendienteUsuarios[index].statusUsuario;
-                        bool esAdmin = pendienteUsuarios[index].esAdministrador;
-
-                        adminUsuario(nombre, correo, estado, esAdmin);
-
-                      },
-                    ),
-                  );
-                });
-          }
-        }),
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: Image.asset('recursos/logo-carga.gif'),
+                );
+              } else {
+                return ListView.builder(
+                    itemCount: pendienteUsuarios.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colores().colorBlanco,
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 15,
+                                  offset: Offset(0, 0))
+                            ]),
+                        child: ListTile(
+                          title: Text(pendienteUsuarios[index].nombreCompleto),
+                          subtitle: Text('Correo : ' +
+                              pendienteUsuarios[index].correo +
+                              '\nCelular: ' +
+                              pendienteUsuarios[index].telefono +
+                              '\nDepartamento: ' +
+                              pendienteUsuarios[index].departamento +
+                              '\nEspecialidad: ' +
+                              pendienteUsuarios[index].especialidad),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VisualizarUsuario(
+                                          usuario: pendienteUsuarios[index],
+                                          nombre: pendienteUsuarios[index]
+                                              .nombreCompleto,
+                                          correo:
+                                              pendienteUsuarios[index].correo,
+                                          departamento: pendienteUsuarios[index]
+                                              .departamento,
+                                          esAdministrador:
+                                              pendienteUsuarios[index]
+                                                  .esAdministrador,
+                                          especialidad: pendienteUsuarios[index]
+                                              .especialidad,
+                                          statusUsuario:
+                                              pendienteUsuarios[index]
+                                                  .statusUsuario,
+                                          telefono:
+                                              pendienteUsuarios[index].telefono,
+                                        )));
+                          },
+                        ),
+                      );
+                    });
+              }
+            }),
       ),
     );
   }
@@ -142,254 +168,191 @@ class _GestionUsuarios extends State<GestionUsuarios> {
   Widget listActivos() {
     return Scaffold(
         body: Container(
-          child: FutureBuilder(
-            future: usuariosActivos(),
-              builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child:  Image.asset('recursos/logo-carga.gif'),
-          );
-      } else {
-          return ListView.builder(
-              itemCount: activoUsuarios.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colores().colorBlanco,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 15,
-                            offset: Offset(0, 0))
-                      ]),
-                  child: ListTile(
-                      title: Text(activoUsuarios[index].nombreCompleto),
-                      subtitle: Text('Correo : ' + activoUsuarios[index].correo +
-                      '\nCelular: ' + activoUsuarios[index].telefono  +
-                      '\nDepartamento: ' + activoUsuarios[index].localidad +
-                      '\nEspecialidad: ' + activoUsuarios[index].especialidad),
-                      onTap: () {
-                        String nombre = activoUsuarios[index].nombreCompleto;
-                        String correo = activoUsuarios[index].correo;
-                        String estado = activoUsuarios[index].statusUsuario;
-                        bool esAdmin = activoUsuarios[index].esAdministrador;
-
-                        adminUsuario(nombre, correo, estado, esAdmin);
-
-
-                      }),
-                );
-              });
-      }
-    }),
-        ));
+      child: FutureBuilder(
+          future: usuariosActivos(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Image.asset('recursos/logo-carga.gif'),
+              );
+            } else {
+              return ListView.builder(
+                  itemCount: activoUsuarios.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colores().colorBlanco,
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 15,
+                                offset: Offset(0, 0))
+                          ]),
+                      child: ListTile(
+                          title: Text(activoUsuarios[index].nombreCompleto),
+                          subtitle: Text('Correo : ' +
+                              activoUsuarios[index].correo +
+                              '\nCelular: ' +
+                              activoUsuarios[index].telefono +
+                              '\nDepartamento: ' +
+                              activoUsuarios[index].departamento +
+                              '\nEspecialidad: ' +
+                              activoUsuarios[index].especialidad),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VisualizarUsuario(
+                                          usuario: activoUsuarios[index],
+                                          nombre: activoUsuarios[index]
+                                              .nombreCompleto,
+                                          correo: activoUsuarios[index].correo,
+                                          departamento: activoUsuarios[index]
+                                              .departamento,
+                                          esAdministrador: activoUsuarios[index]
+                                              .esAdministrador,
+                                          especialidad: activoUsuarios[index]
+                                              .especialidad,
+                                          statusUsuario: activoUsuarios[index]
+                                              .statusUsuario,
+                                          telefono:
+                                              activoUsuarios[index].telefono,
+                                        )));
+                          }),
+                    );
+                  });
+            }
+          }),
+    ));
   }
 
   Widget listInactivos() {
     return Scaffold(
         body: Container(
-          child: FutureBuilder(
-              future: usuariosInactivos(),
-              builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child:  Image.asset('recursos/logo-carga.gif'),
-          );
-      } else {
-          return ListView.builder(
-              itemCount: inactivoUsuarios.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colores().colorBlanco,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 15,
-                            offset: Offset(0, 0))
-                      ]),
-                  child: ListTile(
-                    title: Text(inactivoUsuarios[index].nombreCompleto),
-                    subtitle: Text('Correo : ' + inactivoUsuarios[index].correo +
-                        '\nCelular: ' + inactivoUsuarios[index].telefono  +
-                        '\nDepartamento: ' + inactivoUsuarios[index].localidad +
-                        '\nEspecialidad: ' + inactivoUsuarios[index].especialidad),
-                    onTap: () {
-
-                      String nombre = inactivoUsuarios[index].nombreCompleto;
-                      String correo = inactivoUsuarios[index].correo;
-                      String estado = inactivoUsuarios[index].statusUsuario;
-                      bool esAdmin = inactivoUsuarios[index].esAdministrador;
-
-                      adminUsuario(nombre, correo, estado, esAdmin);
-
-
-                    },
-                  ),
-                );
-              });
-      }
-    }),
-        ));
+      child: FutureBuilder(
+          future: usuariosInactivos(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Image.asset('recursos/logo-carga.gif'),
+              );
+            } else {
+              return ListView.builder(
+                  itemCount: inactivoUsuarios.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colores().colorBlanco,
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 15,
+                                offset: Offset(0, 0))
+                          ]),
+                      child: ListTile(
+                        title: Text(inactivoUsuarios[index].nombreCompleto),
+                        subtitle: Text('Correo : ' +
+                            inactivoUsuarios[index].correo +
+                            '\nCelular: ' +
+                            inactivoUsuarios[index].telefono +
+                            '\nDepartamento: ' +
+                            inactivoUsuarios[index].departamento +
+                            '\nEspecialidad: ' +
+                            inactivoUsuarios[index].especialidad),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => VisualizarUsuario(
+                                        usuario: inactivoUsuarios[index],
+                                        nombre: inactivoUsuarios[index]
+                                            .nombreCompleto,
+                                        correo: inactivoUsuarios[index].correo,
+                                        departamento: inactivoUsuarios[index]
+                                            .departamento,
+                                        esAdministrador: inactivoUsuarios[index]
+                                            .esAdministrador,
+                                        especialidad: inactivoUsuarios[index]
+                                            .especialidad,
+                                        statusUsuario: inactivoUsuarios[index]
+                                            .statusUsuario,
+                                        telefono:
+                                            inactivoUsuarios[index].telefono,
+                                      )));
+                        },
+                      ),
+                    );
+                  });
+            }
+          }),
+    ));
   }
 
-  Widget adminUsuario(String nombre, String correo, String estadoU, bool esAdmin) {
-
-    bool esAdministrador = esAdmin;
-    bool estado;
-    String estadoUsuario = estadoU;
-
-    if(estadoU == 'PENDIENTE' || estadoU == 'INACTIVO'){
-      estado = false;
-    }
-    if(estadoU == 'ACTIVO' ){
-      estado = true;
-    }
-
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              insetPadding: EdgeInsets.all(2.0),
-              title: Text('Usuario'),
-              content: SingleChildScrollView(
-                child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text('Nombre: $nombre'),
-                  ),
-                  SizedBox(height: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: Icon(Icons.group_add_rounded)
-                          ),
-                          Expanded(
-                              child: Text('Administrador')
-                          ),
-                          Expanded(
-                            child:Switch(
-                              value: esAdministrador,
-                              onChanged: (value) {
-                                setState(() {
-                                  esAdministrador = value;
-                                });
-                              },
-                              activeTrackColor: Colores().colorAzul,
-                              activeColor: Colores().colorCeleste,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: Icon(Icons.supervised_user_circle_outlined)
-                          ),
-                          Expanded(
-                              child: Text('Activo')
-                          ),
-                          Expanded(
-                            child: Switch(
-                              value: estado,
-                              onChanged: (value) {
-                                estado = value;
-                                setState(() {
-                                  if(estado) {
-                                    estadoUsuario = 'ACTIVO';
-                                  }
-                                  else{
-                                    estadoUsuario = 'INACTIVO';
-                                  }
-
-                                });
-                              },
-                              activeTrackColor: Colores().colorAzul,
-                              activeColor: Colores().colorCeleste,
-                            ),
-                          )
-
-                        ],
-                      )
-                    ],
-                  ),
-
-                  SizedBox(height: 40),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Boton(
-                        titulo: 'Guardar',
+  Widget listUsuarios() {
+    return Scaffold(
+        body: Container(
+      child: FutureBuilder(
+          future: todosUsuarios(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Image.asset('recursos/logo-carga.gif'),
+              );
+            } else {
+              return ListView.builder(
+                  itemCount: listaUsuarios.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colores().colorBlanco,
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 15,
+                                offset: Offset(0, 0))
+                          ]),
+                      child: ListTile(
+                        title: Text(listaUsuarios[index].nombreCompleto),
+                        subtitle: Text('Correo : ' +
+                            listaUsuarios[index].correo +
+                            '\nCelular: ' +
+                            listaUsuarios[index].telefono +
+                            '\nDepartamento: ' +
+                            listaUsuarios[index].departamento +
+                            '\nEspecialidad: ' +
+                            listaUsuarios[index].especialidad),
                         onTap: () {
-                          Navigator.of(context).pop();
-
-                          ControladorUsuario().administrarUsuario(correo, estadoUsuario, esAdministrador);
-
-                          showDialog(
-                              barrierDismissible: true,
-                              context: context,
-                              builder: (context){
-                                return AlertDialog(
-                                  contentPadding: const EdgeInsets.all(10.0),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0)),
-                                  title: Text('El usuario $nombre, ha sido actualizado.'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: (){
-
-                                        Navigator.of(context).pop();
-                                        Navegacion(context).navegarAPaginaGestionUsuarioDest();
-
-                                      },
-                                      child: Text('Ok',
-                                          style: TextStyle(
-                                              color: Colores().colorAzul,
-                                              fontFamily: 'Trueno',
-                                              fontSize: 11.0,
-                                              decoration: TextDecoration.underline)),
-                                    )
-                                  ],
-                                );
-                              }
-                          );
-
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => VisualizarUsuario(
+                                        usuario: listaUsuarios[index],
+                                        nombre:
+                                            listaUsuarios[index].nombreCompleto,
+                                        correo: listaUsuarios[index].correo,
+                                        departamento:
+                                            listaUsuarios[index].departamento,
+                                        esAdministrador: listaUsuarios[index]
+                                            .esAdministrador,
+                                        especialidad:
+                                            listaUsuarios[index].especialidad,
+                                        statusUsuario:
+                                            listaUsuarios[index].statusUsuario,
+                                        telefono: listaUsuarios[index].telefono,
+                                      )));
                         },
                       ),
-                      TextButton(
-                        child: const Text('ATRAS'),
-                        onPressed: (){
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-
-
-                ],
-              ),
-            ),
-            );
-        },
-        );
-      },
-    );
+                    );
+                  });
+            }
+          }),
+    ));
   }
 
   Future<void> usuariosPendientes() async {
@@ -402,6 +365,20 @@ class _GestionUsuarios extends State<GestionUsuarios> {
 
   Future<void> usuariosInactivos() async {
     inactivoUsuarios = await ControladorUsuario().obtenerUsuariosInactivos();
+  }
 
+  Future<void> todosUsuarios() async {
+    listaUsuarios = await ControladorUsuario().obtenerUsuarios();
+  }
+
+  Future<void> obtenerUsuarioAdministrador() async {
+    isUsuarioAdmin = await ControladorUsuario()
+        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
+    /*
+    setState para que la pagina se actualize sola si el usuario es administrador.
+     */
+    setState(() {
+      isUsuarioAdmin;
+    });
   }
 }

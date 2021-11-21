@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -5,6 +6,7 @@ import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:lsu_app/widgets/auth_background.dart';
@@ -62,7 +64,7 @@ class _LoginState extends State<Login> {
               this._email = value.toLowerCase().trim();
             },
             validacion: (value) => value.isEmpty
-                ? 'Campo obligatorio'
+                ? 'El correo es requerido'
                 : Validar().validarCorreo(value),
           ),
           SizedBox(height: 30),
@@ -74,9 +76,9 @@ class _LoginState extends State<Login> {
             },
             validacion: (value) {
               if (value.isEmpty) {
-                return 'Campo obligatorio';
+                return 'La contraseña es requerida';
               } else if (value.length <= 8) {
-                return 'La contraseña debe contener mas de 8 caracteres';
+                return 'La contraseña debe contener más de 8 caracteres';
               } else {
                 return Validar().validarPassword(value);
               }
@@ -86,9 +88,12 @@ class _LoginState extends State<Login> {
           Boton(
               titulo: 'INGRESAR',
               onTap: () {
-                if (Validar().camposVacios(formKey)) {
-                  AuthService().signIn(_email, _password, context);
-                }
+
+
+                  if (Validar().camposVacios(formKey)) {
+                    AuthService().signIn(_email, _password, context);
+                  }
+
               }),
           SizedBox(height: 10),
           TextButton(
@@ -97,19 +102,19 @@ class _LoginState extends State<Login> {
                   alignment: Alignment.bottomCenter,
                   padding: EdgeInsets.only(top: 15.0, left: 20.0),
                   child: InkWell(
-                      child: Text('OLVIDE MI CONTRASEÑA',
+                      child: Text('OLVIDÉ MI CONTRASEÑA',
                           style: TextStyle(
                               color: Colores().colorAzul,
                               fontFamily: 'Trueno',
                               fontSize: 11.0,
                               decoration: TextDecoration.underline))))),
           TextButton(
-              onPressed: Navegacion(context).navegarAPrincipalDest,
+              onPressed: Navegacion(context).navegarAPrincipal,
               child: Container(
                   alignment: Alignment.bottomCenter,
                   padding: EdgeInsets.only(top: 15.0, left: 20.0),
                   child: InkWell(
-                      child: Text('ATRAS',
+                      child: Text('ATRÁS',
                           style: TextStyle(
                               color: Colores().colorAzul,
                               fontFamily: 'Trueno',

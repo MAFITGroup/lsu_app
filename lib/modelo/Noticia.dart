@@ -9,14 +9,19 @@ class Noticia {
 
   Noticia();
 
-  String get titulo      => _titulo;
-  String get descripcion => _descripcion;
-  String get tipo        => _tipo;
-  String get usuarioAlta => _usuarioAlta;
-  String get link        => _link;
-  String get documentID  => _documentID;
-  String get fechaSubida => _fechaSubida;
+  String get titulo => _titulo;
 
+  String get descripcion => _descripcion;
+
+  String get tipo => _tipo;
+
+  String get usuarioAlta => _usuarioAlta;
+
+  String get link => _link;
+
+  String get documentID => _documentID;
+
+  String get fechaSubida => _fechaSubida;
 
   set titulo(String value) {
     _titulo = value;
@@ -42,7 +47,7 @@ class Noticia {
     _documentID = value;
   }
 
-  set fechaSubida(String value){
+  set fechaSubida(String value) {
     _fechaSubida = value;
   }
 }

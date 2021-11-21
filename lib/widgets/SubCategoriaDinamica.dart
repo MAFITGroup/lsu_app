@@ -1,12 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lsu_app/manejadores/Colores.dart';
 
 import 'TextFieldTexto.dart';
 
 class SubCategoriaDinamica extends StatefulWidget {
-  final List<String> listaSubcategorias;
+  final List<dynamic> listaSubcategorias;
+  final bool modoAlta;
+  final bool modoEditar;
+  final String nombreSubCategoria;
+  final Function onPressed;
+  final TextEditingController controller;
 
-  const SubCategoriaDinamica({Key key, this.listaSubcategorias})
+  const SubCategoriaDinamica(
+      {Key key,
+      this.listaSubcategorias,
+      this.modoAlta,
+      this.modoEditar,
+      this.nombreSubCategoria,
+      this.onPressed,
+      this.controller})
       : super(key: key);
 
   @override
@@ -18,34 +31,54 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> listaSubcategorias = widget.listaSubcategorias;
+    List<dynamic> listaSubcategorias = widget.listaSubcategorias;
+    bool modoAlta = widget.modoAlta;
+    bool modoEditar = widget.modoEditar;
+    String nombreSubCategoria = widget.nombreSubCategoria;
+    Function onPressed = widget.onPressed;
+    TextEditingController controller = widget.controller;
+
     return Container(
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30, right: 90),
+            padding: EdgeInsets.only(left: 30, right: modoEditar ? 40 : 90),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: TextFieldTexto(
-                    nombre: 'NOMBRE SUBCATEGORIA',
-                    icon: Icon(Icons.account_tree_outlined),
-                    valor: (value){
-                      setState(() {
-                        _nombreSubCategoria = value;
-                      });
-                    },
-                    validacion: ((value) => value.isEmpty
-                        ? 'El nombre de la Sub Categoria es requerido'
-                        : null),
-                    onSaved: (value) {
-                      setState(() {
-                        listaSubcategorias.add(_nombreSubCategoria.toUpperCase().trim());
-                      });
-                    }
-                  ),
+                      controlador: controller,
+                      habilitado: modoEditar || modoAlta,
+                      nombre: 'NOMBRE SUBCATEGORIA',
+                      icon: Icon(Icons.account_tree_outlined),
+                      valor: (value) {
+                        setState(() {
+                          _nombreSubCategoria = value;
+                        });
+                      },
+                      validacion: ((value) =>
+                          value.isEmpty ? 'Campo Obligatorio' : null),
+                      onSaved: (value) {
+                        if (_nombreSubCategoria == null) {
+                          _nombreSubCategoria = value;
+                        }
+                        setState(() {
+                          listaSubcategorias
+                              .add(_nombreSubCategoria.toUpperCase().trim());
+                        });
+                      }),
                 ),
+                Container(
+                    child: modoEditar
+                        ? FloatingActionButton(
+                            heroTag: "btnEliminar",
+                            onPressed: onPressed,
+                            child: Icon(Icons.remove),
+                            backgroundColor: Colores().colorAzul,
+                            splashColor: Colores().colorSombraBotones,
+                          )
+                        : null)
               ],
             ),
           ),
