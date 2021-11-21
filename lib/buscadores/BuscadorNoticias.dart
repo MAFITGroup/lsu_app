@@ -1,6 +1,7 @@
-/*
+
 import 'package:flutter/material.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
+import 'package:lsu_app/pantallas/Noticias/VisualizarNoticia.dart';
 
 
 class BuscadorNoticias extends SearchDelegate {
@@ -32,64 +33,82 @@ class BuscadorNoticias extends SearchDelegate {
     );
   }
 
-
-}
- // Widget de buscador
-class buscador extends StatefulWidget{
-  final String texto;
-  final ValueChanged<String> onChanged;
-  final String hintText;
-
-  const buscador({
-    Key key, this.texto, this.onChanged, this.hintText
-}) : super(key:key);
-
   @override
-  _buscadorState createState() => _buscadorState();
+  Widget buildResults(BuildContext context){
+    final List<Noticia> todasNoticias = noticia
+        .where((element) =>
+          element.titulo.toLowerCase().contains(query.toLowerCase()))
+        .toList();
 
-}
-class _buscadorState extends State<buscador>{
-
-  final controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-
-    final estiloActivo = TextStyle(color: Colors.black);
-    final estiloSombra = TextStyle(color: Colors.black54);
-    final estilo = widget.texto.isEmpty ? estiloSombra : estiloActivo;
-
-    return Container(
-      height: 42,
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.black26)
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          icon: Icon(Icons.close, color: estilo.color),
-          hintText: widget.texto,
-          border: InputBorder.none,
-          hintStyle: estilo,
-          suffixIcon: widget.texto.isNotEmpty
-            ? GestureDetector(
-            child: Icon(Icons.close, color: estilo.color),
-            onTap: (){
-              controller.clear();
-              widget.onChanged('');
-              FocusScope.of(context).requestFocus(Focus.of(context));
-            },
-          )
-            : null,
-        ),
-        style: estilo,
-        onChanged: widget.onChanged,
-      ),
+    return ListView.builder(
+        itemCount: todasNoticias.length,
+        itemBuilder: (context, index){
+          return Card(
+            child: ListTile(
+              title: Text('Titulo: ' + todasNoticias[index].titulo),
+              subtitle: Text(
+                  'Descripción: ' + todasNoticias[index].descripcion +
+                      '\nFecha de Publicación: ' + todasNoticias[index].fechaSubida
+              ),
+              onTap: (){
+                Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VisualizarNoticia(
+                          noticia: todasNoticias[index],
+                          tipo: todasNoticias[index].tipo,
+                          titulo: todasNoticias[index].titulo,
+                          descripcion: todasNoticias[index].descripcion,
+                          link: todasNoticias[index].link,
+                          isUsuarioAdmin: isUsuarioAdmin,
+                        )));
+              }
+            ),
+          );
+        }
     );
   }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+
+    final List<Noticia> noticiaSugerida = noticia
+        .where((element) =>
+        element.titulo.toLowerCase().contains(query.toLowerCase())
+    ).toList();
+
+    return ListView.builder(
+      itemCount: noticiaSugerida.length,
+      itemBuilder: (context, index){
+        return Card(
+          child: ListTile(
+              title: Text('Titulo: ' + noticiaSugerida[index].titulo),
+              subtitle: Text(
+                  'Descripción: ' + noticiaSugerida[index].descripcion +
+                      '\nFecha de Publicación: ' + noticiaSugerida[index].fechaSubida
+              ),
+              onTap: (){
+                Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VisualizarNoticia(
+                          noticia: noticiaSugerida[index],
+                          tipo: noticiaSugerida[index].tipo,
+                          titulo: noticiaSugerida[index].titulo,
+                          descripcion: noticiaSugerida[index].descripcion,
+                          link: noticiaSugerida[index].link,
+                          isUsuarioAdmin: isUsuarioAdmin,
+                        )));
+              }
+          ),
+
+        );
+      },
+    );
+  }
+
+
 }
 
-*/

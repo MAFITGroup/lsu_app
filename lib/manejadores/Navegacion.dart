@@ -12,8 +12,10 @@ import 'package:lsu_app/pantallas/Login/Login.dart';
 import 'package:lsu_app/pantallas/Login/ManualDeUsuario.dart';
 import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/pantallas/Login/Principal.dart';
+import 'package:lsu_app/pantallas/Login/ReactivarUsuario.dart';
 import 'package:lsu_app/pantallas/Login/Registrarse.dart';
 import 'package:lsu_app/pantallas/Login/ResetPassword.dart';
+import 'package:lsu_app/pantallas/Login/TerminosCondiciones.dart';
 import 'package:lsu_app/pantallas/Noticias/AltaNoticias.dart';
 import 'package:lsu_app/pantallas/Noticias/Noticias.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
@@ -26,7 +28,7 @@ class Navegacion {
 
   Navegacion(this.context);
 
-  void _cerrarSesion() {
+  void cerrarSesion() {
     AuthService().signOut();
   }
 
@@ -63,13 +65,12 @@ class Navegacion {
   }
 
   void navegarAPerfil(Usuario usuario) {
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => Perfil(usuario: usuario),
         ));
   }
-
 
   void navegarAltaSenia(List listaCategorias) {
     Navigator.push(
@@ -110,9 +111,18 @@ class Navegacion {
           builder: (context) => ResetPassword(),
         ));
   }
+
+  void navegarAReactivarUsuario() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReactivarUsuario(),
+        ));
+  }
+
   void navegarAPaginaInicial() {
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => PaginaInicial()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => PaginaInicial()));
   }
 
   void navegarAPaginaInicialDest() {
@@ -130,6 +140,7 @@ class Navegacion {
           builder: (context) => Perfil(usuario: usuario),
         ));
   }
+
   void navegarAPaginaGestionUsuarioDest() {
     Navigator.pushReplacement(
         context,
@@ -154,7 +165,7 @@ class Navegacion {
         ));
   }
 
-  void navegarAPrincipalDest() {
+  void navegarAPrincipal() {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -185,6 +196,7 @@ class Navegacion {
           builder: (context) => Noticias(),
         ));
   }
+
   void navegarManualDeUsuario() {
     Navigator.push(
         context,
@@ -193,6 +205,10 @@ class Navegacion {
         ));
   }
 
-
-
+  void navegarTerminosCondiciones() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TerminosCondiciones()),
+    );
+  }
 }

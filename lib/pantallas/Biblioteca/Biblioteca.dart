@@ -43,8 +43,8 @@ class _BibliotecaState extends State<Biblioteca> {
                       onPressed: () {
                         showSearch(
                             context: context,
-                            delegate: BuscadorContenido(
-                                listaContenido, listaContenido, isUsuarioAdmin));
+                            delegate: BuscadorContenido(listaContenido,
+                                listaContenido, isUsuarioAdmin));
                       },
                       icon: Icon(Icons.search)),
                 ],
@@ -55,27 +55,37 @@ class _BibliotecaState extends State<Biblioteca> {
                     future: listarContenido(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Cargando...");
-
+                        return Center(
+                          child: Image.asset('recursos/logo-carga.gif'),
+                        );
+                      } else if (listaContenido.length <= 0) {
+                        return Center(
+                          child: Image.asset('recursos/VuelvePronto.png'),
+                        );
                       } else {
                         return ListView.builder(
                             itemCount: listaContenido.length,
                             itemBuilder: (context, index) {
                               return Card(
                                   child: ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => VisualizarContenido(
-                                                contenido: listaContenido[index],
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              VisualizarContenido(
+                                                contenido:
+                                                    listaContenido[index],
                                                 isUsuarioAdmin: isUsuarioAdmin,
                                               )));
-                                    },
-
-                                    title: Text("Titulo: " + listaContenido[index].titulo),
-                                    subtitle: Text ("Autor: " + listaContenido[index].autor + '\nCategoría: ' + listaContenido[index].categoria),
-                                  ));
+                                },
+                                title: Text(
+                                    "TÍTULO: " + listaContenido[index].titulo),
+                                subtitle: Text("AUTOR: " +
+                                    listaContenido[index].autor +
+                                    '\nCATEGORÍA: ' +
+                                    listaContenido[index].categoria),
+                              ));
                             });
                       }
                     },
@@ -89,10 +99,10 @@ class _BibliotecaState extends State<Biblioteca> {
            */
           floatingActionButton: isUsuarioAdmin == true
               ? FloatingActionButton(
-            child: Icon(Icons.add),
-            backgroundColor: Colores().colorAzul,
-            onPressed: Navegacion(context).navegarAltaContenido,
-          )
+                  child: Icon(Icons.add),
+                  backgroundColor: Colores().colorAzul,
+                  onPressed: Navegacion(context).navegarAltaContenido,
+                )
               : null,
         ),
       ),
@@ -102,7 +112,6 @@ class _BibliotecaState extends State<Biblioteca> {
   Future<void> listarContenido() async {
     listaContenido = await ControladorContenido().obtenerTodosContenido();
   }
-
 
   Future<void> obtenerUsuarioAdministrador() async {
     isUsuarioAdmin = await ControladorUsuario()

@@ -32,7 +32,7 @@ class _GlosarioState extends State<Glosario> {
 
   @override
   void initState() {
-    listarCateogirasParaAlta();
+    listarCategoriasParaAlta();
     obtenerUsuarioAdministrador();
     listarSenias();
   }
@@ -77,6 +77,10 @@ class _GlosarioState extends State<Glosario> {
                         return Center(
                           child: Image.asset('recursos/logo-carga.gif'),
                         );
+                      } else if (listaCategorias.length <= 0) {
+                        return Center(
+                          child: Image.asset('recursos/VuelvePronto.png'),
+                        );
                       } else {
                         return ListView.builder(
                             itemCount: listaCategorias.length,
@@ -94,7 +98,9 @@ class _GlosarioState extends State<Glosario> {
                                                         .nombre,
                                               )));
                                 },
-                                title: Text(listaCategorias[index].nombre),
+                                title: Text("CATEGORÍA: " + listaCategorias[index].nombre,style: TextStyle(
+                                    fontFamily: 'Trueno',
+                                    fontSize: 14)),
                               ));
                             });
                       }
@@ -135,11 +141,11 @@ Lista de señas para el buscador.
     listaCategorias = await _controladorCategoria.obtenerTodasCategorias();
   }
 
-  void listarCateogirasParaAlta() async {
+  void listarCategoriasParaAlta() async {
     listaCategoriasParaAlta = await _controladorCategoria.listarCategorias();
   }
 
-  void listarSubCateogirasParaAlta() async {
+  void listarSubCategoriasParaAlta() async {
     listaSubCategoriasParaAlta =
         await _controladorCategoria.listarSubCategorias();
   }

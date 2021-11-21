@@ -32,7 +32,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value))
-      return 'Ingresa un correo valido';
+      return 'Por favor, ingrese un correo válido';
     else
       return null;
   }
@@ -58,7 +58,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               this._email = value;
             },
             validacion: (value) => value.isEmpty
-                ? 'Campo obligatorio'
+                ? 'El email es requerido'
                 : Validar().validarCorreo(value),
           ),
           SizedBox(height: 50.0),
@@ -76,7 +76,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 Navegacion(context).navegarALogin();
               },
               child: Container(
-                child: Text('ATRAS',
+                child: Text('ATRÁS',
                     style: TextStyle(
                         color: Colores().colorAzul,
                         fontFamily: 'Trueno',

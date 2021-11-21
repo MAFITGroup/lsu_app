@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Iconos.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/SeleccionadorVideo.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
@@ -44,7 +44,6 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
   final subCategoriaKey = new GlobalKey<DropdownSearchState>();
   final categoriaKey = new GlobalKey<DropdownSearchState>();
   bool isSubCategoriaSeleccionada;
-  TextEditingController _textEditingController;
 
   //usadas para editar
   String nuevoNombreSenia;
@@ -55,7 +54,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
   @override
   void initState() {
     isSubCategoriaSeleccionada = true;
-    listarCateogiras();
+    listarCategorias();
     setState(() {
       modoEditar = false;
     });
@@ -85,18 +84,30 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                           PopupMenuItem(
                             value: 0,
                             child: ListTile(
-                                leading: Icon(!modoEditar
-                                    ? Icons.edit
-                                    : Icons.cancel_outlined),
-                                title: Text(!modoEditar
-                                    ? "Editar Seña"
-                                    : "Cancelar Editar")),
+                                leading: Icon(
+                                    !modoEditar
+                                        ? Icons.edit
+                                        : Icons.cancel_outlined,
+                                    color: Colores().colorAzul),
+                                title: Text(
+                                    !modoEditar
+                                        ? "Editar Seña"
+                                        : "Cancelar Editar",
+                                    style: TextStyle(
+                                        fontFamily: 'Trueno',
+                                        fontSize: 14,
+                                        color: Colores().colorSombraBotones))),
                           ),
                           PopupMenuItem(
                             value: 1,
                             child: ListTile(
-                                leading: Icon(Icons.delete_forever_outlined),
-                                title: Text("Eliminar Seña")),
+                                leading: Icon(Icons.delete_forever_outlined,
+                                    color: Colores().colorAzul),
+                                title: Text("Eliminar Seña",
+                                    style: TextStyle(
+                                        fontFamily: 'Trueno',
+                                        fontSize: 14,
+                                        color: Colores().colorSombraBotones))),
                           ),
                         ],
                       ),
@@ -105,249 +116,245 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Form(
-                  key: formKey,
-                  child: Container(
-                    child: Column(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 300,
-                          child: senia.urlVideo == null
-                              ? Icon(Icons.video_library_outlined,
-                                  color: Colores().colorTextos, size: 150)
-                              : SeleccionadorVideo(null, senia.urlVideo),
-                        ),
-                        SizedBox(height: 15.0),
-                        TextFieldTexto(
-                          nombre: 'NOMBRE',
-                          icon: Icon(Iconos.hand),
-                          botonHabilitado: modoEditar,
-                          controlador: modoEditar
-                              ? null
-                              : TextEditingController(text: senia.nombre),
-                          valor: (value) {
+              child: Form(
+                key: formKey,
+                child: Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 300,
+                        child: senia.urlVideo == null
+                            ? Icon(Icons.video_library_outlined,
+                                color: Colores().colorTextos, size: 150)
+                            : SeleccionadorVideo(null, senia.urlVideo),
+                      ),
+                      SizedBox(height: 15.0),
+                      TextFieldTexto(
+                        nombre: 'NOMBRE',
+                        icon: Icon(Icons.format_size_outlined),
+                        habilitado: modoEditar,
+                        controlador: modoEditar
+                            ? null
+                            : TextEditingController(text: senia.nombre),
+                        valor: (value) {
+                          setState(() {
+                            nuevoNombreSenia = value;
+                          });
+                        },
+                        validacion: ((value) =>
+                            value.isEmpty ? 'El nombre es requerido' : null),
+                      ),
+                      SizedBox(height: 15.0),
+                      TextFieldDescripcion(
+                        nombre: 'DESCRIPCION',
+                        icon: Icon(Icons.description),
+                        habilitado: modoEditar,
+                        controlador: modoEditar
+                            ? null
+                            : TextEditingController(text: senia.descripcion),
+                        valor: (value) {
+                          setState(() {
+                            nuevaDescripcionSenia = value;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 15.0),
+                      // Menu desplegable de Categorias
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        child: DropdownSearch(
+                          key: categoriaKey,
+                          items: listaCategorias,
+                          enabled: modoEditar,
+                          selectedItem: senia.categoria,
+                          onChanged: (value) async {
+                            await listarSubCategorias(value);
+                            subCategoriaKey.currentState.clear();
                             setState(() {
-                              nuevoNombreSenia = value;
+                              nuevaCategoriaSenia = value;
+                              if (value != null) {
+                                isSubCategoriaSeleccionada = true;
+                                subCategoriaKey.currentState.clear();
+                              } else {
+                                isSubCategoriaSeleccionada = false;
+                                subCategoriaKey.currentState.clear();
+                              }
                             });
                           },
-                          validacion: ((value) =>
-                              value.isEmpty ? 'El nombre es requerido' : null),
-                        ),
-                        SizedBox(height: 15.0),
-                        TextFieldDescripcion(
-                          nombre: 'DESCRIPCION',
-                          icon: Icon(Icons.description),
-                          botonHabilitado: modoEditar,
-                          controlador: modoEditar
-                              ? null
-                              : TextEditingController(text: senia.descripcion),
-                          valor: (value) {
-                            setState(() {
-                              nuevaDescripcionSenia = value;
-                            });
+                          showSearchBox: true,
+                          clearButton: Icon(Icons.close,
+                              color: Colores().colorSombraBotones),
+                          dropDownButton: modoEditar
+                              ? Icon(Icons.arrow_drop_down,
+                                  color: Colores().colorSombraBotones)
+                              : Container(),
+                          showClearButton: modoEditar ? true : false,
+                          mode: Mode.DIALOG,
+                          dropdownSearchDecoration: InputDecoration(
+                              hintStyle: TextStyle(
+                                  fontFamily: 'Trueno',
+                                  fontSize: 12,
+                                  color: Colores().colorSombraBotones),
+                              hintText: "CATEGORÍA",
+                              prefixIcon: Icon(Icons.category_outlined),
+                              focusColor: Colores().colorSombraBotones,
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colores().colorSombraBotones),
+                              )),
+                          validator: (dynamic valor) {
+                            if (valor == null) {
+                              return "La categoría es requerida";
+                            } else {
+                              return null;
+                            }
                           },
                         ),
-                        SizedBox(height: 15.0),
-                        // Menu desplegable de Categorias
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25, right: 25),
-                          child: DropdownSearch(
-                            key: categoriaKey,
-                            items: listaCategorias,
-                            enabled: modoEditar,
-                            selectedItem: senia.categoria,
-                            onChanged: (value) async {
-                              await listarSubCateogiras(value);
-                              subCategoriaKey.currentState.clear();
-                              setState(() {
-                                nuevaCategoriaSenia = value;
-                                if (value != null) {
-                                  isSubCategoriaSeleccionada = true;
-                                  subCategoriaKey.currentState.clear();
-                                } else {
-                                  isSubCategoriaSeleccionada = false;
-                                  subCategoriaKey.currentState.clear();
-                                }
-                              });
-                            },
-                            showSearchBox: true,
-                            clearButton: Icon(Icons.close,
-                                color: Colores().colorSombraBotones),
-                            dropDownButton: modoEditar
-                                ? Icon(Icons.arrow_drop_down,
-                                    color: Colores().colorSombraBotones)
-                                : Container(),
-                            showClearButton: modoEditar ? true : false,
-                            mode: Mode.DIALOG,
-                            dropdownSearchDecoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    fontFamily: 'Trueno',
-                                    fontSize: 12,
-                                    color: Colores().colorSombraBotones),
-                                hintText: "CATEGORIA",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
-                                focusColor: Colores().colorSombraBotones,
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colores().colorSombraBotones),
-                                )),
-                            validator: (dynamic valor) {
-                              if (valor == null) {
-                                return "La categoria es requerida";
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
-                        ),
+                      ),
 
-                        // Menu desplegable de SubCategorias
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25, right: 25),
-                          child: DropdownSearch(
-                            key: subCategoriaKey,
-                            items: listaSubCategorias,
-                            enabled: modoEditar && isSubCategoriaSeleccionada,
-                            selectedItem: senia.subCategoria,
-                            onChanged: (value) {
-                              setState(() {
-                                nuevaSubCategoriaSenia = value;
-                              });
-                            },
-                            dropdownBuilderSupportsNullItem: true,
-                            showSearchBox: true,
-                            clearButton: Icon(Icons.close,
-                                color: Colores().colorSombraBotones),
-                            dropDownButton: modoEditar
-                                ? Icon(Icons.arrow_drop_down,
-                                    color: Colores().colorSombraBotones)
-                                : Container(),
-                            showClearButton: modoEditar ? true : false,
-                            mode: Mode.DIALOG,
-                            dropdownSearchDecoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    fontFamily: 'Trueno',
-                                    fontSize: 12,
+                      // Menu desplegable de SubCategorias
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        child: DropdownSearch(
+                          key: subCategoriaKey,
+                          items: listaSubCategorias,
+                          enabled: modoEditar && isSubCategoriaSeleccionada,
+                          selectedItem: senia.subCategoria,
+                          onChanged: (value) {
+                            setState(() {
+                              nuevaSubCategoriaSenia = value;
+                            });
+                          },
+                          dropdownBuilderSupportsNullItem: true,
+                          showSearchBox: true,
+                          clearButton: Icon(Icons.close,
+                              color: Colores().colorSombraBotones),
+                          dropDownButton: modoEditar
+                              ? Icon(Icons.arrow_drop_down,
+                                  color: Colores().colorSombraBotones)
+                              : Container(),
+                          showClearButton: modoEditar ? true : false,
+                          mode: Mode.DIALOG,
+                          dropdownSearchDecoration: InputDecoration(
+                              hintStyle: TextStyle(
+                                  fontFamily: 'Trueno',
+                                  fontSize: 12,
+                                  color: Colores().colorSombraBotones),
+                              hintText: "SUBCATEGORÍA",
+                              prefixIcon: Icon(Icons.category_outlined),
+                              focusColor: Colores().colorSombraBotones,
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
                                     color: Colores().colorSombraBotones),
-                                hintText: "SUB CATEGORIA",
-                                prefixIcon: Icon(Icons.account_tree_outlined),
-                                focusColor: Colores().colorSombraBotones,
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colores().colorSombraBotones),
-                                )),
-                            validator: (dynamic valor) {
-                              if (valor == null) {
-                                return "La sub categoria es requerida";
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
+                              )),
+                          validator: (dynamic valor) {
+                            if (valor == null) {
+                              return "La subcategoría es requerida";
+                            } else {
+                              return null;
+                            }
+                          },
                         ),
+                      ),
 
-                        SizedBox(height: 20.0),
-                        modoEditar
-                            ? Boton(
-                                titulo: 'GUARDAR',
-                                onTap: () {
-                                  /*
+                      SizedBox(height: 20.0),
+                      modoEditar
+                          ? Boton(
+                              titulo: 'GUARDAR',
+                              onTap: () {
+                                /*
                           Si presiono guardar y no modifique ningun campo
                           los valores son nullos, por lo tanto les seteo
                           el valor que tienen.
                            */
-                                  if (nuevoNombreSenia == null) {
-                                    nuevoNombreSenia = senia.nombre;
-                                  }
-                                  if (nuevaDescripcionSenia == null) {
-                                    nuevaDescripcionSenia = senia.descripcion;
-                                  }
-                                  if (nuevaCategoriaSenia == null) {
-                                    nuevaCategoriaSenia = senia.categoria;
-                                  }
-                                  if (nuevaSubCategoriaSenia == null) {
-                                    nuevaSubCategoriaSenia = senia.subCategoria;
-                                  }
-                                  if (Validar().camposVacios(formKey)) {
-                                    guardarEdicion(
-                                        senia.nombre,
-                                        senia.descripcion,
-                                        senia.categoria,
-                                        senia.subCategoria,
-                                        nuevoNombreSenia,
-                                        nuevaDescripcionSenia,
-                                        nuevaCategoriaSenia,
-                                        nuevaSubCategoriaSenia)
-                                      ..then((userCreds) {
-                                        /*
+                                if (nuevoNombreSenia == null) {
+                                  nuevoNombreSenia = senia.nombre;
+                                }
+                                if (nuevaDescripcionSenia == null) {
+                                  nuevaDescripcionSenia = senia.descripcion;
+                                }
+                                if (nuevaCategoriaSenia == null) {
+                                  nuevaCategoriaSenia = senia.categoria;
+                                }
+                                if (nuevaSubCategoriaSenia == null) {
+                                  nuevaSubCategoriaSenia = senia.subCategoria;
+                                }
+                                if (Validar().camposVacios(formKey)) {
+                                  guardarEdicion(
+                                      senia.nombre,
+                                      senia.descripcion,
+                                      senia.categoria,
+                                      senia.subCategoria,
+                                      nuevoNombreSenia,
+                                      nuevaDescripcionSenia,
+                                      nuevaCategoriaSenia,
+                                      nuevaSubCategoriaSenia)
+                                    ..then((userCreds) {
+                                      /*
                                         Luego de editar la seña,
                                         creo un dialogo de alerta indicando que se
                                         guardo de forma ok
                                          */
-                                        showDialog(
-                                            useRootNavigator: false,
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text('Edicion de Seña'),
-                                                content: Text(
-                                                    'La seña ha sido modificada correctamente'),
-                                                actions: [
-                                                  TextButton(
-                                                      child: Text('Ok',
-                                                          style: TextStyle(
-                                                              color: Colores()
-                                                                  .colorAzul,
-                                                              fontFamily:
-                                                                  'Trueno',
-                                                              fontSize: 11.0,
-                                                              decoration:
-                                                                  TextDecoration
-                                                                      .underline)),
-                                                      onPressed: () {
-                                                        /*Al presionar Ok, cierro la el dialogo y cierro la
+                                      showDialog(
+                                          useRootNavigator: false,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return DialogoAlerta(
+                                              tituloMensaje: 'Edición de Seña',
+                                              mensaje:
+                                                  'La seña ha sido modificada correctamente',
+                                              acciones: [
+                                                TextButton(
+                                                    child: Text('OK',
+                                                        style: TextStyle(
+                                                            color: Colores()
+                                                                .colorAzul,
+                                                            fontFamily:
+                                                                'Trueno',
+                                                            fontSize: 11.0,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline)),
+                                                    onPressed: () {
+                                                      /*Al presionar Ok, cierro la el dialogo y cierro la
                                                        ventana de alta seña
 
                                                          */
-                                                        Navigator
-                                                            .pushReplacement(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              return Glosario();
-                                                            },
-                                                          ),
-                                                        );
-                                                        /*
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return Glosario();
+                                                          },
+                                                        ),
+                                                      );
+                                                      /*
                                                         Cuatro POP, uno para el diologo y los demas
                                                         para la volver a la
                                                         pantalla de glosario
                                                          */
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      })
-                                                ],
-                                              );
-                                            });
-                                        //TODO mensaje si falla.
-                                      }).catchError((e) {
-                                        ErrorHandler().errorDialog(context, e);
-                                      });
-                                  }
-                                })
-                            : Container(),
-                      ],
-                    ),
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    })
+                                              ],
+                                            );
+                                          });
+                                      //TODO mensaje si falla.
+                                    }).catchError((e) {
+                                      ErrorHandler().errorDialog(context, e);
+                                    });
+                                }
+                              })
+                          : Container(),
+                    ],
                   ),
                 ),
               ),
@@ -358,11 +365,11 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
     );
   }
 
-  Future<void> listarCateogiras() async {
+  Future<void> listarCategorias() async {
     listaCategorias = await ControladorCategoria().listarCategorias();
   }
 
-  Future<void> listarSubCateogiras(String nombreCategoria) async {
+  Future<void> listarSubCategorias(String nombreCategoria) async {
     listaSubCategorias = await ControladorCategoria()
         .listarSubCategoriasPorCategoriaList(nombreCategoria);
   }
@@ -379,9 +386,10 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
     });
   }
 
-  Future eliminarSenia(
-      String nombre, String descripcion, String categoria) async {
-    _controladorSenia.eliminarSenia(nombre, descripcion, categoria);
+  Future eliminarSenia(String nombre, String descripcion, String categoria,
+      String subCategoria) async {
+    _controladorSenia.eliminarSenia(
+        nombre, descripcion, categoria, subCategoria);
   }
 
   /*
@@ -420,10 +428,10 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
             useRootNavigator: false,
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Eliminacion de Seña'),
-                content: Text('¿Está seguro que desea eliminar la seña?'),
-                actions: [
+              return DialogoAlerta(
+                tituloMensaje: 'Eliminación de Seña',
+                mensaje: '¿Está seguro que desea eliminar la seña?',
+                acciones: [
                   TextButton(
                       child: Text('OK',
                           style: TextStyle(
@@ -432,8 +440,11 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                               fontSize: 11.0,
                               decoration: TextDecoration.underline)),
                       onPressed: () {
-                        eliminarSenia(widget.senia.nombre,
-                            widget.senia.descripcion, widget.senia.categoria)
+                        eliminarSenia(
+                            widget.senia.nombre,
+                            widget.senia.descripcion,
+                            widget.senia.categoria,
+                            widget.senia.subCategoria)
                           ..then((userCreds) {
                             /*
                                     Luego de eliminar la seña,
@@ -444,13 +455,13 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                 useRootNavigator: false,
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Eliminacion de Seña'),
-                                    content: Text(
-                                        'La seña ha sido eliminada correctamente'),
-                                    actions: [
+                                  return DialogoAlerta(
+                                    tituloMensaje: 'Eliminación de Seña',
+                                    mensaje:
+                                        'La seña ha sido eliminada correctamente',
+                                    acciones: [
                                       TextButton(
-                                          child: Text('Ok',
+                                          child: Text('OK',
                                               style: TextStyle(
                                                   color: Colores().colorAzul,
                                                   fontFamily: 'Trueno',

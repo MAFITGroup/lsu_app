@@ -2,10 +2,12 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
@@ -21,12 +23,31 @@ class _RegistrarseState extends State<Registrarse> {
   String _password;
   String _nombreCompleto;
   String _telefono;
-  String _localidad;
+  String _departamento;
   String _especialidad;
-  List departamentos = ['ARTIGAS', 'CANELONES', 'CERRO LARGO', 'COLONIA', 'DURAZNO', 'FLORES', 'FLORIDA',
-    'LAVALLEJA', 'MALDONADO', 'MONTEVIDEO', 'PAYSANDU', 'RIO NEGRO', 'RIVERA', 'ROCHA', 'SALTO', 'SORIANO',
-    'SAN JOSE', 'TACUAREMBO', 'TREINTA Y TRES'];
+  List departamentos = [
+    'ARTIGAS',
+    'CANELONES',
+    'CERRO LARGO',
+    'COLONIA',
+    'DURAZNO',
+    'FLORES',
+    'FLORIDA',
+    'LAVALLEJA',
+    'MALDONADO',
+    'MONTEVIDEO',
+    'PAYSANDÚ',
+    'RÍO NEGRO',
+    'RIVERA',
+    'ROCHA',
+    'SALTO',
+    'SORIANO',
+    'SAN JOSÉ',
+    'TACUAREMBÓ',
+    'TREINTA Y TRES'
+  ];
 
+  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +77,7 @@ class _RegistrarseState extends State<Registrarse> {
                 this._email = value.toLowerCase();
               },
               validacion: (value) => value.isEmpty
-                  ? 'Campo obligatorio'
+                  ? 'El correo es requerido'
                   : Validar().validarCorreo(value)),
 
           // CONTRASEÑA
@@ -68,9 +89,9 @@ class _RegistrarseState extends State<Registrarse> {
               },
               validacion: (value) {
                 if (value.isEmpty) {
-                  return 'Campo obligatorio';
+                  return 'La contraseña es requerida';
                 } else if (value.length <= 8) {
-                  return 'La contraseña debe contener mas de 8 caracteres';
+                  return 'La contraseña debe contener más de 8 caracteres';
                 } else {
                   return Validar().validarPassword(value);
                 }
@@ -84,7 +105,7 @@ class _RegistrarseState extends State<Registrarse> {
                 this._nombreCompleto = value.toUpperCase();
               },
               validacion: ((value) =>
-                  value.isEmpty ? 'Campo obligatorio' : null)),
+                  value.isEmpty ? 'El nombre completo es requerido' : null)),
 
           // CELULAR
           TextFieldNumerico(
@@ -94,7 +115,7 @@ class _RegistrarseState extends State<Registrarse> {
                 this._telefono = value;
               },
               validacion: (value) => value.isEmpty
-                  ? 'Campo obligatorio'
+                  ? 'El celular es requerido'
                   : Validar().validarCelular(value)),
 
           // DEPARTAMENTO
@@ -102,22 +123,21 @@ class _RegistrarseState extends State<Registrarse> {
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: DropdownSearch(
               items: departamentos,
-              onChanged: (value){
+              onChanged: (value) {
                 setState(() {
-                  this._localidad = value;
+                  this._departamento = value;
                 });
               },
               validator: ((dynamic value) {
                 if (value == null) {
-                  return "Campo obligatorio";
+                  return "El departamento es requerido";
                 } else {
                   return null;
                 }
-              }
-                  ),
+              }),
               showSearchBox: true,
-              clearButton: Icon(Icons.close,
-                  color: Colores().colorSombraBotones),
+              clearButton:
+                  Icon(Icons.close, color: Colores().colorSombraBotones),
               dropDownButton: Icon(Icons.arrow_drop_down,
                   color: Colores().colorSombraBotones),
               showClearButton: true,
@@ -131,11 +151,9 @@ class _RegistrarseState extends State<Registrarse> {
                   prefixIcon: Icon(Icons.location_city_outlined),
                   focusColor: Colores().colorSombraBotones,
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Colores().colorSombraBotones),
+                    borderSide: BorderSide(color: Colores().colorSombraBotones),
                   )),
-
-            ) ,
+            ),
           ),
 
           // ESPECIALIDAD
@@ -146,7 +164,32 @@ class _RegistrarseState extends State<Registrarse> {
                 this._especialidad = value.toUpperCase();
               },
               validacion: ((value) =>
-                  value.isEmpty ? 'Campo obligatorio' : null)),
+                  value.isEmpty ? 'La especialidad es requerida' : null)),
+
+          Container(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isChecked = value;
+                      });
+                    },
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navegacion(context).navegarTerminosCondiciones();
+                      },
+                      child: Text('TÉRMINOS Y CONDICIONES DE USO',
+                          style: TextStyle(
+                            color: Colores().colorAzul,
+                            fontFamily: 'Trueno',
+                            fontSize: 11.0,
+                          )))
+                ],
+              )),
           SizedBox(height: 50.0),
 
           Boton(
@@ -155,21 +198,42 @@ class _RegistrarseState extends State<Registrarse> {
                 String _statusUsuario = 'PENDIENTE';
 
                 if (Validar().camposVacios(formKey)) {
-                  AuthService()
-
-                      //dejo mi UID vacia ya que la obtengo en mi manejador luego de hacer el create user.
-
-                      .signUp(
-                          '',
-                          _email,
-                          _password,
-                          _nombreCompleto,
-                          _telefono,
-                          _localidad,
-                          _especialidad,
-                          false,
-                          _statusUsuario,
-                          context);
+                  if (isChecked) {
+                    AuthService().signUp(
+                        '',
+                        _email,
+                        _password,
+                        _nombreCompleto,
+                        _telefono,
+                        _departamento,
+                        _especialidad,
+                        false,
+                        _statusUsuario,
+                        context);
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DialogoAlerta(
+                            tituloMensaje: 'Términos y Condiciones de Uso',
+                            mensaje:
+                                'Para completar el registro es necesario aceptar los Términos y Condiciones de uso',
+                            acciones: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK',
+                                      style: TextStyle(
+                                          color: Colores().colorAzul,
+                                          fontFamily: 'Trueno',
+                                          fontSize: 11.0,
+                                          decoration:
+                                              TextDecoration.underline))),
+                            ],
+                          );
+                        });
+                  }
                 }
               }),
 

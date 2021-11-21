@@ -1,8 +1,6 @@
-
 import 'package:hexcolor/hexcolor.dart';
 
-class Colores{
-
+class Colores {
   /*
   Eleccion de colores
   https://paletadecolores.online/pastel/
@@ -14,5 +12,4 @@ class Colores{
   HexColor colorTextos = HexColor("#84b6f4");
   HexColor colorBlanco = HexColor("#fcffff");
   HexColor colorCeleste = HexColor('#c4dafa');
-
 }

@@ -4,10 +4,10 @@ import 'package:lsu_app/pantallas/Biblioteca/VisualizarContenido.dart';
 
 class BuscadorContenido extends SearchDelegate {
   final List<Contenido> contenido;
-  final List<Contenido> contenidoSugeridos;
+  final List<Contenido> contenidoSugerido;
   final bool isUsuarioAdmin;
 
-  BuscadorContenido(this.contenido, this.contenidoSugeridos, this.isUsuarioAdmin);
+  BuscadorContenido(this.contenido, this.contenidoSugerido, this.isUsuarioAdmin);
 
   @override
   List<Widget> buildActions(BuildContext context) {

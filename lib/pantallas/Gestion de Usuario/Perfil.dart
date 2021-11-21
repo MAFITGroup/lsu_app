@@ -11,6 +11,7 @@ import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
@@ -47,14 +48,14 @@ class _PerfilState extends State<Perfil> {
     'LAVALLEJA',
     'MALDONADO',
     'MONTEVIDEO',
-    'PAYSANDU',
+    'PAYSANDÚ',
     'RIO NEGRO',
     'RIVERA',
     'ROCHA',
     'SALTO',
     'SORIANO',
-    'SAN JOSE',
-    'TACUAREMBO',
+    'SAN JOSÉ',
+    'TACUAREMBÓ',
     'TREINTA Y TRES'
   ];
 
@@ -70,236 +71,218 @@ class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
     Usuario usuario = widget.usuario;
-    return Container(
-      height: 600,
-      width: 600,
-      child: Center(
-          child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              BarraDeNavegacion(
-                  titulo: Text("PERFIL",
-                      style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
-                  listaWidget: [
-                    PopupMenuButton<int>(
-                        onSelected: (item) => onSelected(context, item),
-                        itemBuilder: (context) => [
-                              PopupMenuItem(
-                                  value: 0,
-                                  child: ListTile(
-                                      leading: Icon(!modoEditar
-                                          ? Icons.edit
-                                          : Icons.cancel_outlined),
-                                      title: Text(!modoEditar
-                                          ? 'Editar'
-                                          : 'Cancelar'))),
-                              PopupMenuItem(
-                                value: 1,
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            BarraDeNavegacion(
+                titulo: Text("PERFIL",
+                    style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
+                listaWidget: [
+                  PopupMenuButton<int>(
+                      onSelected: (item) => onSelected(context, item),
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                                value: 0,
                                 child: ListTile(
-                                    leading:
-                                        Icon(Icons.delete_forever_outlined),
-                                    title: Text('Eliminar')),
-                              ),
-                            ])
-                  ]),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Form(
-                  key: formKey,
-                  child: Container(
-                      child: Column(
-                    children: [
-                      SizedBox(height: 30.0),
-                      //CORREO
-                      TextFieldTexto(
-                        nombre: 'CORREO',
-                        icon: Icon(Icons.alternate_email_rounded),
-                        botonHabilitado: false,
+                                    leading: Icon(!modoEditar
+                                        ? Icons.edit
+                                        : Icons.cancel_outlined),
+                                    title: Text(
+                                        !modoEditar ? 'Editar' : 'Cancelar'))),
+                            PopupMenuItem(
+                              value: 1,
+                              child: ListTile(
+                                  leading: Icon(Icons.delete_forever_outlined),
+                                  title: Text('Eliminar')),
+                            ),
+                          ])
+                ]),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: formKey,
+                child: Container(
+                    child: Column(
+                  children: [
+                    SizedBox(height: 30.0),
+                    //CORREO
+                    TextFieldTexto(
+                      nombre: 'CORREO',
+                      icon: Icon(Icons.alternate_email_rounded),
+                      habilitado: false,
+                      controlador: modoEditar
+                          ? null
+                          : TextEditingController(text: usuario.correo),
+                    ),
+                    // NOMBRE COMPLETO
+                    TextFieldTexto(
+                        nombre: 'NOMBRE COMPLETO',
+                        icon: Icon(Icons.person),
+                        habilitado: modoEditar,
                         controlador: modoEditar
                             ? null
-                            : TextEditingController(text: usuario.correo),
+                            : TextEditingController(
+                                text: usuario.nombreCompleto),
+                        valor: (value) {
+                          setState(() {
+                            nombreNuevo = value.toUpperCase();
+                          });
+                        },
+                        validacion: ((value) =>
+                            value.isEmpty ? 'Campo obligatorio' : null)),
 
-                        /*
-                                          valor: (value) {
+                    // CELULAR
+                    TextFieldNumerico(
+                        nombre: 'CELULAR',
+                        icon: Icon(Icons.phone),
+                        habilitado: modoEditar,
+                        controlador: modoEditar
+                            ? null
+                            : TextEditingController(text: usuario.telefono),
+                        valor: (value) {
+                          setState(() {
+                            celularNuevo = value;
+                          });
+                        },
+                        validacion: (value) => value.isEmpty
+                            ? 'Campo obligatorio'
+                            : Validar().validarCelular(value)),
 
-                                            setState(() {
-                                              correoNuevo = value.toLowerCase();
-                                            });
-                                          },
-
-                                          validacion: (value) => value.isEmpty
-                                              ? 'Campo obligatorio'
-                                              : Validar().validarCorreo(value)
-                                          */
-                      ),
-                      // NOMBRE COMPLETO
-                      TextFieldTexto(
-                          nombre: 'NOMBRE COMPLETO',
-                          icon: Icon(Icons.person),
-                          botonHabilitado: modoEditar,
-                          controlador: modoEditar
-                              ? null
-                              : TextEditingController(
-                                  text: usuario.nombreCompleto),
-                          valor: (value) {
-                            setState(() {
-                              nombreNuevo = value.toUpperCase();
-                            });
-                          },
-                          validacion: ((value) =>
-                              value.isEmpty ? 'Campo obligatorio' : null)),
-
-                      // CELULAR
-                      TextFieldNumerico(
-                          nombre: 'CELULAR',
-                          icon: Icon(Icons.phone),
-                          botonHabilitado: modoEditar,
-                          controlador: modoEditar
-                              ? null
-                              : TextEditingController(text: usuario.telefono),
-                          valor: (value) {
-                            setState(() {
-                              celularNuevo = value;
-                            });
-                          },
-                          validacion: (value) => value.isEmpty
-                              ? 'Campo obligatorio'
-                              : Validar().validarCelular(value)),
-
-                      // DEPARTAMENTO
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: DropdownSearch(
-                          items: departamentos,
-                          enabled: modoEditar,
-                          selectedItem: usuario.localidad,
-                          onChanged: (value) {
-                            setState(() {
-                              departamentoNuevo = value.toUpperCase();
-                            });
-                          },
-                          validator: ((dynamic value) {
-                            if (value == null) {
-                              return "Campo obligatorio";
-                            } else {
-                              return null;
-                            }
-                          }),
-                          showSearchBox: true,
-                          clearButton: Icon(Icons.close,
-                              color: Colores().colorSombraBotones),
-                          dropDownButton: Icon(Icons.arrow_drop_down,
-                              color: Colores().colorSombraBotones),
-                          showClearButton: true,
-                          mode: Mode.DIALOG,
-                          dropdownSearchDecoration: InputDecoration(
-                              hintStyle: TextStyle(
-                                  fontFamily: 'Trueno',
-                                  fontSize: 12,
+                    // DEPARTAMENTO
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25, right: 25),
+                      child: DropdownSearch(
+                        items: departamentos,
+                        enabled: modoEditar,
+                        selectedItem: usuario.departamento,
+                        onChanged: (value) {
+                          setState(() {
+                            departamentoNuevo = value.toUpperCase();
+                          });
+                        },
+                        validator: ((dynamic value) {
+                          if (value == null) {
+                            return "Campo obligatorio";
+                          } else {
+                            return null;
+                          }
+                        }),
+                        showSearchBox: true,
+                        clearButton: Icon(Icons.close,
+                            color: Colores().colorSombraBotones),
+                        dropDownButton: Icon(Icons.arrow_drop_down,
+                            color: Colores().colorSombraBotones),
+                        showClearButton: true,
+                        mode: Mode.DIALOG,
+                        dropdownSearchDecoration: InputDecoration(
+                            hintStyle: TextStyle(
+                                fontFamily: 'Trueno',
+                                fontSize: 12,
+                                color: Colores().colorSombraBotones),
+                            hintText: "DEPARTAMENTO",
+                            prefixIcon: Icon(Icons.location_city_outlined),
+                            focusColor: Colores().colorSombraBotones,
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
                                   color: Colores().colorSombraBotones),
-                              hintText: "DEPARTAMENTO",
-                              prefixIcon: Icon(Icons.location_city_outlined),
-                              focusColor: Colores().colorSombraBotones,
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colores().colorSombraBotones),
-                              )),
-                          autoValidateMode: AutovalidateMode.always,
-                        ),
+                            )),
+                        autoValidateMode: AutovalidateMode.always,
                       ),
+                    ),
 
-                      // ESPECIALIDAD
-                      TextFieldTexto(
-                          nombre: 'ESPECIALIDAD',
-                          icon: Icon(Icons.military_tech_outlined),
-                          botonHabilitado: modoEditar,
-                          controlador: modoEditar
-                              ? null
-                              : TextEditingController(
-                                  text: usuario.especialidad),
-                          valor: (value) {
-                            setState(() {
-                              especialidadNueva = value.toUpperCase();
-                            });
-                          },
-                          validacion: ((value) =>
-                              value.isEmpty ? 'Campo obligatorio' : null)),
-                      SizedBox(height: 50.0),
+                    // ESPECIALIDAD
+                    TextFieldTexto(
+                        nombre: 'ESPECIALIDAD',
+                        icon: Icon(Icons.military_tech_outlined),
+                        habilitado: modoEditar,
+                        controlador: modoEditar
+                            ? null
+                            : TextEditingController(text: usuario.especialidad),
+                        valor: (value) {
+                          setState(() {
+                            especialidadNueva = value.toUpperCase();
+                          });
+                        },
+                        validacion: ((value) =>
+                            value.isEmpty ? 'Campo obligatorio' : null)),
+                    SizedBox(height: 50.0),
 
-                      modoEditar
-                          ? Boton(
-                              titulo: 'Guardar',
-                              onTap: () {
-                                if (correoNuevo == null) {
-                                  correoNuevo = usuario.correo;
-                                }
-                                if (nombreNuevo == null) {
-                                  nombreNuevo = usuario.nombreCompleto;
-                                }
-                                if (celularNuevo == null) {
-                                  celularNuevo = usuario.telefono;
-                                }
-                                if (departamentoNuevo == null) {
-                                  departamentoNuevo = usuario.localidad;
-                                }
-                                if (especialidadNueva == null) {
-                                  especialidadNueva = usuario.especialidad;
-                                }
-                                if (Validar().camposVacios(formKey)) {
-                                  guardarEdicionPerfil(
-                                      usuario.correo,
-                                      usuario.nombreCompleto,
-                                      usuario.telefono,
-                                      usuario.localidad,
-                                      usuario.especialidad,
-                                      correoNuevo,
-                                      nombreNuevo,
-                                      celularNuevo,
-                                      departamentoNuevo,
-                                      especialidadNueva)
-                                    ..then((userCreds) {
-                                      showDialog(
-                                          useRootNavigator: false,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text('Perfil actualzado'),
-                                              content: Text(
-                                                  'Los datos han sido guardados correctamente'),
-                                              actions: [
-                                                TextButton(
-                                                    child: Text('Ok',
-                                                        style: TextStyle(
-                                                            color: Colores()
-                                                                .colorAzul,
-                                                            fontFamily:
-                                                                'Trueno',
-                                                            fontSize: 11.0,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline)),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      Navegacion(context)
-                                                          .navegarAPaginaInicialDest();
-                                                    })
-                                              ],
-                                            );
-                                          });
-                                    });
-                                }
-                              })
-                          : Container(),
-                    ],
-                  )),
-                ),
-              )
-            ],
-          ),
+                    modoEditar
+                        ? Boton(
+                            titulo: 'Guardar',
+                            onTap: () {
+                              if (correoNuevo == null) {
+                                correoNuevo = usuario.correo;
+                              }
+                              if (nombreNuevo == null) {
+                                nombreNuevo = usuario.nombreCompleto;
+                              }
+                              if (celularNuevo == null) {
+                                celularNuevo = usuario.telefono;
+                              }
+                              if (departamentoNuevo == null) {
+                                departamentoNuevo = usuario.departamento;
+                              }
+                              if (especialidadNueva == null) {
+                                especialidadNueva = usuario.especialidad;
+                              }
+                              if (Validar().camposVacios(formKey)) {
+                                guardarEdicionPerfil(
+                                    usuario.correo,
+                                    usuario.nombreCompleto,
+                                    usuario.telefono,
+                                    usuario.departamento,
+                                    usuario.especialidad,
+                                    correoNuevo,
+                                    nombreNuevo,
+                                    celularNuevo,
+                                    departamentoNuevo,
+                                    especialidadNueva)
+                                  ..then((userCreds) {
+                                    showDialog(
+                                        useRootNavigator: false,
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return DialogoAlerta(
+                                            tituloMensaje: 'Perfil actualzado',
+                                            mensaje:
+                                                'Los datos han sido guardados correctamente',
+                                            acciones: [
+                                              TextButton(
+                                                  child: Text('OK',
+                                                      style: TextStyle(
+                                                          color: Colores()
+                                                              .colorAzul,
+                                                          fontFamily: 'Trueno',
+                                                          fontSize: 11.0,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline)),
+                                                  onPressed: () {
+                                                    /*
+                                                      elimino dialogo
+                                                       */
+                                                    Navigator.of(context).pop();
+                                                    /*
+                                                      elimino ventana perfil
+                                                       */
+                                                    Navigator.of(context).pop();
+                                                  })
+                                            ],
+                                          );
+                                        });
+                                  });
+                              }
+                            })
+                        : Container(),
+                  ],
+                )),
+              ),
+            )
+          ],
         ),
-      )),
+      ),
     );
   }
 
@@ -325,7 +308,7 @@ class _PerfilState extends State<Perfil> {
                     leading: Icon(Icons.no_accounts),
                     title: Text('Inactivar usuario'),
                     subtitle: Text(
-                        'Mediante esta opción el usuario pasa a modo inactivo, los datos se '
+                        'Mediante esta opción el usuario pasa a modo inactivo. Los datos se '
                         'conservan en la base de datos y se puede reactivar en cualquier momento.'),
                   ),
                   SizedBox(height: 10),
@@ -333,7 +316,7 @@ class _PerfilState extends State<Perfil> {
                     leading: Icon(Icons.delete),
                     title: Text('Eliminar usuario'),
                     subtitle: Text(
-                        'Mediante esta opción se eliminarán todos los datos del usuario'),
+                        'Mediante esta opción se eliminarán definitivamente los datos del usuario'),
                   ),
                   SizedBox(height: 10),
                   Column(
@@ -341,7 +324,7 @@ class _PerfilState extends State<Perfil> {
                       Boton(
                         titulo: 'Inactivar',
                         onTap: () {
-                          Navegacion(context).navegarAPrincipalDest();
+                          Navegacion(context).navegarAPrincipal();
                           AuthService().signOut();
                           inactivarUsuario(widget.usuario.correo);
                         },
@@ -351,7 +334,7 @@ class _PerfilState extends State<Perfil> {
                         titulo: 'Eliminar',
                         onTap: () {
                           eliminarUsuario(widget.usuario.correo);
-                          Navegacion(context).navegarAPrincipalDest();
+                          Navegacion(context).navegarAPrincipal();
                           AuthService().signOut();
                         },
                       )

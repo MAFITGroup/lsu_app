@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class Boton extends StatefulWidget {
-
   final String titulo;
   final VoidCallback onTap;
 
@@ -14,7 +13,6 @@ class Boton extends StatefulWidget {
 }
 
 class _BotonState extends State<Boton> {
-
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -32,10 +30,10 @@ class _BotonState extends State<Boton> {
                 child: Center(
                     child: Text(widget.titulo,
                         style: TextStyle(
-                            color: Colores().colorBlanco,
-                            fontFamily: 'Trueno',))))),
+                          color: Colores().colorBlanco,
+                          fontFamily: 'Trueno',
+                        ))))),
       ),
-
     );
   }
 }
