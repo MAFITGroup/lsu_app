@@ -163,7 +163,28 @@ class _PaginaInicialState extends State<PaginaInicial> {
                         child: ListView.builder(
                             itemCount: listaSenias.length,
                             itemBuilder: (context, index) {
-                              return Text(
+                              return Container(
+                                margin: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Colores().colorBlanco,
+                                    boxShadow: <BoxShadow>[
+                                      BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 15,
+                                          offset: Offset(0, 0))
+                                    ]),
+                                child: ListTile(
+                                  title: Text(listaSenias[index].nombre),
+                                  subtitle: Text('Categoria: ' + listaSenias[index].categoria +
+                                  '\nSubcategoria: ' + listaSenias[index].subCategoria),
+                                  onTap: (){
+
+                                  },
+                                ),
+                              );
+
+                              /*  Text(
                                   listaSenias[index].nombre +
                                       ": " +
                                       listaSenias[index]
@@ -172,7 +193,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontFamily: 'Trueno', fontSize: 16));
-                            }),
+                           */ }),
                       ),
                     ],
                   )),
