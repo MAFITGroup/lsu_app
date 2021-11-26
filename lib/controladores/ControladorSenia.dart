@@ -1,14 +1,20 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lsu_app/modelo/Senia.dart';
+import 'package:firebase_performance/firebase_performance.dart';
+
+
+
 
 class ControladorSenia {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
+  final Trace myTrace = FirebasePerformance.instance.newTrace("Senias");
+
+
   String _nombre;
   String _categoria;
   String _subCategoria;
@@ -18,6 +24,8 @@ class ControladorSenia {
   Senia senia;
   String _documentID;
   int _cantidadVisualizaciones;
+
+
 
   Future<UploadTask> crearYSubirSenia(
       String idSenia,
@@ -29,6 +37,8 @@ class ControladorSenia {
       String destino,
       File archivo,
       int cantidadVisualizaciones) async {
+
+
     /*
     Primero subo el archivo
      */
@@ -63,7 +73,9 @@ class ControladorSenia {
       print('error al subir archivo ');
       return null;
     }
+    myTrace.stop();
   }
+
 
   /*
   Este metodo se usa para la subida de la seña
@@ -80,6 +92,8 @@ class ControladorSenia {
       String destino,
       Uint8List archivo,
       int cantidadVisualizaciones) async {
+
+
     /*
     Primero subo el archivo
      */
@@ -109,6 +123,7 @@ class ControladorSenia {
       print('error al subir archivo ');
       return null;
     }
+    myTrace.stop();
   }
 
   /*
