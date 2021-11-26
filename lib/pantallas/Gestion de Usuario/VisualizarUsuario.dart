@@ -1,15 +1,18 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/manejadores/EnvioMail.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
-import 'package:lsu_app/servicios/GoogleAuthApi.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
+import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server/gmail.dart';
+
 
 class VisualizarUsuario extends StatefulWidget {
   final Usuario usuario;
@@ -39,6 +42,17 @@ class VisualizarUsuario extends StatefulWidget {
 
 class _VisualizarUsuarioState extends State<VisualizarUsuario> {
   final formKey = new GlobalKey<FormState>();
+  List listaCorreos = [];
+  ControladorUsuario controladorUsuario = ControladorUsuario();
+  bool modoEditar;
+
+  @override
+  void initState() {
+    obtenerCorreosUsuariosAdministrador();
+    setState(() {
+      modoEditar = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +76,50 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
         child: Column(
           children: [
             BarraDeNavegacion(
-              titulo: Text('VISUALIZAR USUARIO',
-                  style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
-            ),
+                titulo: Text('VISUALIZAR USUARIO',
+                    style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
+                listaWidget: [
+                  PopupMenuButton<int>(
+                    /*
+              Agregar en el metodo on Selected
+              las acciones
+               */
+                    onSelected: (item) => onSelected(context, item),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 0,
+                        child: ListTile(
+                            leading: Icon(
+                                !modoEditar
+                                    ? Icons.edit
+                                    : Icons.cancel_outlined,
+                                color: Colores().colorAzul),
+                            title: Text(
+                                !modoEditar
+                                    ? "Editar Usuario"
+                                    : "Cancelar Editar",
+                                style: TextStyle(
+                                    fontFamily: 'Trueno',
+                                    fontSize: 14,
+                                    color: Colores().colorSombraBotones))),
+                      ),
+                      usuario.statusUsuario == 'PENDIENTE'
+                          ? PopupMenuItem(
+                              value: 1,
+                              child: ListTile(
+                                  leading: Icon(Icons.delete_forever_outlined,
+                                      color: Colores().colorAzul),
+                                  title: Text("Eliminar Usuario",
+                                      style: TextStyle(
+                                          fontFamily: 'Trueno',
+                                          fontSize: 14,
+                                          color:
+                                              Colores().colorSombraBotones))),
+                            )
+                          : null,
+                    ],
+                  ),
+                ]),
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Form(
@@ -73,32 +128,35 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                   child: Column(
                     children: [
                       SizedBox(height: 30.0),
-                      // NOMBRE COMPLETO
-                      TextFieldTexto(
-                        nombre: 'NOMBRE COMPLETO',
-                        icon: Icon(Icons.person),
-                        controlador:
-                            TextEditingController(text: usuario.nombreCompleto),
-                      ),
                       //CORREO
                       TextFieldTexto(
                         nombre: 'CORREO',
                         icon: Icon(Icons.alternate_email_rounded),
+                        habilitado: false,
                         controlador:
                             TextEditingController(text: usuario.correo),
+                      ),
+                      // NOMBRE COMPLETO
+                      TextFieldTexto(
+                        nombre: 'NOMBRE COMPLETO',
+                        icon: Icon(Icons.person),
+                        habilitado: false,
+                        controlador:
+                            TextEditingController(text: usuario.nombreCompleto),
                       ),
                       // CELULAR
                       TextFieldNumerico(
                         nombre: 'CELULAR',
                         icon: Icon(Icons.phone),
+                        habilitado: false,
                         controlador:
                             TextEditingController(text: usuario.telefono),
                       ),
-
                       // DEPARTAMENTO
                       TextFieldTexto(
                         nombre: 'DEPARTAMENTO',
                         icon: Icon(Icons.location_city_outlined),
+                        habilitado: false,
                         controlador:
                             TextEditingController(text: usuario.departamento),
                       ),
@@ -107,136 +165,94 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                       TextFieldTexto(
                         nombre: 'ESPECIALIDAD',
                         icon: Icon(Icons.military_tech_outlined),
+                        habilitado: false,
                         controlador:
                             TextEditingController(text: usuario.especialidad),
                       ),
-                      // USUARIO ADMINISTRADOR
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(child: Icon(Icons.group_add_rounded)),
-                          Expanded(child: Text('Administrador')),
-                          Expanded(
-                            child: Switch(
-                              value: usuario.esAdministrador,
-                              onChanged: (value) {
-                                setState(() {
-                                  usuario.esAdministrador = value;
-                                });
-                              },
-                              activeTrackColor: Colores().colorAzul,
-                              activeColor: Colores().colorCeleste,
-                            ),
-                          )
-                        ],
-                      ),
-                      // ESTADO DE USUARIO
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child:
-                                  Icon(Icons.supervised_user_circle_outlined)),
-                          Expanded(child: Text('Activo')),
-                          Expanded(
-                            child: Switch(
-                              value: estadoU,
-                              onChanged: (value) {
-                                setState(() {
-                                  estadoU = value;
-                                  if (estadoU) {
-                                    estadoUsuario = 'ACTIVO';
-                                    usuario.statusUsuario = estadoUsuario;
-                                  } else {
-                                    estadoUsuario = 'INACTIVO';
-                                    usuario.statusUsuario = estadoUsuario;
-                                  }
-                                });
-                              },
-                              activeTrackColor: Colores().colorAzul,
-                              activeColor: Colores().colorCeleste,
-                            ),
-                          )
-                        ],
-                      ),
+                      modoEditar
+                          ? Column(
+                              children: [
+                                Table(
+                                  columnWidths: {3: FlexColumnWidth(0.2)},
+                                  children: [
+                                    TableRow(children: [
+                                      Icon(Icons.group_add_rounded),
+                                      Text('ADMINISTRADOR',
+                                          style: TextStyle(
+                                              fontFamily: 'Trueno',
+                                              fontSize: 16,
+                                              color: Colores().colorAzul)),
+                                      Switch(
+                                        value: usuario.esAdministrador,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            usuario.esAdministrador = value;
+                                          });
+                                        },
+                                        activeTrackColor: Colores().colorAzul,
+                                        activeColor: Colores().colorCeleste,
+                                      ),
+                                    ]),
+                                    TableRow(children: [
+                                      Icon(Icons
+                                          .supervised_user_circle_outlined),
+                                      Text('ACTIVO',
+                                          style: TextStyle(
+                                              fontFamily: 'Trueno',
+                                              fontSize: 16,
+                                              color: Colores().colorAzul)),
+                                      Switch(
+                                        value: estadoU,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            estadoU = value;
+                                            if (estadoU) {
+                                              estadoUsuario = 'ACTIVO';
+                                              usuario.statusUsuario =
+                                                  estadoUsuario;
+                                            } else {
+                                              estadoUsuario = 'INACTIVO';
+                                              usuario.statusUsuario =
+                                                  estadoUsuario;
+                                            }
+                                          });
+                                        },
+                                        activeTrackColor: Colores().colorAzul,
+                                        activeColor: Colores().colorCeleste,
+                                      ),
+                                    ]),
+                                  ],
+                                ),
+                              ],
+                            )
+                          : Container(),
                       SizedBox(height: 50.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Boton(
-                            titulo: 'GUARDAR',
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              if (usuario.statusUsuario == 'ACTIVO') {
-                                String tipo = 'aceptada';
-                                disparadorEmail(usuario.correo, tipo);
-                              }
-
-                              ControladorUsuario().administrarUsuario(
-                                  usuario.correo,
-                                  usuario.statusUsuario,
-                                  usuario.esAdministrador);
-
-                              showDialog(
-                                  barrierDismissible: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      contentPadding:
-                                          const EdgeInsets.all(10.0),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0)),
-                                      title: Text('El usuario ' +
-                                          usuario.nombreCompleto +
-                                          ', ha sido actualizado.'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navegacion(context)
-                                                .navegarAPaginaGestionUsuarioDest();
-                                          },
-                                          child: Text('OK',
-                                              style: TextStyle(
-                                                  color: Colores().colorAzul,
-                                                  fontFamily: 'Trueno',
-                                                  fontSize: 11.0,
-                                                  decoration: TextDecoration
-                                                      .underline)),
-                                        )
-                                      ],
-                                    );
-                                  });
-                            },
-                          ),
-                          usuario.statusUsuario == 'PENDIENTE'
+                          modoEditar
                               ? Boton(
-                                  titulo: 'ELIMINAR USUARIO',
+                                  titulo: 'GUARDAR',
                                   onTap: () {
-                                    String estado = 'DENEGADO';
-                                    String tipo = 'denagada';
-                                    disparadorEmail(usuario.correo, tipo);
-                                    ControladorUsuario().administrarUsuario(
+                                    if (usuario.statusUsuario == 'ACTIVO') {
+                                      String estadoSolicitud = 'Aceptada';
+                                      EnvioMail().enviarMail(usuario.nombreCompleto, usuario.correo, estadoSolicitud);
+                                    }
+                                    controladorUsuario.administrarUsuario(
                                         usuario.correo,
-                                        estado,
+                                        usuario.statusUsuario,
                                         usuario.esAdministrador);
 
                                     showDialog(
-                                        barrierDismissible: true,
+                                        useRootNavigator: false,
                                         context: context,
                                         builder: (context) {
-                                          return AlertDialog(
-                                            contentPadding:
-                                                const EdgeInsets.all(10.0),
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        20.0)),
-                                            title: Text('El usuario ' +
+                                          return DialogoAlerta(
+                                            tituloMensaje: 'Edición de Usuario',
+                                            mensaje: 'El usuario ' +
                                                 usuario.nombreCompleto +
-                                                ', ha sido actualizado.'),
-                                            actions: [
+                                                ', ha sido actualizado.',
+                                            acciones: [
                                               TextButton(
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
@@ -258,7 +274,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                         });
                                   },
                                 )
-                              : SizedBox(height: 1.0),
+                              : Container(),
                         ],
                       ),
                     ],
@@ -272,30 +288,62 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
     );
   }
 
-  Future disparadorEmail(String correo, String tipo) async {
-    GoogleAuthApi.signOut();
-    final user = await GoogleAuthApi.singIn();
+  void modoEditarUsuario() {
+    setState(() {
+      modoEditar = true;
+    });
+  }
 
-    if (user == null) return;
-    final email = user.email;
-    final auth = await user.authentication;
-    String token = auth.accessToken;
+  void cancelarModoEditarUsuario() {
+    setState(() {
+      modoEditar = false;
+    });
+  }
 
-    final smtpServer = gmailSaslXoauth2(email, token);
+  void onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+        !modoEditar ? modoEditarUsuario() : cancelarModoEditarUsuario();
+        break;
+      case 1:
+        String estadoSolicitud = 'Denegada';
+        EnvioMail().enviarMail(widget.usuario.nombreCompleto, widget.usuario.correo, estadoSolicitud);
+        controladorUsuario.administrarUsuario(
+            widget.usuario.correo, estadoSolicitud, widget.usuario.esAdministrador);
 
-    final message = Message()
-      ..from = Address(email, 'Plataforma LSU')
-      ..recipients = [correo]
-      ..subject = 'Solicitud de Acceso $tipo'
-      ..text =
-          'Su solicitud de acceso a la Plataforma ha sido $tipo por el usuario administrador' +
-              '\n Plataforma LSU';
-
-    try {
-      await send(message, smtpServer);
-      print('mail envidado');
-    } on MailerException catch (e) {
-      print(e);
+        showDialog(
+            barrierDismissible: true,
+            context: context,
+            builder: (context) {
+              return DialogoAlerta(
+                tituloMensaje: 'Edición de Usuario',
+                mensaje: 'El usuario ' +
+                    widget.usuario.nombreCompleto +
+                    ', ha sido actualizado.',
+                acciones: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navegacion(context).navegarAPaginaGestionUsuarioDest();
+                    },
+                    child: Text('OK',
+                        style: TextStyle(
+                            color: Colores().colorAzul,
+                            fontFamily: 'Trueno',
+                            fontSize: 11.0,
+                            decoration: TextDecoration.underline)),
+                  )
+                ],
+              );
+            });
     }
   }
+
+  Future<void> obtenerCorreosUsuariosAdministrador() async {
+    listaCorreos =
+        await controladorUsuario.obtenerCorreosUsuariosAdministrador();
+    return listaCorreos;
+  }
+
+
 }

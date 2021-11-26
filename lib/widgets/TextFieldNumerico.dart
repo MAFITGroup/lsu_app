@@ -8,7 +8,7 @@ class TextFieldNumerico extends StatefulWidget {
   final Function(String) valor;
   final Function(String) validacion;
   final Icon icon;
-
+  final Widget iconInfo;
   final TextEditingController controlador;
   final bool habilitado;
 
@@ -19,7 +19,8 @@ class TextFieldNumerico extends StatefulWidget {
       this.validacion,
       this.icon,
       this.controlador,
-      this.habilitado})
+      this.habilitado,
+      this.iconInfo})
       : super(key: key);
 
   @override
@@ -36,6 +37,7 @@ class _TextFieldNumericoState extends State<TextFieldNumerico> {
           controller: widget.controlador,
           decoration: InputDecoration(
               prefixIcon: widget.icon == null ? Icon(null) : widget.icon,
+              suffixIcon: widget.iconInfo,
               labelText: widget.nombre,
               labelStyle: TextStyle(
                   fontFamily: 'Trueno',

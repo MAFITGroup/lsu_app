@@ -164,7 +164,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                 )),
                             validator: (dynamic valor) {
                               if (valor == null) {
-                                return "La categoría es requerida";
+                                return "Campo Obligatorio";
                               } else {
                                 return null;
                               }
@@ -205,7 +205,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                                 )),
                             validator: (dynamic valor) {
                               if (valor == null) {
-                                return "La subcategoría es requerida";
+                                return "Campo Obligatorio";
                               } else {
                                 return null;
                               }

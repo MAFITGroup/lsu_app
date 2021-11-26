@@ -1,15 +1,13 @@
 import 'dart:async';
-
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lsu_app/controladores/ControladorNoticia.dart';
-import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
+import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/pantallas/Noticias/Noticias.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
@@ -18,8 +16,6 @@ import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
-
-import '../../main.dart';
 
 class AltaNoticias extends StatefulWidget {
   const AltaNoticias({Key key}) : super(key: key);
@@ -33,73 +29,65 @@ class _AltaNoticiasState extends State<AltaNoticias> {
 
   List _tipo = ['CHARLAS', 'LLAMADOS'];
 
-  String _usuarioUID = FirebaseAuth.instance.currentUser.uid;
-
   dynamic _tipoSeleccionado;
 
-  ControladorUsuario _controladorUsuario = new ControladorUsuario();
   String _tituloNoticia;
   String _descripcionNoticia;
   String _linkNoticia;
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+
+  static const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'channel id', 'channel notifications',
+      description: 'channel description',
+      importance: Importance.max,
+      playSound: true);
+
   @override
   void initState() {
     super.initState();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+
+
+    /// funciona en backgroubd
+    FirebaseMessaging.onMessage.listen((RemoteMessage mensaje) {
+      RemoteNotification notification = mensaje.notification;
+      AndroidNotification android = mensaje.notification.android;
       if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
+        flutterLocalNotificationsPlugin.show(notification.hashCode,
+            notification.title, notification.body,
             NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                // channel.description,
-                color: Colors.blue,
-                playSound: true,
-                icon: '@mipmap/ic_launcher',
-              ),
+                android: AndroidNotificationDetails(
+                    channel.id,
+                    channel.name,
+                    channelDescription: channel.description,
+                    color: Colors.white,
+                    playSound: true,
+                    icon: '@mipmap/ic_launcher'
+                )
             ));
       }
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
-      if (notification != null && android != null) {
-        showDialog(
-            context: context,
-            builder: (_) {
-              return AlertDialog(
-                title: Text(notification.title),
-                content: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Text(notification.body)],
-                  ),
-                ),
-              );
-            });
-      }
-    });
-  }
 
-  void showNotification() {
-    flutterLocalNotificationsPlugin.show(
-        0,
-        'Plataforma LSU',
-        'Nuevas noticias han sido publicadas en tu Plataforma LSU, no te las pierdas!',
-        NotificationDetails(
-            android: AndroidNotificationDetails(channel.id, channel.name,
-                //channel.description,
-                importance: Importance.high,
-                color: Colors.blue,
-                playSound: true,
-                icon: '@mipmap/ic_launcher')));
+    /// funciona con la app en background y abierta
+    /// y el usuario presiona la notificacion
+    FirebaseMessaging.onMessageOpenedApp.listen((mensaje) {
+      print(' Una nueva notificacion a sido generada');
+      RemoteNotification notification = mensaje.notification;
+      AndroidNotification android = mensaje.notification.android;
+      if (notification != null && android != null) {
+        showDialog(context: context, builder: (_) {
+          return DialogoAlerta(
+            tituloMensaje: notification.title,
+            mensaje: notification.body,
+          );
+        });
+      }
+      Navegacion(context).navegarANoticias();
+    });
+
+
   }
 
   @override
@@ -131,7 +119,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                               });
                             },
                             validator: ((value) =>
-                                value == null ? 'El tipo es requerid0' : null),
+                            value == null ? 'Campo Obligatorio' : null),
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,
                                 color: Colores().colorSombraBotones),
@@ -161,7 +149,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                             this._tituloNoticia = value;
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El título es requerido' : null),
+                          value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
@@ -170,9 +158,12 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                           valor: (value) {
                             this._descripcionNoticia = value;
                           },
+                          /*
                           validacion: ((value) => value.isEmpty
-                              ? 'La descripción es requerida'
+                              ? 'Campo Obligatorio'
                               : null),
+
+                           */
                         ),
                         SizedBox(height: 15.0),
                         TextFieldTexto(
@@ -186,7 +177,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                             }
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El link es requerido' : null),
+                          value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 20.0),
                         Boton(
@@ -198,80 +189,47 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                   _tituloNoticia,
                                   _descripcionNoticia,
                                   _linkNoticia,
-                                ).catchError((e) {
-                                  ErrorHandler().errorDialog(e, context);
-                                });
-
-                                showDialog(
-                                    useRootNavigator: false,
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return DialogoAlerta(
-                                        tituloMensaje: "Alta de Noticia",
-                                        mensaje:
-                                            "La noticia ha sido creada correctamente",
-                                        acciones: [
-                                          TextButton(
-                                            child: Text('OK',
-                                                style: TextStyle(
-                                                    color: Colores().colorAzul,
-                                                    fontFamily: 'Trueno',
-                                                    fontSize: 11.0,
-                                                    decoration: TextDecoration
-                                                        .underline)),
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        Noticias()),
-                                                ModalRoute.withName('/'),
-                                              );
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    });
-                              } else {
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: true,
-                                    builder: (context) {
-                                      return DialogoAlerta(
-                                        tituloMensaje: 'Alta de Archivo',
-                                        mensaje:
-                                            'Uno o más campos están vacíos. Por favor, verifique.',
-                                        acciones: [
-                                          TextButton(
-                                            child: Text('OK',
-                                                style: TextStyle(
-                                                    color: Colores().colorAzul,
-                                                    fontFamily: 'Trueno',
-                                                    fontSize: 11.0,
-                                                    decoration: TextDecoration
-                                                        .underline)),
-                                            onPressed: () {
-                                              TextButton(
+                                )
+                                    .then(
+                                      (value) =>
+                                      showDialog(
+                                          useRootNavigator: false,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return DialogoAlerta(
+                                              tituloMensaje: "Alta de Noticia",
+                                              mensaje:
+                                              "La noticia ha sido creada correctamente",
+                                              acciones: [
+                                                TextButton(
                                                   child: Text('OK',
                                                       style: TextStyle(
-                                                          color: Colores()
-                                                              .colorAzul,
+                                                          color:
+                                                          Colores().colorAzul,
                                                           fontFamily: 'Trueno',
                                                           fontSize: 11.0,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline)),
+                                                          decoration: TextDecoration
+                                                              .underline)),
                                                   onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  });
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    });
+                                                    Navigator.of(context)
+                                                        .pushAndRemoveUntil(
+                                                      MaterialPageRoute(
+                                                          builder: (BuildContext
+                                                          context) =>
+                                                              Noticias()),
+                                                      ModalRoute.withName('/'),
+                                                    );
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          }),
+                                )
+                                    .catchError((e) {
+                                  ErrorHandler().errorDialog(e, context);
+                                });
                               }
-                              showNotification();
+                              mostrarNotificacion();
                             }),
                       ],
                     ),
@@ -283,13 +241,32 @@ class _AltaNoticiasState extends State<AltaNoticias> {
         ),
       ),
     );
+
+
   }
 
-  Future crearNoticia(
-      String tipo, String titulo, String descripcion, String link) async {
-    String usuarioAlta =
-        await _controladorUsuario.obtenerNombreUsuario(_usuarioUID);
-    ControladorNoticia()
-        .crearNoticia(tipo, titulo, descripcion, link, usuarioAlta);
+  Future crearNoticia(String tipo, String titulo, String descripcion,
+      String link) async {
+    ControladorNoticia().crearNoticia(tipo, titulo, descripcion, link);
+  }
+
+  void mostrarNotificacion() {
+    flutterLocalNotificationsPlugin.show(0, 'Plataforma LSU',
+        'Una nueva noticia ha sido publicada. No te la pierdas!',
+        NotificationDetails(
+            android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                importance: Importance.high,
+                priority: Priority.high,
+                color: Colors.white,
+                playSound: true,
+                icon: '@mipmap/ic_launcher'
+            )
+        ));
+  }
+
+  subscribeToTopic(String topic) async{
   }
 }

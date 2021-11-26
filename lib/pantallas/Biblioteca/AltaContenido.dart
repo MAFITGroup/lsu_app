@@ -80,7 +80,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                             this._tituloContenido = value;
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El título es requerido' : null),
+                              value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
@@ -90,7 +90,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                             this._descripcionContenido = value;
                           },
                           validacion: ((value) => value.isEmpty
-                              ? 'La descripción es requerida'
+                              ? 'Campo Obligatorio'
                               : null),
                         ),
                         SizedBox(height: 15.0),
@@ -101,7 +101,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                             this._autorContenido = value;
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El autor es requerido' : null),
+                              value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
@@ -115,7 +115,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                               });
                             },
                             validator: ((value) => value == null
-                                ? 'La categoría es requerida'
+                                ? 'Campo Obligatorio'
                                 : null),
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,

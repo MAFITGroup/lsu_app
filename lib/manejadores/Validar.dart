@@ -27,7 +27,7 @@ class Validar {
     Pattern pattern = r'(^09+[0-9]{7}$)';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value))
-      return 'El número de celular debe comenzar con 09 y tener un largo de 9 caracteres';
+      return 'Campo Obligatorio';
     else
       return null;
   }
@@ -38,7 +38,10 @@ class Validar {
     RegExp regex = new RegExp(pattern);
 
     if (!regex.hasMatch(value))
-      return "Formato: 1 Mayúsc., 1 num., 1 carácter especial";
+      /*
+      Se explica en widget de textfield como debe ser el patron
+       */
+      return "Campo Obligatorio";
     else
       return null;
   }

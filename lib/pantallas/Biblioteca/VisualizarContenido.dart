@@ -136,7 +136,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             });
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El título es requerido' : null),
+                              value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
@@ -153,7 +153,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             });
                           },
                           validacion: ((value) => value.isEmpty
-                              ? 'La descrpición es requerida'
+                              ? 'Campo Obligatorio'
                               : null),
                         ),
                         SizedBox(height: 15.0),
@@ -170,7 +170,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             });
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El autor es requerido' : null),
+                              value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
@@ -186,7 +186,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                               });
                             },
                             validator: ((value) => value == null
-                                ? 'La categoría es requerida'
+                                ? 'Campo Obligatorio'
                                 : null),
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,
@@ -426,7 +426,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                         });
                       }),
                   TextButton(
-                      child: Text('Cancelar',
+                      child: Text('CANCELAR',
                           style: TextStyle(
                               color: Colores().colorAzul,
                               fontFamily: 'Trueno',

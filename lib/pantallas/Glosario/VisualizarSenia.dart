@@ -143,7 +143,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                           });
                         },
                         validacion: ((value) =>
-                            value.isEmpty ? 'El nombre es requerido' : null),
+                            value.isEmpty ? 'Campo Obligatorio' : null),
                       ),
                       SizedBox(height: 15.0),
                       TextFieldDescripcion(
@@ -205,7 +205,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                               )),
                           validator: (dynamic valor) {
                             if (valor == null) {
-                              return "La categoría es requerida";
+                              return "Campo Obligatorio";
                             } else {
                               return null;
                             }
@@ -250,7 +250,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                               )),
                           validator: (dynamic valor) {
                             if (valor == null) {
-                              return "La subcategoría es requerida";
+                              return "Campo Obligatorio";
                             } else {
                               return null;
                             }
@@ -317,10 +317,6 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                                                 TextDecoration
                                                                     .underline)),
                                                     onPressed: () {
-                                                      /*Al presionar Ok, cierro la el dialogo y cierro la
-                                                       ventana de alta seña
-
-                                                         */
                                                       Navigator.pushReplacement(
                                                         context,
                                                         MaterialPageRoute(
@@ -374,13 +370,13 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
         .listarSubCategoriasPorCategoriaList(nombreCategoria);
   }
 
-  void editarSenia() {
+  void modoEditarSenia() {
     setState(() {
       modoEditar = true;
     });
   }
 
-  void canelarEditar() {
+  void canelarModoEditarSenia() {
     setState(() {
       modoEditar = false;
     });
@@ -421,7 +417,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
   void onSelected(BuildContext context, int item) {
     switch (item) {
       case 0:
-        !modoEditar ? editarSenia() : canelarEditar();
+        !modoEditar ? modoEditarSenia() : canelarModoEditarSenia();
         break;
       case 1:
         showDialog(

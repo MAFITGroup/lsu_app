@@ -137,9 +137,7 @@ class _NoticiasState extends State<Noticias> {
                     ),
                     child: ListTile(
                       title: Text('TÍTULO: ' + listaLlamados[index].titulo),
-                      subtitle: Text(
-                          'DESCRIPCIÓN: ' + listaLlamados[index].descripcion +
-                              '\nLINK: ' + listaLlamados[index].link +
+                      subtitle: Text('LINK: ' + listaLlamados[index].link +
                               '\nFECHA DE PUBLICACIÓN: ' + listaLlamados[index].fechaSubida
                       ),
                       onTap: (){
@@ -148,10 +146,6 @@ class _NoticiasState extends State<Noticias> {
                             MaterialPageRoute(
                                 builder: (context) => VisualizarNoticia(
                                   noticia: listaLlamados[index],
-                                  tipo: listaLlamados[index].tipo,
-                                  titulo: listaLlamados[index].titulo,
-                                  descripcion: listaLlamados[index].descripcion,
-                                  link: listaLlamados[index].link,
                                   isUsuarioAdmin: isUsuarioAdmin,
                                 )));
 
@@ -202,9 +196,7 @@ class _NoticiasState extends State<Noticias> {
                     child: ListTile(
 
                       title: Text('TÍTULO: ' + listaCharlas[index].titulo),
-                      subtitle: Text(
-                          'DESCRIPCIÓN: ' + listaCharlas[index].descripcion +
-                        '\nLINK: ' + listaCharlas[index].link +
+                      subtitle: Text('LINK: ' + listaCharlas[index].link +
                         '\nFECHA DE PUBLICACIÓN: ' + listaCharlas[index].fechaSubida
                       ),
                       onTap: (){
@@ -213,10 +205,6 @@ class _NoticiasState extends State<Noticias> {
                             MaterialPageRoute(
                                 builder: (context) => VisualizarNoticia(
                                   noticia: listaCharlas[index],
-                                  tipo: listaCharlas[index].tipo,
-                                  titulo: listaCharlas[index].titulo,
-                                  descripcion: listaCharlas[index].descripcion,
-                                  link: listaCharlas[index].link,
                                   isUsuarioAdmin: isUsuarioAdmin,
                                 )));
 
@@ -267,9 +255,7 @@ class _NoticiasState extends State<Noticias> {
                     child: ListTile(
 
                       title: Text('TÍTULO: ' + listaNoticias[index].titulo),
-                      subtitle: Text(
-                          'DESCRIPCIÓN: ' + listaNoticias[index].descripcion +
-                        '\nLINK: ' + listaNoticias[index].link +
+                      subtitle: Text('LINK: ' + listaNoticias[index].link +
                         '\nFECHA DE PUBLICACIÓN: ' + listaNoticias[index].fechaSubida
                       ),
                       onTap: (){
@@ -278,10 +264,6 @@ class _NoticiasState extends State<Noticias> {
                             MaterialPageRoute(
                                 builder: (context) => VisualizarNoticia(
                                   noticia: listaNoticias[index],
-                                  tipo: listaNoticias[index].tipo,
-                                  titulo: listaNoticias[index].titulo,
-                                  descripcion: listaNoticias[index].descripcion,
-                                  link: listaNoticias[index].link,
                                   isUsuarioAdmin: isUsuarioAdmin,
                                 )));
 

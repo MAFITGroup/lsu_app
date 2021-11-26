@@ -1,6 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
@@ -25,6 +26,7 @@ class _RegistrarseState extends State<Registrarse> {
   String _telefono;
   String _departamento;
   String _especialidad;
+  String _statusUsuario;
   List departamentos = [
     'ARTIGAS',
     'CANELONES',
@@ -47,7 +49,7 @@ class _RegistrarseState extends State<Registrarse> {
     'TREINTA Y TRES'
   ];
 
-  bool isChecked = false;
+  bool isCheckedTerminosyCondiciones = false;
 
   @override
   Widget build(BuildContext context) {
@@ -77,22 +79,24 @@ class _RegistrarseState extends State<Registrarse> {
                 this._email = value.toLowerCase();
               },
               validacion: (value) => value.isEmpty
-                  ? 'El correo es requerido'
+                  ? 'Campo Obligatorio'
                   : Validar().validarCorreo(value)),
 
           // CONTRASEÑA
           TextFieldContrasenia(
               nombre: 'CONTRASEÑA',
               icon: Icon(Icons.lock_outline),
+              iconInfo: Tooltip(
+                message: 'La contraseña debe contener al menos 8 caracteres,\n1 Mayúscula, 1 número y 1 carácter especial ( !@#\$&*~. )',
+                child: InkWell(
+                  child: Icon(FontAwesomeIcons.infoCircle, color: Colores().colorAzul),
+                ),
+              ),
               valor: (value) {
                 this._password = value;
               },
               validacion: (value) {
                 if (value.isEmpty) {
-                  return 'La contraseña es requerida';
-                } else if (value.length <= 8) {
-                  return 'La contraseña debe contener más de 8 caracteres';
-                } else {
                   return Validar().validarPassword(value);
                 }
               }),
@@ -105,17 +109,23 @@ class _RegistrarseState extends State<Registrarse> {
                 this._nombreCompleto = value.toUpperCase();
               },
               validacion: ((value) =>
-                  value.isEmpty ? 'El nombre completo es requerido' : null)),
+                  value.isEmpty ? 'Campo Obligatorio' : null)),
 
           // CELULAR
           TextFieldNumerico(
               nombre: 'CELULAR',
               icon: Icon(Icons.phone),
+              iconInfo: Tooltip(
+                message: 'El número de celular debe comenzar con 09 \ny tener un largo de 9 caracteres',
+                child: InkWell(
+                  child: Icon(FontAwesomeIcons.infoCircle, color: Colores().colorAzul),
+                ),
+              ),
               valor: (value) {
                 this._telefono = value;
               },
               validacion: (value) => value.isEmpty
-                  ? 'El celular es requerido'
+                  ? 'Campo Obligatorio'
                   : Validar().validarCelular(value)),
 
           // DEPARTAMENTO
@@ -130,7 +140,7 @@ class _RegistrarseState extends State<Registrarse> {
               },
               validator: ((dynamic value) {
                 if (value == null) {
-                  return "El departamento es requerido";
+                  return "Campo Obligatorio";
                 } else {
                   return null;
                 }
@@ -164,17 +174,17 @@ class _RegistrarseState extends State<Registrarse> {
                 this._especialidad = value.toUpperCase();
               },
               validacion: ((value) =>
-                  value.isEmpty ? 'La especialidad es requerida' : null)),
+                  value.isEmpty ? 'Campo Obligatorio' : null)),
 
           Container(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
               child: Row(
                 children: [
                   Checkbox(
-                    value: isChecked,
+                    value: isCheckedTerminosyCondiciones,
                     onChanged: (value) {
                       setState(() {
-                        isChecked = value;
+                        isCheckedTerminosyCondiciones = value;
                       });
                     },
                   ),
@@ -195,12 +205,10 @@ class _RegistrarseState extends State<Registrarse> {
           Boton(
               titulo: 'REGISTRARSE',
               onTap: () {
-                String _statusUsuario = 'PENDIENTE';
-
+                _statusUsuario = 'PENDIENTE';
                 if (Validar().camposVacios(formKey)) {
-                  if (isChecked) {
+                  if (isCheckedTerminosyCondiciones) {
                     AuthService().signUp(
-                        '',
                         _email,
                         _password,
                         _nombreCompleto,
