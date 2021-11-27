@@ -582,7 +582,7 @@ packages:
     source: hosted
     version: "2.0.8"
   universal_io:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: universal_io
       url: "https://pub.dartlang.org"

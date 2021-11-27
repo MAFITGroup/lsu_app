@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,6 @@ import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
-import 'package:lsu_app/pantallas/Noticias/Noticias.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -211,14 +211,13 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                                           decoration: TextDecoration
                                                               .underline)),
                                                   onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pushAndRemoveUntil(
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                          context) =>
-                                                              Noticias()),
-                                                      ModalRoute.withName('/'),
-                                                    );
+                                                    //cierro dialogo
+                                                    Navigator.of(context).pop();
+                                                    // cierro ventana de alta
+                                                    Navigator.of(context).pop();
+                                                    // cierro ventana de noticias
+                                                    Navigator.of(context).pop();
+
                                                   },
                                                 )
                                               ],
