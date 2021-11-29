@@ -110,10 +110,12 @@ class _AltaCategoria extends State<AltaCategoria> {
                 ),
               ),
               Container(
-                height: 350,
+                height: 550,
                 child: Column(
                   children: [
-                    Expanded(
+                    ConstrainedBox(
+                      constraints:
+                      BoxConstraints(maxHeight: 350, minHeight: 56.0),
                       child: ListView.builder(
                           itemCount: listaDinamicaWidgetSubCategoria.length,
                           itemBuilder: (context, index) =>

@@ -8,7 +8,7 @@ class TextFieldContrasenia extends StatefulWidget {
   final Function(String) validacion;
   bool verContrasenia = true;
   final Icon icon;
-
+  final Widget iconInfo;
   final TextEditingController controlador;
   final bool habilitado;
 
@@ -19,7 +19,7 @@ class TextFieldContrasenia extends StatefulWidget {
       this.validacion,
       this.icon,
       this.controlador,
-      this.habilitado})
+      this.habilitado, this.iconInfo})
       : super(key: key);
 
   @override
@@ -45,6 +45,7 @@ class _TextFieldContraseniaState extends State<TextFieldContrasenia> {
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colores().colorSombraBotones),
               ),
+              suffixIcon: widget.iconInfo,
               suffix: InkWell(
                 onTap: _accionVerContrasenia,
                 child: Icon(

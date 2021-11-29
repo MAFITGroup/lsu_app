@@ -9,7 +9,9 @@ class SubCategoriaDinamica extends StatefulWidget {
   final bool modoAlta;
   final bool modoEditar;
   final String nombreSubCategoria;
+  final String nombreAnteriorSubCategoria;
   final Function onPressed;
+  final Function onSaved;
   final TextEditingController controller;
 
   const SubCategoriaDinamica(
@@ -19,7 +21,7 @@ class SubCategoriaDinamica extends StatefulWidget {
       this.modoEditar,
       this.nombreSubCategoria,
       this.onPressed,
-      this.controller})
+      this.controller, this.nombreAnteriorSubCategoria, this.onSaved})
       : super(key: key);
 
   @override
@@ -34,7 +36,6 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
     List<dynamic> listaSubcategorias = widget.listaSubcategorias;
     bool modoAlta = widget.modoAlta;
     bool modoEditar = widget.modoEditar;
-    String nombreSubCategoria = widget.nombreSubCategoria;
     Function onPressed = widget.onPressed;
     TextEditingController controller = widget.controller;
 
@@ -51,7 +52,7 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
                       controlador: controller,
                       habilitado: modoEditar || modoAlta,
                       nombre: 'NOMBRE SUBCATEGORIA',
-                      icon: Icon(Icons.account_tree_outlined),
+                      icon: Icon(Icons.category_outlined),
                       valor: (value) {
                         setState(() {
                           _nombreSubCategoria = value;
@@ -67,6 +68,7 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
                           listaSubcategorias
                               .add(_nombreSubCategoria.toUpperCase().trim());
                         });
+                        widget.onSaved();
                       }),
                 ),
                 Container(

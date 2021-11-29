@@ -4,7 +4,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
+import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
+import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -13,23 +15,17 @@ import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'Noticias.dart';
+
 enum RedesSociales { facebook, twitter, email, whatsapp }
 
 class VisualizarNoticia extends StatefulWidget {
   final Noticia noticia;
-  final String tipo;
-  final String titulo;
-  final String descripcion;
-  final String link;
   final bool isUsuarioAdmin;
 
   const VisualizarNoticia(
       {Key key,
       this.noticia,
-      this.tipo,
-      this.titulo,
-      this.descripcion,
-      this.link,
       this.isUsuarioAdmin})
       : super(key: key);
 
@@ -168,7 +164,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                             tituloNoticiaNuevo = value;
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El título es requerido' : null),
+                              value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldTexto(
@@ -186,7 +182,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                             }
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'El link es requerido' : null),
+                              value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
@@ -200,17 +196,19 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                           valor: (value) {
                             descripcionNoticiaNueva = value;
                           },
+                          /*
                           validacion: ((value) => value.isEmpty
                               ? 'La descripción es requerida'
                               : null),
+
+                           */
                         ),
                         !modoEditar ? SocialMediaBotones() : Container(),
                         !modoEditar
                             ? Boton(
-                                titulo: 'NAVEGAR A LINK',
+                                titulo: 'NAVEGAR AL SITIO',
                                 onTap: () {
                                   String link = noticia.link;
-
                                   if (link != null) {
                                     navegarALink(link, context);
                                   } else {
@@ -252,38 +250,49 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                                   if (linkNoticiaNueva == null) {
                                     linkNoticiaNueva = noticia.link;
                                   }
-
-                                  guardarEdicionNoticia(
-                                      noticia.tipo,
-                                      noticia.titulo,
-                                      noticia.descripcion,
-                                      noticia.link,
-                                      tipoSeleccionadoNuevo,
-                                      tituloNoticiaNuevo,
-                                      descripcionNoticiaNueva,
-                                      linkNoticiaNueva)
-                                    ..then((userCreds) {
-                                      showDialog(
-                                          useRootNavigator: false,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return DialogoAlerta(
-                                              tituloMensaje: 'Editar Noticia',
-                                              mensaje:
-                                                  'Los datos han sido guardados correctamente',
-                                              acciones: [
-                                                TextButton(
-                                                  child: Text('OK'),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                    Navegacion(context)
-                                                        .navegarANoticiasDest();
-                                                  },
-                                                )
-                                              ],
-                                            );
-                                          });
-                                    });
+                                  if (Validar().camposVacios(formKey)) {
+                                    guardarEdicionNoticia(
+                                        noticia.tipo,
+                                        noticia.titulo,
+                                        noticia.descripcion,
+                                        noticia.link,
+                                        tipoSeleccionadoNuevo,
+                                        tituloNoticiaNuevo,
+                                        descripcionNoticiaNueva,
+                                        linkNoticiaNueva)
+                                      ..then((userCreds) {
+                                        showDialog(
+                                            useRootNavigator: false,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return DialogoAlerta(
+                                                tituloMensaje: 'Edición de Noticia',
+                                                mensaje:
+                                                    'Los datos han sido guardados correctamente',
+                                                acciones: [
+                                                  TextButton(
+                                                    child: Text('OK',
+                                                        style: TextStyle(
+                                                            color: Colores()
+                                                                .colorAzul,
+                                                            fontFamily:
+                                                            'Trueno',
+                                                            fontSize: 11.0,
+                                                            decoration:
+                                                            TextDecoration
+                                                                .underline)),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Navegacion(context)
+                                                          .navegarANoticiasDest();
+                                                    },
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      });
+                                  }
                                 },
                               )
                       ],
@@ -311,10 +320,10 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
   }
 
   void onSelected(BuildContext context, int item) {
-    String titulo = widget.titulo;
-    String tipo = widget.tipo;
-    String descripcion = widget.descripcion;
-    String link = widget.link;
+    String titulo = widget.noticia.titulo;
+    String tipo = widget.noticia.tipo;
+    String descripcion = widget.noticia.descripcion;
+    String link = widget.noticia.link;
 
     switch (item) {
       case 0:
@@ -322,58 +331,123 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
         break;
       case 1:
         showDialog(
+            useRootNavigator: false,
             context: context,
             builder: (BuildContext context) {
               return DialogoAlerta(
-                tituloMensaje: 'Eliminar noticia',
-                mensaje: '¿Desea eliminar la noticia $titulo ?',
+                tituloMensaje: 'Eliminación de Noticia',
+                mensaje: '¿Está seguro que desea eliminar la noticia?',
                 acciones: [
-                  Boton(
-                    titulo: 'CONFIRMAR',
-                    onTap: () {
-                      eliminarNoticia(tipo, titulo, descripcion, link);
-                      Navigator.of(context).pop();
-                      Navegacion(context).navegarANoticiasDest();
-                    },
-                  )
+                  TextButton(
+                      child: Text('OK',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration.underline)),
+                      onPressed: () {
+                        eliminarNoticia(tipo, titulo, descripcion, link)
+                          ..then((userCreds) {
+                            /*
+                                    Luego de eliminar la seña,
+                                    creo un dialogo de alerta indicando que se
+                                    elimino de forma ok
+                                     */
+                            showDialog(
+                                useRootNavigator: false,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DialogoAlerta(
+                                    tituloMensaje: 'Eliminación de Noticia',
+                                    mensaje:
+                                        'La noticia ha sido eliminada correctamente',
+                                    acciones: [
+                                      TextButton(
+                                          child: Text('OK',
+                                              style: TextStyle(
+                                                  color: Colores().colorAzul,
+                                                  fontFamily: 'Trueno',
+                                                  fontSize: 11.0,
+                                                  decoration: TextDecoration
+                                                      .underline)),
+                                          onPressed: () {
+                                            /*Al presionar Ok, cierro la el dialogo y cierro la
+                                                   ventana de visualizacion seña
+
+                                                     */
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return Noticias();
+                                                },
+                                              ),
+                                            );
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          })
+                                    ],
+                                  );
+                                });
+                            //TODO mensaje si falla.
+                          }).catchError((e) {
+                            ErrorHandler().errorDialog(context, e);
+                          });
+                      }),
+                  TextButton(
+                      child: Text('CANCELAR',
+                          style: TextStyle(
+                              color: Colores().colorAzul,
+                              fontFamily: 'Trueno',
+                              fontSize: 11.0,
+                              decoration: TextDecoration.underline)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })
                 ],
               );
             });
-        break;
     }
   }
 
   Widget SocialMediaBotones() {
-    return Card(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          RedesBotones(
-            icon: FontAwesomeIcons.facebook,
-            onTap: () => compartir(RedesSociales.facebook),
-          ),
-          RedesBotones(
-            icon: FontAwesomeIcons.twitter,
-            onTap: () => compartir(RedesSociales.twitter),
-          ),
-          RedesBotones(
-            icon: FontAwesomeIcons.whatsapp,
-            onTap: () => compartir(RedesSociales.whatsapp),
-          ),
-          RedesBotones(
-            icon: Icons.email,
-            onTap: () => compartir(RedesSociales.email),
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RedesBotones(
+          icon: FontAwesomeIcons.facebook,
+          onTap: () => compartir(RedesSociales.facebook, widget.noticia.titulo,
+              widget.noticia.link),
+        ),
+        RedesBotones(
+          icon: FontAwesomeIcons.twitter,
+          onTap: () => compartir(RedesSociales.twitter, widget.noticia.titulo,
+              widget.noticia.link),
+        ),
+        RedesBotones(
+          icon: FontAwesomeIcons.whatsapp,
+          onTap: () => compartir(RedesSociales.whatsapp, widget.noticia.titulo,
+              widget.noticia.link),
+        ),
+        RedesBotones(
+          icon: Icons.email,
+          onTap: () => compartir(
+              RedesSociales.email, widget.noticia.titulo, widget.noticia.link),
+        ),
+      ],
     );
   }
 
-  Future compartir(RedesSociales redes) async {
+  Future compartir(
+      RedesSociales redes, String tituloNoticia, String linkNoticia) async {
     final asunto = 'Plataforma LSU';
-    final texto =
-        'Nuevas noticias publicadas en Plataforma LSU. ¡No te las pierdas!';
-    final urlCompartir = Uri.encodeComponent('https://prueba.com');
+    final texto = 'Nueva noticia publicada en Plataforma LSU. ' +
+        tituloNoticia +
+        ' ¡No te la pierdas! ';
+    final urlCompartir = Uri.encodeComponent(linkNoticia);
 
     final urls = {
       RedesSociales.facebook:
@@ -406,39 +480,36 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
 
   Widget navegarALink(String link, BuildContext context) {
     showDialog(
+        useRootNavigator: false,
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            insetPadding: EdgeInsets.all(2.0),
-            title: const Text('Navegar al link'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  Text(
-                      'Uds está a punto de visitar un sitio web fuera de la app,'),
-                  SizedBox(height: 10.0),
-                  Text('¿Desea continuar?'),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              Column(
-                children: <Widget>[
-                  Boton(
-                    titulo: 'Confirmar',
-                    onTap: () {
-                      lanzarLink(link);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('ATRÁS'))
-                ],
-              )
+          return DialogoAlerta(
+            tituloMensaje: 'Navegar al sitio',
+            mensaje:
+                'Está a punto de visitar un sitio web fuera de la aplicación.'
+                '\n¿Desea continuar?',
+            acciones: [
+              TextButton(
+                  child: Text('OK',
+                      style: TextStyle(
+                          color: Colores().colorAzul,
+                          fontFamily: 'Trueno',
+                          fontSize: 11.0,
+                          decoration: TextDecoration.underline)),
+                  onPressed: () {
+                    lanzarLink(link);
+                    Navigator.of(context).pop();
+                  }),
+              TextButton(
+                  child: Text('CANCELAR',
+                      style: TextStyle(
+                          color: Colores().colorAzul,
+                          fontFamily: 'Trueno',
+                          fontSize: 11.0,
+                          decoration: TextDecoration.underline)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
             ],
           );
         });

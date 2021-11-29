@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
 
 class ControladorNoticia {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   String _tipo;
   String _titulo;
@@ -47,11 +50,11 @@ class ControladorNoticia {
     return noticia;
   }
 
-  void crearNoticia(String tipo, String titulo, String descripcion, String link,
-      String usuarioAlta) {
+  void crearNoticia(String tipo, String titulo, String descripcion, String link) async{
     var fechaHoy = DateTime.now();
     String fechaSubida = '${fechaHoy.day}-${fechaHoy.month}-${fechaHoy.year}';
     String docId = new UniqueKey().toString();
+    String usuarioAlta = await ControladorUsuario().obtenerNombreUsuario(firebaseAuth.currentUser.uid);
     firestore.collection('noticias').doc(docId).set({
       'tipo': tipo,
       'titulo': titulo.trim(),

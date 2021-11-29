@@ -57,10 +57,6 @@ class BuscadorNoticias extends SearchDelegate {
                     MaterialPageRoute(
                         builder: (context) => VisualizarNoticia(
                           noticia: todasNoticias[index],
-                          tipo: todasNoticias[index].tipo,
-                          titulo: todasNoticias[index].titulo,
-                          descripcion: todasNoticias[index].descripcion,
-                          link: todasNoticias[index].link,
                           isUsuarioAdmin: isUsuarioAdmin,
                         )));
               }
@@ -84,9 +80,7 @@ class BuscadorNoticias extends SearchDelegate {
         return Card(
           child: ListTile(
               title: Text('Titulo: ' + noticiaSugerida[index].titulo),
-              subtitle: Text(
-                  'Descripción: ' + noticiaSugerida[index].descripcion +
-                      '\nFecha de Publicación: ' + noticiaSugerida[index].fechaSubida
+              subtitle: Text('Fecha de Publicación: ' + noticiaSugerida[index].fechaSubida
               ),
               onTap: (){
                 Navigator.of(context).pop();
@@ -95,10 +89,6 @@ class BuscadorNoticias extends SearchDelegate {
                     MaterialPageRoute(
                         builder: (context) => VisualizarNoticia(
                           noticia: noticiaSugerida[index],
-                          tipo: noticiaSugerida[index].tipo,
-                          titulo: noticiaSugerida[index].titulo,
-                          descripcion: noticiaSugerida[index].descripcion,
-                          link: noticiaSugerida[index].link,
                           isUsuarioAdmin: isUsuarioAdmin,
                         )));
               }

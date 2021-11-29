@@ -21,7 +21,7 @@ class ControladorUsuario {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   User user = FirebaseAuth.instance.currentUser;
 
-  void crearUsuario(
+  Future<void> crearUsuario(
     String uid,
     String email,
     String nombreCompleto,
@@ -310,7 +310,7 @@ class ControladorUsuario {
     return usuario;
   }
 
-  void eliminarUsuarios(String correo) async {
+  void eliminarUsuario(String correo) async {
     Usuario usuario = await obtenerUsuarioPerfil(correo);
     String docId = usuario.uid;
     await firestore
@@ -371,7 +371,7 @@ class ControladorUsuario {
     Usuario usuario = await obtenerUsuarioPerfil(correo);
     String docId = usuario.uid;
     await firestore.collection('usuarios').doc(docId).update({
-      'statusUsuario': estado,
+      'statusUsuario': estado.toUpperCase(),
       'esAdministrador': esAdministrador,
     }).then((value) => print('Usuario actualizado correctamente'));
   }
@@ -432,5 +432,27 @@ class ControladorUsuario {
     cantidadUsuariosRegistrados = listaDeDocumentos.length;
 
     return cantidadUsuariosRegistrados;
+  }
+  
+  Future<List<dynamic>> obtenerCorreosUsuariosAdministrador() async {
+    List<dynamic> listaCorreos = [];
+    await firestore
+        .collection('usuarios').where('esAdministrador', isEqualTo: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        _nombreCompleto = doc['nombreCompleto'];
+        _correo = doc['correo'];
+        _departamento = doc['departamento'];
+        _esAdministrador = doc['esAdministrador'];
+        _especialidad = doc['especialidad'];
+        _statusUsuario = doc['statusUsuario'];
+        _telefono = doc['telefono'];
+
+        listaCorreos.add(_correo);
+      });
+    });
+
+    return listaCorreos;
   }
 }

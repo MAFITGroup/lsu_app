@@ -50,14 +50,6 @@ class ControladorCategoria {
     Map<String, String> subCategorias =
         new Map<String, String>(); //map para armar las subCategorias
 
-    for (String nombreSubAnterior in listaDeSubsAnterior) {
-      bool existeNombreSubEnSenia =
-          await existeSubCategoriaEnSenia(nombreSubAnterior);
-      if (existeNombreSubEnSenia) {
-        editarSubCategoriaEnSenia(nombreSubAnterior, nombreNuevo);
-      }
-    }
-
     for (String nombreSubNueva in listaDeSubsNueva) {
       index++;
       subCategorias.putIfAbsent(

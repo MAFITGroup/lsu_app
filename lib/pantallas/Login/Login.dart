@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -6,7 +5,6 @@ import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/Boton.dart';
-import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldContrasenia.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:lsu_app/widgets/auth_background.dart';
@@ -64,7 +62,7 @@ class _LoginState extends State<Login> {
               this._email = value.toLowerCase().trim();
             },
             validacion: (value) => value.isEmpty
-                ? 'El correo es requerido'
+                ? 'Campo Obligatorio'
                 : Validar().validarCorreo(value),
           ),
           SizedBox(height: 30),
@@ -76,10 +74,6 @@ class _LoginState extends State<Login> {
             },
             validacion: (value) {
               if (value.isEmpty) {
-                return 'La contraseña es requerida';
-              } else if (value.length <= 8) {
-                return 'La contraseña debe contener más de 8 caracteres';
-              } else {
                 return Validar().validarPassword(value);
               }
             },
