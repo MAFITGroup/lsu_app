@@ -14,7 +14,7 @@ class DialogoAlerta extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       title: Text(tituloMensaje),
-      content: Text(mensaje),
+      content: mensaje != null ? Text(mensaje) : null,
       actions: acciones,
     );
   }

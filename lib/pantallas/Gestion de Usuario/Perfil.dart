@@ -161,13 +161,13 @@ class _PerfilState extends State<Perfil> {
                             departamentoNuevo = value.toUpperCase();
                           });
                         },
-                        validator: ((dynamic value) {
-                          if (value == null) {
-                            return "Campo obligatorio";
+                        validator: (valor) {
+                          if (valor == null) {
+                            return "Campo Obligatorio";
                           } else {
                             return null;
                           }
-                        }),
+                        },
                         showSearchBox: true,
                         clearButton: Icon(Icons.close,
                             color: Colores().colorSombraBotones),
@@ -292,54 +292,66 @@ class _PerfilState extends State<Perfil> {
         !modoEditar ? editarPerfil() : canelarEditar();
         break;
       case 1:
-        Navigator.of(context).pop();
         showDialog(
             barrierDismissible: true,
             context: context,
             builder: (context) {
-              return SimpleDialog(
-                insetPadding: EdgeInsets.all(10.0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-                title: Text('Eliminar o inactivar usuario'),
-                children: [
+              return DialogoAlerta(
+                tituloMensaje: 'Eliminar o inactivar usuario',
+                acciones: [
                   SizedBox(height: 10),
                   const ListTile(
                     leading: Icon(Icons.no_accounts),
                     title: Text('Inactivar usuario'),
                     subtitle: Text(
-                        'Mediante esta opción el usuario pasa a modo inactivo. Los datos se '
-                        'conservan en la base de datos y se puede reactivar en cualquier momento.'),
+                        'Mediante esta opción el usuario pasa a modo inactivo.'
+                        '\nLos datos se conservan en la base de datos y se puede reactivar en cualquier momento.'),
                   ),
                   SizedBox(height: 10),
                   const ListTile(
                     leading: Icon(Icons.delete),
                     title: Text('Eliminar usuario'),
                     subtitle: Text(
-                        'Mediante esta opción se eliminarán definitivamente los datos del usuario'),
+                        'Mediante esta opción se eliminarán definitivamente los datos del usuario.'),
                   ),
                   SizedBox(height: 10),
-                  Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Boton(
-                        titulo: 'Inactivar',
-                        onTap: () {
-                          Navegacion(context).navegarAPrincipal();
-                          AuthService().signOut();
-                          inactivarUsuario(widget.usuario.correo);
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      Boton(
-                        titulo: 'Eliminar',
-                        onTap: () {
-                          eliminarUsuario(widget.usuario.correo);
-                          Navegacion(context).navegarAPrincipal();
-                          AuthService().signOut();
-                        },
-                      )
+                      TextButton(
+                          child: Text('INACTIVAR',
+                              style: TextStyle(
+                                  color: Colores().colorAzul,
+                                  fontFamily: 'Trueno',
+                                  fontSize: 11.0,
+                                  decoration: TextDecoration.underline)),
+                          onPressed: () {
+                            Navegacion(context).navegarAPrincipal();
+                            AuthService().signOut();
+                            inactivarUsuario(widget.usuario.correo);
+                          }),
+                      TextButton(
+                          child: Text('ELIMINAR',
+                              style: TextStyle(
+                                  color: Colores().colorAzul,
+                                  fontFamily: 'Trueno',
+                                  fontSize: 11.0,
+                                  decoration: TextDecoration.underline)),
+                          onPressed: () {
+                            eliminarUsuario(widget.usuario.correo);
+                          }),
+                      TextButton(
+                          child: Text('CANCELAR',
+                              style: TextStyle(
+                                  color: Colores().colorAzul,
+                                  fontFamily: 'Trueno',
+                                  fontSize: 11.0,
+                                  decoration: TextDecoration.underline)),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
                     ],
-                  )
+                  ),
                 ],
               );
             });
@@ -384,9 +396,12 @@ class _PerfilState extends State<Perfil> {
         especialidadNueva);
   }
 
-  Future eliminarUsuario(String correo) {
-    _controladorUsuario.eliminarAuth();
-    _controladorUsuario.eliminarUsuarios(correo);
+  Future eliminarUsuario(String correo) async {
+    await _controladorUsuario
+        .eliminarAuth()
+        .then((value) => _controladorUsuario.eliminarUsuario(correo));
+
+    AuthService().signOut();
   }
 
   Future inactivarUsuario(String correo) {

@@ -12,6 +12,7 @@ class TextFieldTexto extends StatefulWidget {
    */
   final Function(String) onSaved;
   final Icon icon;
+  final Widget iconInfo;
 
   /*
   Con este controlador, puedo limpiar el textfield,
@@ -28,7 +29,7 @@ class TextFieldTexto extends StatefulWidget {
     this.icon,
     this.controlador,
     this.habilitado,
-    this.onSaved,
+    this.onSaved, this.iconInfo,
   }) : super(key: key);
 
   @override
@@ -47,6 +48,7 @@ class _TextFieldTextoState extends State<TextFieldTexto> {
         textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
             prefixIcon: widget.icon == null ? Icon(null) : widget.icon,
+            suffixIcon: widget.iconInfo,
             labelText: widget.nombre.toUpperCase(),
             labelStyle: TextStyle(
                 fontFamily: 'Trueno',

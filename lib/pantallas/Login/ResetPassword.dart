@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -73,7 +72,7 @@ class _ResetPasswordState extends State<ResetPassword> {
           SizedBox(height: 20.0),
           TextButton(
               onPressed: () {
-                Navegacion(context).navegarALogin();
+                Navigator.of(context).pop();
               },
               child: Container(
                 child: Text('ATRÁS',

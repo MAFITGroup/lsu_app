@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -14,18 +15,24 @@ class AuthService extends ChangeNotifier {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   User usuario = FirebaseAuth.instance.currentUser;
+  bool isUsuarioAdmin = false;
 
   //Determino si el usuario esta autenticado.
   handleAuth() {
-    return StreamBuilder(
-        stream: firebaseAuth.authStateChanges(),
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.hasData) {
-            return PaginaInicial();
-          } else {
-            return Principal();
-          }
-        });
+      return StreamBuilder(
+          stream: firebaseAuth.authStateChanges(),
+          builder: (BuildContext context, snapshot) {
+            if(kIsWeb){
+              return Principal();
+            }else{
+              if (snapshot.hasData) {
+                return PaginaInicial();
+              } else {
+                return Principal();
+              }
+            }
+
+          });
   }
 
   //Cerrar sesion
@@ -74,6 +81,7 @@ class AuthService extends ChangeNotifier {
           firebaseAuth
               .signInWithEmailAndPassword(email: email, password: password)
               .then((val) {
+            Navigator.of(context).pop();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -82,7 +90,7 @@ class AuthService extends ChangeNotifier {
                 },
               ),
             );
-            Navigator.of(context).pop();
+
           }).catchError((e) {
             String error = e.toString();
             ErrorHandler().errorDialog(e, context);
@@ -190,7 +198,6 @@ class AuthService extends ChangeNotifier {
 
   //Iniciar sesion con usuario nuevo
   signUp(
-      String uid,
       String email,
       String password,
       String nombreCompleto,
@@ -202,22 +209,17 @@ class AuthService extends ChangeNotifier {
       context) {
     return firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password)
-        .then((value) {
+        .then((value)async {
       String userID = firebaseAuth.currentUser.uid;
       manej.crearUsuario(userID, email, nombreCompleto, telefono, departamento,
           especialidad, esAdministrador, statusUsuario);
-
-      usuario.sendEmailVerification();
-
-
-
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return DialogoAlerta(
               tituloMensaje: 'Registro realizado',
               mensaje:
-                  'El registro esta pendiente de aprobacion del administrador. '
+                  'Registro pendiente de aprobación del administrador. '
                   '\nUna vez autorizado, recibirás una notificación en tu correo.',
               acciones: [
                 TextButton(
@@ -228,6 +230,8 @@ class AuthService extends ChangeNotifier {
                             fontSize: 11.0,
                             decoration: TextDecoration.underline)),
                     onPressed: () {
+                      //cierro dialogo
+                      Navigator.of(context).pop();
                       Navigator.of(context).pop();
                       Navegacion(context).navegarAPrincipal();
                     })
@@ -267,5 +271,10 @@ class AuthService extends ChangeNotifier {
         .catchError((e) {
       ErrorHandler().errorDialog2(context, e);
     });
+  }
+
+  Future<void> obtenerUsuarioAdministrador(String userID) async {
+    isUsuarioAdmin = await ControladorUsuario().isUsuarioAdministrador(userID);
+    return isUsuarioAdmin;
   }
 }

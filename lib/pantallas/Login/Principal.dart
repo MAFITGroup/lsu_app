@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
@@ -66,13 +68,17 @@ class Principal extends StatelessWidget {
       elevation: 3.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ListTile(
-              subtitle: Center(
-            child: Text(
-              'Única plataforma Uruguaya para intérpretes de Lengua de Señas donde encontrarás, con un solo clic, la información que requieras para tu cotidianidad.',
+            title: Center(
+              child: Text(
+                'Única plataforma Uruguaya para intérpretes de Lengua de Señas donde encontrarás, con un solo clic, la información que requieras para tu cotidianidad.',
+                style: TextStyle(color: Colors.black54,fontSize: 14),
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );

@@ -8,7 +8,6 @@ import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/pantallas/Glosario/VisualizarSenia.dart';
-import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -139,16 +138,21 @@ class _PaginaInicialState extends State<PaginaInicial> {
                   Card(
                       child: ListTile(
                     title: Text(
-                      "USUARIOS REGISTRADOS: $cantidadUsuariosRegistrados",
-                      textAlign: TextAlign.center,
-                    ),
+                        "USUARIOS REGISTRADOS: $cantidadUsuariosRegistrados",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Trueno',
+                            fontSize: 16,
+                            color: Colores().colorAzul)),
                   )),
                   Card(
                       child: ListTile(
-                    title: Text(
-                      "USUARIOS ACTIVOS: $cantidadUsuariosActivos",
-                      textAlign: TextAlign.center,
-                    ),
+                    title: Text("USUARIOS ACTIVOS: $cantidadUsuariosActivos",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Trueno',
+                            fontSize: 16,
+                            color: Colores().colorAzul)),
                   )),
                   Card(
                       child: Column(
@@ -165,12 +169,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
                             itemCount: listaSenias.length,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                title: Text(
-                                    listaSenias[index].nombre +
-                                        ": " +
-                                        listaSenias[index]
-                                            .cantidadVisualizaciones
-                                            .toString(),
+                                shape: Border(bottom: BorderSide(color: Colores().colorSombraBotones, width: 1)),
+                                title: Text("Nombre: " +listaSenias[index].nombre,
                                     style: TextStyle(
                                         fontFamily: 'Trueno', fontSize: 12)),
                                 subtitle: Text('Categoría: ' +
@@ -217,7 +217,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                               yValueMapper: (Usuario usuario, _) =>
                                   obtenerCantidadUsuariosPorDepartamento(
                                       usuario.departamento),
-                              name: usuario.departamento,
+                              name: "DEPARTAMENTO",
                               color: Colores().colorAzul)
                         ]),
                   )
@@ -246,19 +246,12 @@ class _PaginaInicialState extends State<PaginaInicial> {
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
      */
-    setState(() {
-      isUsuarioAdmin;
-    });
+    setState(() {});
   }
 
   Future<void> obtenerDatosUsuarioLogueado() async {
     usuario = await controladorUsuario
         .obtenerUsuarioLogueado(FirebaseAuth.instance.currentUser.uid);
-
-    if (usuario.statusUsuario == 'INACTIVO' ||
-        usuario.statusUsuario == 'PENDIENTE') {
-      AuthService().signOut();
-    }
   }
 
   void obtenerCantidadUsuariosActivos() async {

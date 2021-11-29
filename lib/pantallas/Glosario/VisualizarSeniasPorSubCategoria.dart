@@ -78,9 +78,7 @@ class _VisualizarSeniasPorSubCategoriaState
                                               )));
                                 },
                                 title: Text( "SEÑA: " +
-                                    listaSeniaPorSubCategoria[index].nombre,
-                                    style: TextStyle(
-                                        fontFamily: 'Trueno', fontSize: 14)),
+                                    listaSeniaPorSubCategoria[index].nombre),
                               ));
                             });
                       }
