@@ -138,16 +138,21 @@ class _PaginaInicialState extends State<PaginaInicial> {
                   Card(
                       child: ListTile(
                     title: Text(
-                      "USUARIOS REGISTRADOS: $cantidadUsuariosRegistrados",
-                      textAlign: TextAlign.center,
-                    ),
+                        "USUARIOS REGISTRADOS: $cantidadUsuariosRegistrados",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Trueno',
+                            fontSize: 16,
+                            color: Colores().colorAzul)),
                   )),
                   Card(
                       child: ListTile(
-                    title: Text(
-                      "USUARIOS ACTIVOS: $cantidadUsuariosActivos",
-                      textAlign: TextAlign.center,
-                    ),
+                    title: Text("USUARIOS ACTIVOS: $cantidadUsuariosActivos",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Trueno',
+                            fontSize: 16,
+                            color: Colores().colorAzul)),
                   )),
                   Card(
                       child: Column(
@@ -164,12 +169,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
                             itemCount: listaSenias.length,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                title: Text(
-                                    listaSenias[index].nombre +
-                                        ": " +
-                                        listaSenias[index]
-                                            .cantidadVisualizaciones
-                                            .toString(),
+                                shape: Border(bottom: BorderSide(color: Colores().colorSombraBotones, width: 1)),
+                                title: Text("Nombre: " +listaSenias[index].nombre,
                                     style: TextStyle(
                                         fontFamily: 'Trueno', fontSize: 12)),
                                 subtitle: Text('Categoría: ' +
@@ -216,7 +217,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                               yValueMapper: (Usuario usuario, _) =>
                                   obtenerCantidadUsuariosPorDepartamento(
                                       usuario.departamento),
-                              name: usuario.departamento,
+                              name: "DEPARTAMENTO",
                               color: Colores().colorAzul)
                         ]),
                   )
@@ -245,8 +246,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
      */
-    setState(() {
-    });
+    setState(() {});
   }
 
   Future<void> obtenerDatosUsuarioLogueado() async {
