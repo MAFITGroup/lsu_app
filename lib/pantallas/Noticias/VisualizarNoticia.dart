@@ -444,7 +444,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
   Future compartir(
       RedesSociales redes, String tituloNoticia, String linkNoticia) async {
     final asunto = 'Plataforma LSU';
-    final texto = 'Nueva noticia publicada en Plataforma LSU. ' +
+    final texto = 'Noticia publicada en Plataforma LSU. ' +
         tituloNoticia +
         ' ¡No te la pierdas! ';
     final urlCompartir = Uri.encodeComponent(linkNoticia);

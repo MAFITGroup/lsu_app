@@ -85,16 +85,29 @@ class _PerfilState extends State<Perfil> {
                             PopupMenuItem(
                                 value: 0,
                                 child: ListTile(
-                                    leading: Icon(!modoEditar
-                                        ? Icons.edit
-                                        : Icons.cancel_outlined),
+                                    leading: Icon(
+                                        !modoEditar
+                                            ? Icons.edit
+                                            : Icons.cancel_outlined,
+                                        color: Colores().colorAzul),
                                     title: Text(
-                                        !modoEditar ? 'Editar' : 'Cancelar'))),
+                                        !modoEditar ? 'Editar' : 'Cancelar',
+                                        style: TextStyle(
+                                            fontFamily: 'Trueno',
+                                            fontSize: 14,
+                                            color: Colores()
+                                                .colorSombraBotones)))),
                             PopupMenuItem(
                               value: 1,
                               child: ListTile(
-                                  leading: Icon(Icons.delete_forever_outlined),
-                                  title: Text('Eliminar')),
+                                  leading: Icon(Icons.delete_forever_outlined,
+                                      color: Colores().colorAzul),
+                                  title: Text('Eliminar',
+                                      style: TextStyle(
+                                          fontFamily: 'Trueno',
+                                          fontSize: 14,
+                                          color:
+                                              Colores().colorSombraBotones))),
                             ),
                           ])
                 ]),

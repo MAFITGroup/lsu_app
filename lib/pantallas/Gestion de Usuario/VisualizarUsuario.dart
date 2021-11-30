@@ -173,14 +173,14 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                           ? Column(
                               children: [
                                 Table(
-                                  columnWidths: {3: FlexColumnWidth(0.2)},
+                                  columnWidths: {3: FlexColumnWidth(0.3)},
                                   children: [
                                     TableRow(children: [
                                       Icon(Icons.group_add_rounded),
                                       Text('ADMINISTRADOR',
                                           style: TextStyle(
                                               fontFamily: 'Trueno',
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colores().colorAzul)),
                                       Switch(
                                         value: usuario.esAdministrador,
@@ -199,7 +199,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                       Text('ACTIVO',
                                           style: TextStyle(
                                               fontFamily: 'Trueno',
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colores().colorAzul)),
                                       Switch(
                                         value: estadoU,
@@ -255,9 +255,10 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                             acciones: [
                                               TextButton(
                                                 onPressed: () {
+                                                  // cierro dialogo
                                                   Navigator.of(context).pop();
-                                                  Navegacion(context)
-                                                      .navegarAPaginaGestionUsuarioDest();
+                                                  //cierro ventana
+                                                  Navigator.of(context).pop();
                                                 },
                                                 child: Text('OK',
                                                     style: TextStyle(
