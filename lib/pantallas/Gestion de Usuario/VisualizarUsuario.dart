@@ -173,7 +173,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                           ? Column(
                               children: [
                                 Table(
-                                  columnWidths: {3: FlexColumnWidth(0.2)},
+                                  columnWidths: {3: FlexColumnWidth(0.3)},
                                   children: [
                                     TableRow(children: [
                                       Icon(Icons.group_add_rounded),
@@ -255,9 +255,10 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                             acciones: [
                                               TextButton(
                                                 onPressed: () {
+                                                  // cierro dialogo
                                                   Navigator.of(context).pop();
-                                                  Navegacion(context)
-                                                      .navegarAPaginaGestionUsuarioDest();
+                                                  //cierro ventana
+                                                  Navigator.of(context).pop();
                                                 },
                                                 child: Text('OK',
                                                     style: TextStyle(

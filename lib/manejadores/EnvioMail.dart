@@ -35,8 +35,8 @@ Config para cuenta testing
   /*
   Config cuenta prod
    */
-  Future enviarMail(
-      String nombreUsuario, String correoUsuario, String estadoSolicitud) async {
+  Future enviarMail(String nombreUsuario, String correoUsuario,
+      String estadoSolicitud) async {
     final serviceId = 'service_u2c0omv';
     final templateId = 'template_n0zyfki';
     final userId = 'user_3AeyYnd4DEkwW8tRldLMn';
@@ -44,6 +44,7 @@ Config para cuenta testing
     final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
     final response = await http.post(url,
         headers: {
+          'origin': 'http://localhost',
           'Content-Type': 'application/json',
         },
         body: json.encode({
