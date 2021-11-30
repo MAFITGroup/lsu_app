@@ -69,16 +69,27 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                       value: 0,
                       child: ListTile(
                           leading: Icon(
-                              !modoEditar ? Icons.edit : Icons.cancel_outlined),
-                          title: Text(!modoEditar
-                              ? "Editar Categoría"
-                              : "Cancelar Editar")),
+                              !modoEditar ? Icons.edit : Icons.cancel_outlined,
+                              color: Colores().colorAzul),
+                          title: Text(
+                              !modoEditar
+                                  ? "Editar Categoría"
+                                  : "Cancelar Editar",
+                              style: TextStyle(
+                                  fontFamily: 'Trueno',
+                                  fontSize: 14,
+                                  color: Colores().colorSombraBotones))),
                     ),
                     PopupMenuItem(
                       value: 1,
                       child: ListTile(
-                          leading: Icon(Icons.delete_forever_outlined),
-                          title: Text("Eliminar Categoría")),
+                          leading: Icon(Icons.delete_forever_outlined,
+                              color: Colores().colorAzul),
+                          title: Text("Eliminar Categoría",
+                              style: TextStyle(
+                                  fontFamily: 'Trueno',
+                                  fontSize: 14,
+                                  color: Colores().colorSombraBotones))),
                     ),
                   ],
                 ),
@@ -149,12 +160,12 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                   modoEditar: modoEditar,
                                   modoAlta: false,
                                   nombreSubCategoria: listaSubCategorias[index],
-                                  nombreAnteriorSubCategoria: listaSubCategorias[index],
+                                  nombreAnteriorSubCategoria:
+                                      listaSubCategorias[index],
                                   listaSubcategorias: listaSubCategoriasNuevas,
                                   controller: controller =
                                       new TextEditingController(
                                           text: listaSubCategorias[index]),
-
                                   onPressed: () async {
                                     existeSubCategoriaEnSenia =
                                         await _controladorCategoria
@@ -195,8 +206,10 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                           });
                                     }
                                   },
-                                  onSaved: (){
-                                    editarSubCategoriaEnSenia(listaSubCategorias[index], listaSubCategoriasNuevas[index]);
+                                  onSaved: () {
+                                    editarSubCategoriaEnSenia(
+                                        listaSubCategorias[index],
+                                        listaSubCategoriasNuevas[index]);
                                   },
                                 );
 
@@ -223,149 +236,155 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                           ),
                           modoEditar
                               ? Boton(
-                              titulo: 'GUARDAR',
-                              onTap: () {
-                                if (nuevoNombreCategoria == null) {
-                                  nuevoNombreCategoria = categoria.nombre;
-                                }
-                                if (Validar().camposVacios(formKey)) {
-                                  if (listaSubCategorias.length == 0 &&
-                                      listaSubCategoriasNuevas.length == 0) {
-                                    return showCupertinoDialog(
-                                        context: context,
-                                        barrierDismissible: true,
-                                        builder: (context) {
-                                          return DialogoAlerta(
-                                            tituloMensaje: "Advertencia",
-                                            mensaje:
-                                            "Debe ingresar al menos una subcategoría.",
-                                            acciones: [
-                                              TextButton(
-                                                child: Text('OK',
-                                                    style: TextStyle(
-                                                        color:
-                                                        Colores().colorAzul,
-                                                        fontFamily: 'Trueno',
-                                                        fontSize: 11.0,
-                                                        decoration: TextDecoration
-                                                            .underline)),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              )
-                                            ],
-                                          );
-                                        });
-                                  }
-                                  if (!isCategoriaExistente) {
-                                    if (!existeSubCategoria(
-                                        listaSubCategoriasNuevas)) {
-                                      guardarEdicion(
-                                          categoria.nombre,
-                                          nuevoNombreCategoria,
-                                          listaSubCategorias,
-                                          listaSubCategoriasNuevas)
-                                        ..then((userCreds) {
-                                          showCupertinoDialog(
+                                  titulo: 'GUARDAR',
+                                  onTap: () {
+                                    if (nuevoNombreCategoria == null) {
+                                      nuevoNombreCategoria = categoria.nombre;
+                                    }
+                                    if (Validar().camposVacios(formKey)) {
+                                      if (listaSubCategorias.length == 0 &&
+                                          listaSubCategoriasNuevas.length ==
+                                              0) {
+                                        return showCupertinoDialog(
+                                            context: context,
+                                            barrierDismissible: true,
+                                            builder: (context) {
+                                              return DialogoAlerta(
+                                                tituloMensaje: "Advertencia",
+                                                mensaje:
+                                                    "Debe ingresar al menos una subcategoría.",
+                                                acciones: [
+                                                  TextButton(
+                                                    child: Text('OK',
+                                                        style: TextStyle(
+                                                            color: Colores()
+                                                                .colorAzul,
+                                                            fontFamily:
+                                                                'Trueno',
+                                                            fontSize: 11.0,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline)),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      }
+                                      if (!isCategoriaExistente) {
+                                        if (!existeSubCategoria(
+                                            listaSubCategoriasNuevas)) {
+                                          guardarEdicion(
+                                              categoria.nombre,
+                                              nuevoNombreCategoria,
+                                              listaSubCategorias,
+                                              listaSubCategoriasNuevas)
+                                            ..then((userCreds) {
+                                              showCupertinoDialog(
+                                                  context: context,
+                                                  barrierDismissible: true,
+                                                  builder: (context) {
+                                                    return DialogoAlerta(
+                                                      tituloMensaje:
+                                                          'Edición Realizada',
+                                                      mensaje:
+                                                          'La categoría se ha editado correctamente',
+                                                      acciones: [
+                                                        TextButton(
+                                                          child: Text('OK',
+                                                              style: TextStyle(
+                                                                  color: Colores()
+                                                                      .colorAzul,
+                                                                  fontFamily:
+                                                                      'Trueno',
+                                                                  fontSize:
+                                                                      11.0,
+                                                                  decoration:
+                                                                      TextDecoration
+                                                                          .underline)),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        )
+                                                      ],
+                                                    );
+                                                  });
+                                            });
+                                        } else {
+                                          listaSubCategoriasNuevas.clear();
+                                          return showCupertinoDialog(
                                               context: context,
-                                              barrierDismissible:
-                                              true,
+                                              barrierDismissible: true,
                                               builder: (context) {
                                                 return DialogoAlerta(
-                                                  tituloMensaje:
-                                                  'Edición Realizada',
+                                                  tituloMensaje: "Advertencia",
                                                   mensaje:
-                                                  'La categoría se ha editado correctamente',
+                                                      "Una de las subcategorías ingresadas esta repetida.",
                                                   acciones: [
                                                     TextButton(
-                                                      child: Text(
-                                                          'OK',
+                                                      child: Text('OK',
                                                           style: TextStyle(
                                                               color: Colores()
                                                                   .colorAzul,
                                                               fontFamily:
-                                                              'Trueno',
-                                                              fontSize:
-                                                              11.0,
+                                                                  'Trueno',
+                                                              fontSize: 11.0,
                                                               decoration:
-                                                              TextDecoration.underline)),
-                                                      onPressed:
-                                                          () {
-                                                        Navigator.of(
-                                                            context)
-                                                            .pop();
-                                                        Navigator.of(
-                                                            context)
+                                                                  TextDecoration
+                                                                      .underline)),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
                                                             .pop();
                                                       },
                                                     )
                                                   ],
                                                 );
                                               });
-                                        });
-                                    } else {
-                                      listaSubCategoriasNuevas.clear();
-                                      return showCupertinoDialog(
-                                          context: context,
-                                          barrierDismissible: true,
-                                          builder: (context) {
-                                            return DialogoAlerta(
-                                              tituloMensaje: "Advertencia",
-                                              mensaje:
-                                              "Una de las subcategorías ingresadas esta repetida.",
-                                              acciones: [
-                                                TextButton(
-                                                  child: Text('OK',
-                                                      style: TextStyle(
-                                                          color:
-                                                          Colores().colorAzul,
-                                                          fontFamily: 'Trueno',
-                                                          fontSize: 11.0,
-                                                          decoration:
-                                                          TextDecoration
-                                                              .underline)),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                )
-                                              ],
-                                            );
-                                          });
+                                        }
+                                      } else {
+                                        showCupertinoDialog(
+                                            context: context,
+                                            barrierDismissible: true,
+                                            builder: (context) {
+                                              return DialogoAlerta(
+                                                tituloMensaje: "Advertencia",
+                                                mensaje:
+                                                    "La categoría ingresada ya existe.",
+                                                acciones: [
+                                                  TextButton(
+                                                    child: Text('OK',
+                                                        style: TextStyle(
+                                                            color: Colores()
+                                                                .colorAzul,
+                                                            fontFamily:
+                                                                'Trueno',
+                                                            fontSize: 11.0,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline)),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      }
                                     }
-                                  } else {
-                                    showCupertinoDialog(
-                                        context: context,
-                                        barrierDismissible: true,
-                                        builder: (context) {
-                                          return DialogoAlerta(
-                                            tituloMensaje: "Advertencia",
-                                            mensaje:
-                                            "La categoría ingresada ya existe.",
-                                            acciones: [
-                                              TextButton(
-                                                child: Text('OK',
-                                                    style: TextStyle(
-                                                        color:
-                                                        Colores().colorAzul,
-                                                        fontFamily: 'Trueno',
-                                                        fontSize: 11.0,
-                                                        decoration: TextDecoration
-                                                            .underline)),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              )
-                                            ],
-                                          );
-                                        });
-                                  }
-                                }
-                              })
+                                  })
                               : Container(),
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -407,12 +426,13 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
     setState(() {});
   }
 
-  void editarSubCategoriaEnSenia(String nombreAnterior, String nombreNuevo) async{
-
+  void editarSubCategoriaEnSenia(
+      String nombreAnterior, String nombreNuevo) async {
     bool existeNombreSubEnSenia =
-    await _controladorCategoria.existeSubCategoriaEnSenia(nombreAnterior);
+        await _controladorCategoria.existeSubCategoriaEnSenia(nombreAnterior);
     if (existeNombreSubEnSenia) {
-      _controladorCategoria.editarSubCategoriaEnSenia(nombreAnterior, nombreNuevo);
+      _controladorCategoria.editarSubCategoriaEnSenia(
+          nombreAnterior, nombreNuevo);
     }
   }
 

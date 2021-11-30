@@ -38,6 +38,7 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
     bool modoEditar = widget.modoEditar;
     Function onPressed = widget.onPressed;
     TextEditingController controller = widget.controller;
+    Function onSaved = widget.onSaved;
 
     return Container(
       child: Column(
@@ -68,7 +69,9 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
                           listaSubcategorias
                               .add(_nombreSubCategoria.toUpperCase().trim());
                         });
-                        widget.onSaved();
+                        if(onSaved != null){
+                          widget.onSaved();
+                        }
                       }),
                 ),
                 Container(
