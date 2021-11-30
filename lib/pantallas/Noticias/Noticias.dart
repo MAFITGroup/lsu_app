@@ -118,6 +118,10 @@ class _NoticiasState extends State<Noticias> {
               return Center(
                 child: Image.asset('recursos/logo-carga.gif'),
               );
+            } else if (listaCharlas.length <= 0) {
+              return Center(
+                child: Image.asset('recursos/VuelvePronto.png'),
+              );
             } else {
               return ListView.builder(
                 itemCount: listaLlamados.length,

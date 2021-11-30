@@ -180,7 +180,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                       Text('ADMINISTRADOR',
                                           style: TextStyle(
                                               fontFamily: 'Trueno',
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colores().colorAzul)),
                                       Switch(
                                         value: usuario.esAdministrador,
@@ -199,7 +199,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                       Text('ACTIVO',
                                           style: TextStyle(
                                               fontFamily: 'Trueno',
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colores().colorAzul)),
                                       Switch(
                                         value: estadoU,
