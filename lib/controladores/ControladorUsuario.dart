@@ -297,6 +297,7 @@ class ControladorUsuario {
         _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _uid = doc['usuarioUID'];
+        _statusUsuario = doc['statusUsuario'];
 
         usuario = new Usuario();
         usuario.correo = _correo;
@@ -305,6 +306,7 @@ class ControladorUsuario {
         usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.uid = _uid;
+        usuario.statusUsuario = _statusUsuario;
       });
     });
     return usuario;

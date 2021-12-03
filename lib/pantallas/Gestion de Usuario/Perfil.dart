@@ -258,7 +258,7 @@ class _PerfilState extends State<Perfil> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return DialogoAlerta(
-                                            tituloMensaje: 'Perfil actualzado',
+                                            tituloMensaje: 'Perfil actualizado',
                                             mensaje:
                                                 'Los datos han sido guardados correctamente',
                                             acciones: [

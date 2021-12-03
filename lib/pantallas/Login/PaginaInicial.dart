@@ -8,6 +8,7 @@ import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/pantallas/Glosario/VisualizarSenia.dart';
+import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -39,6 +40,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
     obtenerCantidadUsuarios();
     obtenerVisualizacionesSenia();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +237,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
         Navegacion(context).navegarAPerfil(usuario);
         break;
       case 0:
-        Navegacion(context).cerrarSesion();
+        AuthService().signOut();
+        Navegacion(context).navegarAPrincipal();
         break;
     }
   }
@@ -252,6 +255,12 @@ class _PaginaInicialState extends State<PaginaInicial> {
   Future<void> obtenerDatosUsuarioLogueado() async {
     usuario = await controladorUsuario
         .obtenerUsuarioLogueado(FirebaseAuth.instance.currentUser.uid);
+
+    if (usuario.statusUsuario == 'PENDIENTE' ||
+        usuario.statusUsuario == 'INACTIVO' ||
+        usuario.statusUsuario == 'DENEGADO') {
+      AuthService().signOut();
+    }
   }
 
   void obtenerCantidadUsuariosActivos() async {
