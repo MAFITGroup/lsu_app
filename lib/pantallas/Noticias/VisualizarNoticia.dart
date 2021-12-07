@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
@@ -282,10 +281,14 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                                                             TextDecoration
                                                                 .underline)),
                                                     onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      Navegacion(context)
-                                                          .navegarANoticiasDest();
+                                                      // cierro dialogo
+                                                      Navigator.of(context).pop();
+                                                      Navigator.of(context).pop();
+                                                      Navigator.pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                          builder: (context) =>
+                                                          Noticias()));
                                                     },
                                                   )
                                                 ],
