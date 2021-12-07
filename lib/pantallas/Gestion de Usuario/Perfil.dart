@@ -8,6 +8,7 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -139,7 +140,7 @@ class _PerfilState extends State<Perfil> {
                                 text: usuario.nombreCompleto),
                         valor: (value) {
                           setState(() {
-                            nombreNuevo = value.toUpperCase();
+                            nombreNuevo = value;
                           });
                         },
                         validacion: ((value) =>
@@ -171,7 +172,7 @@ class _PerfilState extends State<Perfil> {
                         selectedItem: usuario.departamento,
                         onChanged: (value) {
                           setState(() {
-                            departamentoNuevo = value.toUpperCase();
+                            departamentoNuevo = value;
                           });
                         },
                         validator: (valor) {
@@ -214,7 +215,7 @@ class _PerfilState extends State<Perfil> {
                             : TextEditingController(text: usuario.especialidad),
                         valor: (value) {
                           setState(() {
-                            especialidadNueva = value.toUpperCase();
+                            especialidadNueva = value;
                           });
                         },
                         validacion: ((value) =>
@@ -247,7 +248,6 @@ class _PerfilState extends State<Perfil> {
                                     usuario.telefono,
                                     usuario.departamento,
                                     usuario.especialidad,
-                                    correoNuevo,
                                     nombreNuevo,
                                     celularNuevo,
                                     departamentoNuevo,
@@ -280,7 +280,11 @@ class _PerfilState extends State<Perfil> {
                                                     /*
                                                       elimino ventana perfil
                                                        */
-                                                    Navigator.of(context).pop();
+                                                    Navigator.pushAndRemoveUntil(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                          (Route<dynamic> route) => false,
+                                                    );
                                                   })
                                             ],
                                           );
@@ -385,24 +389,22 @@ class _PerfilState extends State<Perfil> {
   }
 
   Future guardarEdicionPerfil(
-    String correoAnterior,
+    String correo,
     String nombreAnterior,
     String celularAnterior,
     String departamentoAnterior,
     String especialidadAnterior,
-    String correoNuevo,
     String nombreNuevo,
     String celularNuevo,
     String departamentoNuevo,
     String especialidadNueva,
   ) async {
     _controladorUsuario.editarPerfil(
-        correoAnterior,
+        correo,
         nombreAnterior,
         celularAnterior,
         departamentoAnterior,
         especialidadAnterior,
-        correoNuevo,
         nombreNuevo,
         celularNuevo,
         departamentoNuevo,

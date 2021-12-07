@@ -142,7 +142,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                       ),
                     ),
                     Container(
-                      height: 600,
+                      height: 620,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -311,6 +311,9 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                                                 .pop();
                                                             Navigator.of(
                                                                     context)
+                                                                .pop();
+                                                            Navigator.of(
+                                                                context)
                                                                 .pop();
                                                           },
                                                         )

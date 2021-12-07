@@ -4,10 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:lsu_app/buscadores/BuscadorUsuario.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/pantallas/Gestion%20de%20Usuario/VisualizarUsuario.dart';
-import 'package:lsu_app/widgets/Boton.dart';
 
 class GestionUsuarios extends StatefulWidget {
   @override
@@ -28,6 +26,8 @@ class _GestionUsuarios extends State<GestionUsuarios> {
   int _selectedIndexForBottomNavigationBar = 0;
   int _selectedIndexForTabBar = 0;
 
+
+
   @override
   void initState() {
     inactivoUsuarios.clear();
@@ -43,6 +43,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
 
   @override
   Widget build(BuildContext context) {
+
     void _onItemTappedForTabBar(int index) {
       setState(() {
         _selectedIndexForTabBar = index + 1;
@@ -69,6 +70,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
     );
 
     return new DefaultTabController(
+      initialIndex: 0,
       length: 3,
       child: new Scaffold(
         appBar: AppBar(

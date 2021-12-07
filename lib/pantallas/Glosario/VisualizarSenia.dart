@@ -10,6 +10,8 @@ import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Senia.dart';
+import 'package:lsu_app/pantallas/Glosario/VisualizarSeniasPorSubCategoria.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -333,12 +335,16 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                                          */
                                                       Navigator.of(context)
                                                           .pop();
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      Navigator.of(context)
-                                                          .pop();
+                                                      Navigator
+                                                          .pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                PaginaInicial()),
+                                                        (Route<dynamic>
+                                                                route) =>
+                                                            false,
+                                                      );
                                                     })
                                               ],
                                             );

@@ -77,13 +77,13 @@ class AuthService extends ChangeNotifier {
               .signInWithEmailAndPassword(email: email, password: password)
               .then((val) {
             Navigator.of(context).pop();
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return PaginaInicial();
-                },
-              ),
+                  builder: (context) =>
+                      PaginaInicial()),
+                  (Route<dynamic> route) =>
+              false,
             );
           }).catchError((e) {
             String error = e.toString();
