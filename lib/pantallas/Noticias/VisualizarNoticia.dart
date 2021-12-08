@@ -5,6 +5,7 @@ import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -282,13 +283,11 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                                                                 .underline)),
                                                     onPressed: () {
                                                       // cierro dialogo
-                                                      Navigator.of(context).pop();
-                                                      Navigator.of(context).pop();
-                                                      Navigator.pushReplacement(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                          builder: (context) =>
-                                                          Noticias()));
+                                                      Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                            (Route<dynamic> route) => false,
+                                                      );
                                                     },
                                                   )
                                                 ],
@@ -378,19 +377,11 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                                                    ventana de visualizacion seña
 
                                                      */
-                                            Navigator.pushReplacement(
+                                            Navigator.pushAndRemoveUntil(
                                               context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return Noticias();
-                                                },
-                                              ),
+                                              MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                  (Route<dynamic> route) => false,
                                             );
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
                                           })
                                     ],
                                   );

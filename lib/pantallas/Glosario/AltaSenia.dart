@@ -18,7 +18,7 @@ import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
-import 'package:lsu_app/pantallas/Glosario/Glosario.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -289,21 +289,15 @@ class _AltaSeniaState extends State<AltaSenia> {
                                                   /*Al presionar Ok, cierro la el dialogo y cierro la
                                                    ventana de alta seña
                                                      */
-                                                  Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return Glosario();
-                                                      },
-                                                    ),
-                                                  );
+                                                  Navigator.of(context).pop();
                                                   /*
-                                                        Dos POP, uno para el diologo y otro para la
-                                                        pantalla de Alta
-                                                         */
-                                                  Navigator.of(context).pop();
-                                                  Navigator.of(context).pop();
+                                                      elimino ventana Alta
+                                                       */
+                                                  Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                  (Route<dynamic> route) => false,
+                                                  );
                                                 })
                                           ],
                                         );

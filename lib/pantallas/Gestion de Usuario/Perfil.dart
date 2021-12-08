@@ -5,10 +5,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
+import 'package:lsu_app/pantallas/Login/Principal.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -343,9 +343,14 @@ class _PerfilState extends State<Perfil> {
                                   fontSize: 11.0,
                                   decoration: TextDecoration.underline)),
                           onPressed: () {
-                            Navegacion(context).navegarAPrincipal();
-                            AuthService().signOut();
                             inactivarUsuario(widget.usuario.correo);
+                            AuthService().signOut();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => Principal()),
+                                  (Route<dynamic> route) => false,
+                            );
+
                           }),
                       TextButton(
                           child: Text('ELIMINAR',
@@ -356,6 +361,12 @@ class _PerfilState extends State<Perfil> {
                                   decoration: TextDecoration.underline)),
                           onPressed: () {
                             eliminarUsuario(widget.usuario.correo);
+                            AuthService().signOut();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => Principal()),
+                                  (Route<dynamic> route) => false,
+                            );
                           }),
                       TextButton(
                           child: Text('CANCELAR',
@@ -415,8 +426,6 @@ class _PerfilState extends State<Perfil> {
     await _controladorUsuario
         .eliminarAuth()
         .then((value) => _controladorUsuario.eliminarUsuario(correo));
-
-    AuthService().signOut();
   }
 
   Future inactivarUsuario(String correo) {

@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/SubCategoriaDinamica.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
-
-import 'Categorias.dart';
 
 class AltaCategoria extends StatefulWidget {
   @override
@@ -115,7 +114,7 @@ class _AltaCategoria extends State<AltaCategoria> {
                   children: [
                     ConstrainedBox(
                       constraints:
-                      BoxConstraints(maxHeight: 350, minHeight: 56.0),
+                          BoxConstraints(maxHeight: 350, minHeight: 56.0),
                       child: ListView.builder(
                           itemCount: listaDinamicaWidgetSubCategoria.length,
                           itemBuilder: (context, index) =>
@@ -154,13 +153,15 @@ class _AltaCategoria extends State<AltaCategoria> {
                                                     decoration: TextDecoration
                                                         .underline)),
                                             onPressed: () {
-                                              Navigator.of(context)
-                                                  .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        Categorias()),
-                                                ModalRoute.withName('/'),
+                                              // cierro dialogo
+                                              Navigator.of(context).pop();
+                                              /*
+                                                      elimino ventana alta
+                                                       */
+                                              Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                              (Route<dynamic> route) => false,
                                               );
                                             },
                                           )
@@ -217,8 +218,8 @@ class _AltaCategoria extends State<AltaCategoria> {
                                                 color: Colores().colorAzul,
                                                 fontFamily: 'Trueno',
                                                 fontSize: 11.0,
-                                                decoration: TextDecoration
-                                                    .underline)),
+                                                decoration:
+                                                    TextDecoration.underline)),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
