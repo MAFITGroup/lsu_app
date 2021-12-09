@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
-import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Noticia.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -282,10 +282,12 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                                                             TextDecoration
                                                                 .underline)),
                                                     onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      Navegacion(context)
-                                                          .navegarANoticiasDest();
+                                                      // cierro dialogo
+                                                      Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                            (Route<dynamic> route) => false,
+                                                      );
                                                     },
                                                   )
                                                 ],
@@ -375,19 +377,11 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                                                    ventana de visualizacion seña
 
                                                      */
-                                            Navigator.pushReplacement(
+                                            Navigator.pushAndRemoveUntil(
                                               context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return Noticias();
-                                                },
-                                              ),
+                                              MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                  (Route<dynamic> route) => false,
                                             );
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
                                           })
                                     ],
                                   );

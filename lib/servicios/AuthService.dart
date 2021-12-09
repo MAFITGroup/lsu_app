@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
+import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/pantallas/Login/Principal.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -13,31 +14,25 @@ import 'ErrorHandler.dart';
 class AuthService extends ChangeNotifier {
   ControladorUsuario manej = new ControladorUsuario();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
-  User usuario = FirebaseAuth.instance.currentUser;
-  bool isUsuarioAdmin = false;
+  Usuario usuarioLogueado;
 
   //Determino si el usuario esta autenticado.
-  handleAuth() {
-      return StreamBuilder(
-          stream: firebaseAuth.authStateChanges(),
-          builder: (BuildContext context, snapshot) {
-            if(kIsWeb){
-              return Principal();
-            }else{
-              if (snapshot.hasData) {
-                return PaginaInicial();
-              } else {
-                return Principal();
-              }
-            }
-
-          });
+  handleAuth(){
+    return StreamBuilder(
+        stream: firebaseAuth.authStateChanges(),
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          if (snapshot.hasData) {
+            return PaginaInicial();
+          } else {
+            return Principal();
+          }
+        });
   }
 
   //Cerrar sesion
-  signOut() {
-    firebaseAuth.signOut();
+  signOut() async {
+    await firebaseAuth.signOut();
+    return new Principal();
   }
 
   //Iniciar Sesion
@@ -82,15 +77,14 @@ class AuthService extends ChangeNotifier {
               .signInWithEmailAndPassword(email: email, password: password)
               .then((val) {
             Navigator.of(context).pop();
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return PaginaInicial();
-                },
-              ),
+                  builder: (context) =>
+                      PaginaInicial()),
+                  (Route<dynamic> route) =>
+              false,
             );
-
           }).catchError((e) {
             String error = e.toString();
             ErrorHandler().errorDialog(e, context);
@@ -105,56 +99,53 @@ class AuthService extends ChangeNotifier {
         }
         break;
 
-        case 'INACTIVO':
-          {
-            return showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) {
-                  return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0)),
-                      title: Text('Usuario inactivo'),
-                      content:
-                          Column(mainAxisSize: MainAxisSize.min, children: [
-                        Container(
-                            height: 100.0,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            child: Center(
-                                child: Text('¿Desea reactiviar su usuario?'))),
-                        Container(
-                            height: 50.0,
-                            child: Row(children: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('ATRÁS',
-                                      style: TextStyle(
-                                          color: Colores().colorAzul,
-                                          fontFamily: 'Trueno',
-                                          fontSize: 11.0,
-                                          decoration:
-                                              TextDecoration.underline))),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navegacion(context)
-                                        .navegarAReactivarUsuario();
-                                  },
-                                  child: Text('REACTIVAR USUARIO',
-                                      style: TextStyle(
-                                          color: Colores().colorAzul,
-                                          fontFamily: 'Trueno',
-                                          fontSize: 11.0,
-                                          decoration:
-                                              TextDecoration.underline)))
-                            ]))
-                      ]));
-                });
-          }
-          break;
+      case 'INACTIVO':
+        {
+          return showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) {
+                return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    title: Text('Usuario inactivo'),
+                    content: Column(mainAxisSize: MainAxisSize.min, children: [
+                      Container(
+                          height: 100.0,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          child: Center(
+                              child: Text('¿Desea reactiviar su usuario?'))),
+                      Container(
+                          height: 50.0,
+                          child: Row(children: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('ATRÁS',
+                                    style: TextStyle(
+                                        color: Colores().colorAzul,
+                                        fontFamily: 'Trueno',
+                                        fontSize: 11.0,
+                                        decoration: TextDecoration.underline))),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navegacion(context)
+                                      .navegarAReactivarUsuario();
+                                },
+                                child: Text('REACTIVAR USUARIO',
+                                    style: TextStyle(
+                                        color: Colores().colorAzul,
+                                        fontFamily: 'Trueno',
+                                        fontSize: 11.0,
+                                        decoration: TextDecoration.underline)))
+                          ]))
+                    ]));
+              });
+        }
+        break;
 
       default:
         {
@@ -209,7 +200,7 @@ class AuthService extends ChangeNotifier {
       context) {
     return firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password)
-        .then((value)async {
+        .then((value) async {
       String userID = firebaseAuth.currentUser.uid;
       manej.crearUsuario(userID, email, nombreCompleto, telefono, departamento,
           especialidad, esAdministrador, statusUsuario);
@@ -218,8 +209,7 @@ class AuthService extends ChangeNotifier {
           builder: (BuildContext context) {
             return DialogoAlerta(
               tituloMensaje: 'Registro realizado',
-              mensaje:
-                  'Registro pendiente de aprobación del administrador. '
+              mensaje: 'Registro pendiente de aprobación del administrador. '
                   '\nUna vez autorizado, recibirás una notificación en tu correo.',
               acciones: [
                 TextButton(
@@ -273,8 +263,7 @@ class AuthService extends ChangeNotifier {
     });
   }
 
-  Future<void> obtenerUsuarioAdministrador(String userID) async {
-    isUsuarioAdmin = await ControladorUsuario().isUsuarioAdministrador(userID);
-    return isUsuarioAdmin;
+  Future<void> obtenerUsuarioLogueado(String correo) async {
+    usuarioLogueado = await ControladorUsuario().obtenerUsuarioPerfil(correo);
   }
 }

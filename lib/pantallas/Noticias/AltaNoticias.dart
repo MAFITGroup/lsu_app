@@ -10,6 +10,7 @@ import 'package:lsu_app/controladores/ControladorNoticia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -36,7 +37,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
   String _linkNoticia;
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   static const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'channel id', 'channel notifications',
@@ -48,27 +49,23 @@ class _AltaNoticiasState extends State<AltaNoticias> {
   void initState() {
     super.initState();
 
-
     /// funciona en backgroubd
     FirebaseMessaging.onMessage.listen((RemoteMessage mensaje) {
       RemoteNotification notification = mensaje.notification;
       AndroidNotification android = mensaje.notification.android;
       if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(notification.hashCode,
-            notification.title, notification.body,
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
             NotificationDetails(
-                android: AndroidNotificationDetails(
-                    channel.id,
-                    channel.name,
+                android: AndroidNotificationDetails(channel.id, channel.name,
                     channelDescription: channel.description,
                     color: Colors.white,
                     playSound: true,
-                    icon: '@mipmap/ic_launcher'
-                )
-            ));
+                    icon: '@mipmap/ic_launcher')));
       }
     });
-
 
     /// funciona con la app en background y abierta
     /// y el usuario presiona la notificacion
@@ -77,17 +74,17 @@ class _AltaNoticiasState extends State<AltaNoticias> {
       RemoteNotification notification = mensaje.notification;
       AndroidNotification android = mensaje.notification.android;
       if (notification != null && android != null) {
-        showDialog(context: context, builder: (_) {
-          return DialogoAlerta(
-            tituloMensaje: notification.title,
-            mensaje: notification.body,
-          );
-        });
+        showDialog(
+            context: context,
+            builder: (_) {
+              return DialogoAlerta(
+                tituloMensaje: notification.title,
+                mensaje: notification.body,
+              );
+            });
       }
       Navegacion(context).navegarANoticias();
     });
-
-
   }
 
   @override
@@ -119,7 +116,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                               });
                             },
                             validator: ((value) =>
-                            value == null ? 'Campo Obligatorio' : null),
+                                value == null ? 'Campo Obligatorio' : null),
                             showSearchBox: true,
                             clearButton: Icon(Icons.close,
                                 color: Colores().colorSombraBotones),
@@ -149,7 +146,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                             this._tituloNoticia = value;
                           },
                           validacion: ((value) =>
-                          value.isEmpty ? 'Campo Obligatorio' : null),
+                              value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
@@ -177,7 +174,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                             }
                           },
                           validacion: ((value) =>
-                          value.isEmpty ? 'Campo Obligatorio' : null),
+                              value.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 20.0),
                         Boton(
@@ -191,38 +188,35 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                                   _linkNoticia,
                                 )
                                     .then(
-                                      (value) =>
-                                      showDialog(
-                                          useRootNavigator: false,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return DialogoAlerta(
-                                              tituloMensaje: "Alta de Noticia",
-                                              mensaje:
+                                  (value) => showDialog(
+                                      useRootNavigator: false,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return DialogoAlerta(
+                                          tituloMensaje: "Alta de Noticia",
+                                          mensaje:
                                               "La noticia ha sido creada correctamente",
-                                              acciones: [
-                                                TextButton(
-                                                  child: Text('OK',
-                                                      style: TextStyle(
-                                                          color:
+                                          acciones: [
+                                            TextButton(
+                                              child: Text('OK',
+                                                  style: TextStyle(
+                                                      color:
                                                           Colores().colorAzul,
-                                                          fontFamily: 'Trueno',
-                                                          fontSize: 11.0,
-                                                          decoration: TextDecoration
-                                                              .underline)),
-                                                  onPressed: () {
-                                                    //cierro dialogo
-                                                    Navigator.of(context).pop();
-                                                    // cierro ventana de alta
-                                                    Navigator.of(context).pop();
-                                                    // cierro ventana de noticias
-                                                    Navigator.of(context).pop();
-
-                                                  },
-                                                )
-                                              ],
-                                            );
-                                          }),
+                                                      fontFamily: 'Trueno',
+                                                      fontSize: 11.0,
+                                                      decoration: TextDecoration
+                                                          .underline)),
+                                              onPressed: () {
+                                                Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                      (Route<dynamic> route) => false,
+                                                );
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      }),
                                 )
                                     .catchError((e) {
                                   ErrorHandler().errorDialog(e, context);
@@ -240,32 +234,25 @@ class _AltaNoticiasState extends State<AltaNoticias> {
         ),
       ),
     );
-
-
   }
 
-  Future crearNoticia(String tipo, String titulo, String descripcion,
-      String link) async {
+  Future crearNoticia(
+      String tipo, String titulo, String descripcion, String link) async {
     ControladorNoticia().crearNoticia(tipo, titulo, descripcion, link);
   }
 
   void mostrarNotificacion() {
-    flutterLocalNotificationsPlugin.show(0, 'Plataforma LSU',
+    flutterLocalNotificationsPlugin.show(
+        0,
+        'Plataforma LSU',
         'Una nueva noticia ha sido publicada. No te la pierdas!',
         NotificationDetails(
-            android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
+            android: AndroidNotificationDetails(channel.id, channel.name,
                 channelDescription: channel.description,
                 importance: Importance.high,
                 priority: Priority.high,
                 color: Colors.white,
                 playSound: true,
-                icon: '@mipmap/ic_launcher'
-            )
-        ));
-  }
-
-  subscribeToTopic(String topic) async{
+                icon: '@mipmap/ic_launcher')));
   }
 }

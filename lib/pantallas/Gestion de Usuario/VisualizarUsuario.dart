@@ -7,6 +7,7 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/EnvioMail.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
+import 'package:lsu_app/pantallas/Gestion%20de%20Usuario/GestionUsuarios.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -257,8 +258,13 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                                 onPressed: () {
                                                   // cierro dialogo
                                                   Navigator.of(context).pop();
-                                                  //cierro ventana
                                                   Navigator.of(context).pop();
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            GestionUsuarios()),
+                                                  );
                                                 },
                                                 child: Text('OK',
                                                     style: TextStyle(

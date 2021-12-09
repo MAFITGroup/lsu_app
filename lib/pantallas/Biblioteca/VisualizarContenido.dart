@@ -6,7 +6,7 @@ import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
-import 'package:lsu_app/pantallas/Biblioteca/Biblioteca.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -219,7 +219,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => visualizarPDF(
+                                        builder: (context) => VisualizarPDF(
                                               archivoRef: contenido.urlarchivo,
                                               titulo: contenido.titulo,
                                             )));
@@ -290,14 +290,10 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                                        ventana de alta contenido
 
                                                          */
-                                                        Navigator.of(context)
-                                                            .pushAndRemoveUntil(
-                                                          MaterialPageRoute(
-                                                              builder: (BuildContext
-                                                                      context) =>
-                                                                  Biblioteca()),
-                                                          ModalRoute.withName(
-                                                              '/'),
+                                                        Navigator.pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                              (Route<dynamic> route) => false,
                                                         );
                                                       })
                                                 ],
@@ -411,11 +407,10 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                                             fontSize: 11.0,
                                             decoration: TextDecoration.underline)),
                                       onPressed: () {
-                                        Navigator.of(context).pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  Biblioteca()),
-                                          ModalRoute.withName('/'),
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                              (Route<dynamic> route) => false,
                                         );
                                       },
                                   )

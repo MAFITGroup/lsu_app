@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
+import 'dart:io' show Platform;
 
 class ControladorUsuario {
   String _uid;
@@ -31,6 +35,7 @@ class ControladorUsuario {
     bool esAdministrador,
     String statusUsuario,
   ) async {
+
     await firestore.collection("usuarios").doc(uid).set({
       'usuarioUID': uid,
       'correo': email.trim(),
@@ -262,25 +267,23 @@ class ControladorUsuario {
   }
 
   void editarPerfil(
-    String correoAnterior,
+    String correo,
     String nombreAnterior,
     String celularAnterior,
     String departamentoAnterior,
     String especialidadAnterior,
-    String correoNuevo,
     String nombreNuevo,
     String celularNuevo,
     String departamentoNuevo,
     String especialidadNueva,
   ) async {
-    Usuario usuario = await obtenerUsuarioPerfil(correoAnterior);
+    Usuario usuario = await obtenerUsuarioPerfil(correo);
     String usuarioId = usuario.uid;
     firestore.collection('usuarios').doc(usuarioId).update({
-      'correo': correoNuevo,
-      'nombreCompleto': nombreNuevo.trim(),
-      'telefono': celularNuevo.trim(),
-      'departamento': departamentoNuevo,
-      'especialidad': especialidadNueva.trim(),
+      'nombreCompleto': nombreNuevo.toUpperCase().trim(),
+      'telefono': celularNuevo.toUpperCase().trim(),
+      'departamento': departamentoNuevo.toUpperCase(),
+      'especialidad': especialidadNueva.toUpperCase().trim(),
     }).then((value) => print('Usuario editado correctamente'));
   }
 
@@ -297,6 +300,7 @@ class ControladorUsuario {
         _departamento = doc['departamento'];
         _especialidad = doc['especialidad'];
         _uid = doc['usuarioUID'];
+        _statusUsuario = doc['statusUsuario'];
 
         usuario = new Usuario();
         usuario.correo = _correo;
@@ -305,6 +309,7 @@ class ControladorUsuario {
         usuario.departamento = _departamento;
         usuario.especialidad = _especialidad;
         usuario.uid = _uid;
+        usuario.statusUsuario = _statusUsuario;
       });
     });
     return usuario;

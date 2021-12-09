@@ -5,6 +5,7 @@ import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Categoria.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -142,7 +143,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                       ),
                     ),
                     Container(
-                      height: 600,
+                      height: 620,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -306,12 +307,11 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                                                       TextDecoration
                                                                           .underline)),
                                                           onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
+                                                            Navigator.pushAndRemoveUntil(
+                                                              context,
+                                                              MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                                  (Route<dynamic> route) => false,
+                                                            );
                                                           },
                                                         )
                                                       ],

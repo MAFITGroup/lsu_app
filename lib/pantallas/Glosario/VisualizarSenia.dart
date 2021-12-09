@@ -10,6 +10,7 @@ import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
 import 'package:lsu_app/modelo/Senia.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/servicios/ErrorHandler.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
@@ -18,7 +19,6 @@ import 'package:lsu_app/widgets/SeleccionadorVideo.dart';
 import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
-import 'Glosario.dart';
 
 class VisualizarSenia extends StatefulWidget {
   final Senia senia;
@@ -317,28 +317,18 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                                                 TextDecoration
                                                                     .underline)),
                                                     onPressed: () {
-                                                      Navigator.pushReplacement(
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Navigator
+                                                          .pushAndRemoveUntil(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return Glosario();
-                                                          },
-                                                        ),
+                                                            builder: (context) =>
+                                                                PaginaInicial()),
+                                                        (Route<dynamic>
+                                                                route) =>
+                                                            false,
                                                       );
-                                                      /*
-                                                        Cuatro POP, uno para el diologo y los demas
-                                                        para la volver a la
-                                                        pantalla de glosario
-                                                         */
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      Navigator.of(context)
-                                                          .pop();
                                                     })
                                               ],
                                             );
@@ -469,19 +459,14 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                                    ventana de visualizacion seña
 
                                                      */
-                                            Navigator.pushReplacement(
+                                            Navigator.of(context).pop();
+                                            Navigator.pushAndRemoveUntil(
                                               context,
                                               MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return Glosario();
-                                                },
-                                              ),
+                                                  builder: (context) =>
+                                                      PaginaInicial()),
+                                              (Route<dynamic> route) => false,
                                             );
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
                                           })
                                     ],
                                   );

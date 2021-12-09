@@ -14,7 +14,7 @@ import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
-import 'package:lsu_app/pantallas/Biblioteca/Biblioteca.dart';
+import 'package:lsu_app/pantallas/Login/PaginaInicial.dart';
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
@@ -215,21 +215,11 @@ class _AltaContenidoState extends State<AltaContenido> {
                                                   /*Al presionar Ok, cierro la el dialogo y cierro la
                                                    ventana de alta contenido
                                                      */
-                                                  Navigator.pushReplacement(
+                                                  Navigator.pushAndRemoveUntil(
                                                     context,
-                                                    MaterialPageRoute(
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return Biblioteca();
-                                                      },
-                                                    ),
+                                                    MaterialPageRoute(builder: (context) => PaginaInicial()),
+                                                        (Route<dynamic> route) => false,
                                                   );
-                                                  /*
-                                                        Dos POP, uno para el diologo y otro para la
-                                                        pantalla de Alta
-                                                         */
-                                                  Navigator.of(context).pop();
-                                                  Navigator.of(context).pop();
                                                 })
                                           ],
                                         );

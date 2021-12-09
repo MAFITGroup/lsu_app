@@ -10,7 +10,6 @@ class ManualDeUsuario extends StatefulWidget {
 }
 
 class _ManualDeUsuarioState extends State<ManualDeUsuario> {
-  final GlobalKey<SfPdfViewerState> _pdfViewerJey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
