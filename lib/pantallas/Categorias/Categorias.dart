@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/buscadores/BuscadorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
@@ -17,7 +16,7 @@ class Categorias extends StatefulWidget {
 
 class _CategoriasState extends State<Categorias> {
   List<Categoria> listaCategorias = [];
-  bool isUsuarioAdmin;
+  bool ?isUsuarioAdmin;
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
   ControladorCategoria _controladorCategoria = new ControladorCategoria();
 
@@ -35,7 +34,7 @@ class _CategoriasState extends State<Categorias> {
                     showSearch(
                         context: context,
                         delegate: BuscadorCategoria(
-                            listaCategorias, listaCategorias, isUsuarioAdmin));
+                            listaCategorias, listaCategorias, isUsuarioAdmin!));
                   },
                   icon: Icon(Icons.search)),
             ],
@@ -91,7 +90,7 @@ class _CategoriasState extends State<Categorias> {
 
   Future<void> obtenerUsuarioAdministrador() async {
     isUsuarioAdmin = await _controladorUsuario
-        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
+        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser!.uid);
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
      */

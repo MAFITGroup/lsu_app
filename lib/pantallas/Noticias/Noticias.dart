@@ -27,10 +27,10 @@ class _NoticiasState extends State<Noticias> {
 
   final formKey = new GlobalKey<FormState>();
 
-  bool isUsuarioAdmin;
-  bool modoEditar;
+  bool ?isUsuarioAdmin;
+  bool ?modoEditar;
 
-  bool isSearching;
+  bool ?isSearching;
 
   int _selectedIndexForBottomNavigationBar = 0;
   int _selectedIndexForTabBar = 0;
@@ -90,7 +90,7 @@ class _NoticiasState extends State<Noticias> {
                     showSearch(
                         context: context,
                         delegate: BuscadorNoticias(
-                            listaNoticias, listaNoticias, isUsuarioAdmin));
+                            listaNoticias, listaNoticias, isUsuarioAdmin!));
                   },
                   icon: Icon(Icons.search)),
             ]),
@@ -146,7 +146,7 @@ class _NoticiasState extends State<Noticias> {
                             MaterialPageRoute(
                                 builder: (context) => VisualizarNoticia(
                                   noticia: listaLlamados[index],
-                                  isUsuarioAdmin: isUsuarioAdmin,
+                                  isUsuarioAdmin: isUsuarioAdmin!,
                                 )));
 
 
@@ -205,7 +205,7 @@ class _NoticiasState extends State<Noticias> {
                             MaterialPageRoute(
                                 builder: (context) => VisualizarNoticia(
                                   noticia: listaCharlas[index],
-                                  isUsuarioAdmin: isUsuarioAdmin,
+                                  isUsuarioAdmin: isUsuarioAdmin!,
                                 )));
 
                       },
@@ -264,7 +264,7 @@ class _NoticiasState extends State<Noticias> {
                             MaterialPageRoute(
                                 builder: (context) => VisualizarNoticia(
                                   noticia: listaNoticias[index],
-                                  isUsuarioAdmin: isUsuarioAdmin,
+                                  isUsuarioAdmin: isUsuarioAdmin!,
                                 )));
 
                       },
@@ -294,7 +294,7 @@ class _NoticiasState extends State<Noticias> {
 
   Future<void> obtenerUsuarioAdministrador() async {
     isUsuarioAdmin = await ControladorUsuario()
-        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
+        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser!.uid);
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
      */

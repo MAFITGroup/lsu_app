@@ -23,8 +23,8 @@ class Iconos {
   Iconos._();
 
   static const _kFontFam = 'HandIconFont';
-  static const String _kFontPkg = null;
+
 
   static const IconData hand =
-      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+      IconData(0xe800, fontFamily: _kFontFam, fontPackage: null);
 }

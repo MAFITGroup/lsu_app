@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
+
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
@@ -9,7 +9,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -36,17 +35,17 @@ class _AltaContenidoState extends State<AltaContenido> {
   ]; // Lista de las categorias dentro de biblioteca. Hardcodeadas xq son únicas.
   ControladorContenido _controladorContenido = new ControladorContenido();
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
-  String _tituloContenido;
-  String _descripcionContenido;
-  String _autorContenido;
-  File archivo;
-  String _url;
-  String fileExtension;
-  Uint8List fileWeb;
+  String ?_tituloContenido;
+  String ?_descripcionContenido;
+  String ?_autorContenido;
+  File ?archivo;
+  String ?_url;
+  String ?fileExtension;
+  Uint8List ?fileWeb;
   final formKey = new GlobalKey<FormState>();
-  String _usuarioUID = FirebaseAuth.instance.currentUser.uid;
+  String? _usuarioUID = FirebaseAuth.instance.currentUser?.uid;
   dynamic _catSeleccionada;
-  UploadTask uploadTask;
+  late UploadTask uploadTask;
   String archivoNombre = 'Seleccione un archivo pdf';
 
   @override
@@ -80,7 +79,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                             this._tituloContenido = value;
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'Campo Obligatorio' : null),
+                              value!.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
@@ -89,7 +88,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                           valor: (value) {
                             this._descripcionContenido = value;
                           },
-                          validacion: ((value) => value.isEmpty
+                          validacion: ((value) => value!.isEmpty
                               ? 'Campo Obligatorio'
                               : null),
                         ),
@@ -101,7 +100,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                             this._autorContenido = value;
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'Campo Obligatorio' : null),
+                              value!.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
@@ -117,25 +116,6 @@ class _AltaContenidoState extends State<AltaContenido> {
                             validator: ((value) => value == null
                                 ? 'Campo Obligatorio'
                                 : null),
-                            showSearchBox: true,
-                            clearButton: Icon(Icons.close,
-                                color: Colores().colorSombraBotones),
-                            dropDownButton: Icon(Icons.arrow_drop_down,
-                                color: Colores().colorSombraBotones),
-                            showClearButton: true,
-                            mode: Mode.DIALOG,
-                            dropdownSearchDecoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    fontFamily: 'Trueno',
-                                    fontSize: 12,
-                                    color: Colores().colorSombraBotones),
-                                hintText: "CATEGORÍA",
-                                prefixIcon: Icon(Icons.category_outlined),
-                                focusColor: Colores().colorSombraBotones,
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colores().colorSombraBotones),
-                                )),
                           ),
                         ),
                         SizedBox(height: 20.0),
@@ -155,9 +135,9 @@ class _AltaContenidoState extends State<AltaContenido> {
                         SizedBox(height: 5.0),
                         Boton(
                             titulo: 'GUARDAR',
-                            onTap: () {
+                            onTap: () async {
                               if (kIsWeb ? fileWeb == null : archivo == null) {
-                                return showCupertinoDialog(
+                                await showCupertinoDialog(
                                     context: context,
                                     barrierDismissible: true,
                                     builder: (context) {
@@ -190,7 +170,7 @@ class _AltaContenidoState extends State<AltaContenido> {
                                       ? fileWeb != null
                                       : archivo != null) &&
                                   _catSeleccionada != null &&
-                                  verificarFormato(fileExtension)) {
+                                  verificarFormato(fileExtension!)) {
                                 guardarContenido().then((userCreds) {
                                   showCupertinoDialog(
                                       useRootNavigator: false,
@@ -243,7 +223,7 @@ class _AltaContenidoState extends State<AltaContenido> {
     String docID = new UniqueKey().toString();
     final destino = 'Biblioteca/$docID';
     String nombreUsuario =
-        await _controladorUsuario.obtenerNombreUsuario(_usuarioUID);
+        await _controladorUsuario.obtenerNombreUsuario(_usuarioUID!);
 
     /*ESTOY EN LA WEB*/
 
@@ -257,13 +237,13 @@ class _AltaContenidoState extends State<AltaContenido> {
 
         _controladorContenido.crearYSubirContenidoWeb(
             docID,
-            _tituloContenido,
-            _descripcionContenido,
-            _autorContenido,
+            _tituloContenido!,
+            _descripcionContenido!,
+            _autorContenido!,
             _catSeleccionada,
             nombreUsuario,
             destino,
-            fileWeb);
+            fileWeb!);
       }
     } else {
       /*NO ESTOY EN LA WEB*/
@@ -273,13 +253,13 @@ class _AltaContenidoState extends State<AltaContenido> {
       } else {
         _controladorContenido.crearYSubirContenido(
             docID,
-            _tituloContenido,
-            _descripcionContenido,
-            _autorContenido,
+            _tituloContenido!,
+            _descripcionContenido!,
+            _autorContenido!,
             _catSeleccionada,
             nombreUsuario,
             destino,
-            archivo);
+            archivo!);
       }
     }
   }
@@ -294,7 +274,7 @@ class _AltaContenidoState extends State<AltaContenido> {
       this._url = null;
     });
 
-    FilePickerResult result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf']); //te permite cargar pdf
     if (result == null) return;
@@ -309,18 +289,18 @@ class _AltaContenidoState extends State<AltaContenido> {
         if (fileName != null) {
           archivoNombre = p.basename(fileName);
           fileExtension = p.extension(fileName);
-          verificarFormato(fileExtension);
+          verificarFormato(fileExtension!);
         }
       }
     } else {
       if (result != null) {
-        File file = File(result.files.single.path);
+        File file = File(result.files.single.path!);
         if (file != null) {
           setState(() {
             if (file.path != null) {
               fileExtension = p.extension(file.path);
               archivoNombre = p.basename(file.path);
-              if (verificarFormato(fileExtension)) {
+              if (verificarFormato(fileExtension!)) {
                 archivo = file;
                 setState(() {
                   archivoNombre;

@@ -1,17 +1,14 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class BarraDeNavegacion extends StatelessWidget {
-  final Widget titulo;
-  final List<Widget> listaWidget;
-  final PreferredSizeWidget bottom;
+  final Widget ?titulo;
+  final List<Widget> ?listaWidget;
+  final PreferredSizeWidget ?bottom;
 
   const BarraDeNavegacion({
-    Key key,
+    Key ?key,
     this.titulo,
     this.listaWidget, this.bottom,
   }) : super(key: key);

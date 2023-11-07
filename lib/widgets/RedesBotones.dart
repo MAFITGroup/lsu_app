@@ -3,10 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class RedesBotones extends StatefulWidget {
-  final VoidCallback onTap;
-  final IconData icon;
+  final VoidCallback ?onTap;
+  final IconData ?icon;
 
-  const RedesBotones({Key key, this.onTap, this.icon}) : super(key: key);
+  const RedesBotones({Key ?key, this.onTap, this.icon}) : super(key: key);
 
   @override
   _RedesBotonesState createState() => _RedesBotonesState();

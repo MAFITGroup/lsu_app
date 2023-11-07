@@ -20,8 +20,8 @@ class _GestionUsuarios extends State<GestionUsuarios> {
   List<Usuario> inactivoUsuarios = [];
   List<Usuario> listaUsuarios = [];
 
-  Usuario usuario;
-  bool isUsuarioAdmin;
+  Usuario ?usuario;
+  bool ?isUsuarioAdmin;
 
   int _selectedIndexForBottomNavigationBar = 0;
   int _selectedIndexForTabBar = 0;
@@ -88,7 +88,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
                     showSearch(
                         context: context,
                         delegate: BuscardorUsuario(
-                            listaUsuarios, listaUsuarios, isUsuarioAdmin));
+                            listaUsuarios, listaUsuarios, isUsuarioAdmin!));
                   },
                   icon: Icon(Icons.search)),
             ]),
@@ -375,7 +375,7 @@ class _GestionUsuarios extends State<GestionUsuarios> {
 
   Future<void> obtenerUsuarioAdministrador() async {
     isUsuarioAdmin = await ControladorUsuario()
-        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
+        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser!.uid);
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
      */

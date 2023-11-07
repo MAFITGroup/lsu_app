@@ -5,7 +5,7 @@ import 'package:lsu_app/manejadores/Navegacion.dart';
 
 class ErrorHandler {
   //Error Dialogs
-  Future<bool> errorDialog(e, BuildContext context) {
+  Future<bool?> errorDialog(e, BuildContext context) {
     return showCupertinoDialog(
         context: context,
         barrierDismissible: true,
@@ -41,7 +41,7 @@ class ErrorHandler {
         });
   }
 
-  Future<bool> errorDialog2(BuildContext context, e) {
+  Future<bool?> errorDialog2(BuildContext context, e) {
     return showCupertinoDialog(
         context: context,
         barrierDismissible: true,
@@ -68,7 +68,7 @@ class ErrorHandler {
         });
   }
 
-  Future<bool> errorDialog3(BuildContext context, e) {
+  Future<bool?> errorDialog3(BuildContext context, e) {
     return showDialog(
         context: context,
         barrierDismissible: true,
@@ -103,7 +103,7 @@ class ErrorHandler {
         });
   }
 
-  Future<bool> errorDialogTooManyRequest(BuildContext context, e) {
+  Future<bool?> errorDialogTooManyRequest(BuildContext context, e) {
     return showCupertinoDialog(
         context: context,
         barrierDismissible: true,
@@ -130,7 +130,7 @@ class ErrorHandler {
         });
   }
 
-  Future<bool> errorDialogWrongPassword(BuildContext context, e) {
+  Future<bool?> errorDialogWrongPassword(BuildContext context, e) {
     return showCupertinoDialog(
         context: context,
         barrierDismissible: true,
@@ -156,7 +156,7 @@ class ErrorHandler {
         });
   }
 
-  Future<bool> errorDialogEditarPerfil(BuildContext context, e) {
+  Future<bool?> errorDialogEditarPerfil(BuildContext context, e) {
     return showCupertinoDialog(
         context: context,
         barrierDismissible: true,

@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lsu_app/controladores/ControladorNoticia.dart';
@@ -19,7 +17,7 @@ import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
 class AltaNoticias extends StatefulWidget {
-  const AltaNoticias({Key key}) : super(key: key);
+  const AltaNoticias({Key ?key}) : super(key: key);
 
   @override
   _AltaNoticiasState createState() => _AltaNoticiasState();
@@ -32,9 +30,9 @@ class _AltaNoticiasState extends State<AltaNoticias> {
 
   dynamic _tipoSeleccionado;
 
-  String _tituloNoticia;
-  String _descripcionNoticia;
-  String _linkNoticia;
+  String ?_tituloNoticia;
+  String ?_descripcionNoticia;
+  String ?_linkNoticia;
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -51,8 +49,8 @@ class _AltaNoticiasState extends State<AltaNoticias> {
 
     /// funciona en backgroubd
     FirebaseMessaging.onMessage.listen((RemoteMessage mensaje) {
-      RemoteNotification notification = mensaje.notification;
-      AndroidNotification android = mensaje.notification.android;
+      RemoteNotification? notification = mensaje.notification;
+      AndroidNotification? android = mensaje.notification!.android;
       if (notification != null && android != null) {
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
@@ -71,15 +69,15 @@ class _AltaNoticiasState extends State<AltaNoticias> {
     /// y el usuario presiona la notificacion
     FirebaseMessaging.onMessageOpenedApp.listen((mensaje) {
       print(' Una nueva notificacion a sido generada');
-      RemoteNotification notification = mensaje.notification;
-      AndroidNotification android = mensaje.notification.android;
+      RemoteNotification? notification = mensaje.notification;
+      AndroidNotification? android = mensaje.notification!.android;
       if (notification != null && android != null) {
         showDialog(
             context: context,
             builder: (_) {
               return DialogoAlerta(
-                tituloMensaje: notification.title,
-                mensaje: notification.body,
+                tituloMensaje: notification.title!,
+                mensaje: notification.body!,
               );
             });
       }
@@ -117,25 +115,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                             },
                             validator: ((value) =>
                                 value == null ? 'Campo Obligatorio' : null),
-                            showSearchBox: true,
-                            clearButton: Icon(Icons.close,
-                                color: Colores().colorSombraBotones),
-                            dropDownButton: Icon(Icons.arrow_drop_down,
-                                color: Colores().colorSombraBotones),
-                            showClearButton: true,
-                            mode: Mode.DIALOG,
-                            dropdownSearchDecoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    fontFamily: 'Trueno',
-                                    fontSize: 12,
-                                    color: Colores().colorSombraBotones),
-                                hintText: "TIPO",
-                                prefixIcon: Icon(Icons.category_outlined),
-                                focusColor: Colores().colorSombraBotones,
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colores().colorSombraBotones),
-                                )),
+
                           ),
                         ),
                         SizedBox(height: 15.0),
@@ -146,7 +126,7 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                             this._tituloNoticia = value;
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'Campo Obligatorio' : null),
+                              value!.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
@@ -167,14 +147,14 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                           nombre: 'LINK',
                           icon: Icon(Icons.link),
                           valor: (value) {
-                            if (value.contains('https')) {
+                            if (value!.contains('https')) {
                               this._linkNoticia = value;
                             } else {
                               this._linkNoticia = 'https://$value';
                             }
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'Campo Obligatorio' : null),
+                              value!.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 20.0),
                         Boton(
@@ -183,9 +163,9 @@ class _AltaNoticiasState extends State<AltaNoticias> {
                               if (Validar().camposVacios(formKey)) {
                                 crearNoticia(
                                   _tipoSeleccionado,
-                                  _tituloNoticia,
-                                  _descripcionNoticia,
-                                  _linkNoticia,
+                                  _tituloNoticia!,
+                                  _descripcionNoticia!,
+                                  _linkNoticia!,
                                 )
                                     .then(
                                   (value) => showDialog(

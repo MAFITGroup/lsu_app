@@ -1,8 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
@@ -17,9 +16,9 @@ import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
 class Perfil extends StatefulWidget {
-  final Usuario usuario;
+  final Usuario ?usuario;
 
-  const Perfil({Key key, this.usuario}) : super(key: key);
+  const Perfil({Key? key, this.usuario}) : super(key: key);
 
   @override
   _PerfilState createState() => _PerfilState();
@@ -28,7 +27,7 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   final formKey = new GlobalKey<FormState>();
 
-  bool modoEditar;
+  bool ?modoEditar;
 
   dynamic correoNuevo;
   dynamic nombreNuevo;
@@ -71,7 +70,7 @@ class _PerfilState extends State<Perfil> {
 
   @override
   Widget build(BuildContext context) {
-    Usuario usuario = widget.usuario;
+    Usuario? usuario = widget.usuario;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -87,12 +86,12 @@ class _PerfilState extends State<Perfil> {
                                 value: 0,
                                 child: ListTile(
                                     leading: Icon(
-                                        !modoEditar
+                                        !modoEditar!
                                             ? Icons.edit
                                             : Icons.cancel_outlined,
                                         color: Colores().colorAzul),
                                     title: Text(
-                                        !modoEditar ? 'Editar' : 'Cancelar',
+                                        !modoEditar! ? 'Editar' : 'Cancelar',
                                         style: TextStyle(
                                             fontFamily: 'Trueno',
                                             fontSize: 14,
@@ -125,41 +124,41 @@ class _PerfilState extends State<Perfil> {
                       nombre: 'CORREO',
                       icon: Icon(Icons.alternate_email_rounded),
                       habilitado: false,
-                      controlador: modoEditar
+                      controlador: modoEditar!
                           ? null
-                          : TextEditingController(text: usuario.correo),
+                          : TextEditingController(text: usuario?.correo),
                     ),
                     // NOMBRE COMPLETO
                     TextFieldTexto(
                         nombre: 'NOMBRE COMPLETO',
                         icon: Icon(Icons.person),
                         habilitado: modoEditar,
-                        controlador: modoEditar
+                        controlador: modoEditar!
                             ? null
                             : TextEditingController(
-                                text: usuario.nombreCompleto),
+                                text: usuario?.nombreCompleto),
                         valor: (value) {
                           setState(() {
                             nombreNuevo = value;
                           });
                         },
                         validacion: ((value) =>
-                            value.isEmpty ? 'Campo obligatorio' : null)),
+                            value!.isEmpty ? 'Campo obligatorio' : null)),
 
                     // CELULAR
                     TextFieldNumerico(
                         nombre: 'CELULAR',
                         icon: Icon(Icons.phone),
-                        habilitado: modoEditar,
-                        controlador: modoEditar
+                        habilitado: modoEditar!,
+                        controlador: modoEditar!
                             ? null
-                            : TextEditingController(text: usuario.telefono),
+                            : TextEditingController(text: usuario?.telefono),
                         valor: (value) {
                           setState(() {
                             celularNuevo = value;
                           });
                         },
-                        validacion: (value) => value.isEmpty
+                        validacion: (value) => value!.isEmpty
                             ? 'Campo obligatorio'
                             : Validar().validarCelular(value)),
 
@@ -168,8 +167,8 @@ class _PerfilState extends State<Perfil> {
                       padding: const EdgeInsets.only(left: 25, right: 25),
                       child: DropdownSearch(
                         items: departamentos,
-                        enabled: modoEditar,
-                        selectedItem: usuario.departamento,
+                        enabled: modoEditar!,
+                        selectedItem: usuario?.departamento,
                         onChanged: (value) {
                           setState(() {
                             departamentoNuevo = value;
@@ -182,25 +181,6 @@ class _PerfilState extends State<Perfil> {
                             return null;
                           }
                         },
-                        showSearchBox: true,
-                        clearButton: Icon(Icons.close,
-                            color: Colores().colorSombraBotones),
-                        dropDownButton: Icon(Icons.arrow_drop_down,
-                            color: Colores().colorSombraBotones),
-                        showClearButton: true,
-                        mode: Mode.DIALOG,
-                        dropdownSearchDecoration: InputDecoration(
-                            hintStyle: TextStyle(
-                                fontFamily: 'Trueno',
-                                fontSize: 12,
-                                color: Colores().colorSombraBotones),
-                            hintText: "DEPARTAMENTO",
-                            prefixIcon: Icon(Icons.location_city_outlined),
-                            focusColor: Colores().colorSombraBotones,
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colores().colorSombraBotones),
-                            )),
                         autoValidateMode: AutovalidateMode.always,
                       ),
                     ),
@@ -210,44 +190,44 @@ class _PerfilState extends State<Perfil> {
                         nombre: 'ESPECIALIDAD',
                         icon: Icon(Icons.military_tech_outlined),
                         habilitado: modoEditar,
-                        controlador: modoEditar
+                        controlador: modoEditar!
                             ? null
-                            : TextEditingController(text: usuario.especialidad),
+                            : TextEditingController(text: usuario?.especialidad),
                         valor: (value) {
                           setState(() {
                             especialidadNueva = value;
                           });
                         },
                         validacion: ((value) =>
-                            value.isEmpty ? 'Campo obligatorio' : null)),
+                            value!.isEmpty ? 'Campo obligatorio' : null)),
                     SizedBox(height: 50.0),
 
-                    modoEditar
+                    modoEditar!
                         ? Boton(
                             titulo: 'Guardar',
                             onTap: () {
                               if (correoNuevo == null) {
-                                correoNuevo = usuario.correo;
+                                correoNuevo = usuario?.correo;
                               }
                               if (nombreNuevo == null) {
-                                nombreNuevo = usuario.nombreCompleto;
+                                nombreNuevo = usuario?.nombreCompleto;
                               }
                               if (celularNuevo == null) {
-                                celularNuevo = usuario.telefono;
+                                celularNuevo = usuario?.telefono;
                               }
                               if (departamentoNuevo == null) {
-                                departamentoNuevo = usuario.departamento;
+                                departamentoNuevo = usuario?.departamento;
                               }
                               if (especialidadNueva == null) {
-                                especialidadNueva = usuario.especialidad;
+                                especialidadNueva = usuario?.especialidad;
                               }
                               if (Validar().camposVacios(formKey)) {
                                 guardarEdicionPerfil(
-                                    usuario.correo,
-                                    usuario.nombreCompleto,
-                                    usuario.telefono,
-                                    usuario.departamento,
-                                    usuario.especialidad,
+                                    usuario!.correo,
+                                    usuario!.nombreCompleto,
+                                    usuario!.telefono,
+                                    usuario!.departamento,
+                                    usuario!.especialidad,
                                     nombreNuevo,
                                     celularNuevo,
                                     departamentoNuevo,
@@ -306,7 +286,7 @@ class _PerfilState extends State<Perfil> {
   void onSelected(BuildContext context, int item) {
     switch (item) {
       case 0:
-        !modoEditar ? editarPerfil() : canelarEditar();
+        !modoEditar! ? editarPerfil() : canelarEditar();
         break;
       case 1:
         showDialog(
@@ -343,7 +323,7 @@ class _PerfilState extends State<Perfil> {
                                   fontSize: 11.0,
                                   decoration: TextDecoration.underline)),
                           onPressed: () {
-                            inactivarUsuario(widget.usuario.correo);
+                            inactivarUsuario(widget.usuario!.correo);
                             AuthService().signOut();
                             Navigator.pushAndRemoveUntil(
                               context,
@@ -360,7 +340,7 @@ class _PerfilState extends State<Perfil> {
                                   fontSize: 11.0,
                                   decoration: TextDecoration.underline)),
                           onPressed: () {
-                            eliminarUsuario(widget.usuario.correo);
+                            eliminarUsuario(widget.usuario!.correo);
                             AuthService().signOut();
                             Navigator.pushAndRemoveUntil(
                               context,
@@ -428,7 +408,7 @@ class _PerfilState extends State<Perfil> {
         .then((value) => _controladorUsuario.eliminarUsuario(correo));
   }
 
-  Future inactivarUsuario(String correo) {
+  Future? inactivarUsuario(String correo) {
     _controladorUsuario.inactivarUsuario(correo);
   }
 }

@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lsu_app/buscadores/BuscadorContenido.dart';
 import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
@@ -18,7 +16,7 @@ class Biblioteca extends StatefulWidget {
 
 class _BibliotecaState extends State<Biblioteca> {
   List<Contenido> listaContenido = [];
-  bool isUsuarioAdmin;
+  bool ?isUsuarioAdmin;
   bool isSearching = false;
 
   @override
@@ -44,7 +42,7 @@ class _BibliotecaState extends State<Biblioteca> {
                         showSearch(
                             context: context,
                             delegate: BuscadorContenido(listaContenido,
-                                listaContenido, isUsuarioAdmin));
+                                listaContenido, isUsuarioAdmin!));
                       },
                       icon: Icon(Icons.search)),
                 ],
@@ -76,7 +74,7 @@ class _BibliotecaState extends State<Biblioteca> {
                                               VisualizarContenido(
                                                 contenido:
                                                     listaContenido[index],
-                                                isUsuarioAdmin: isUsuarioAdmin,
+                                                isUsuarioAdmin: isUsuarioAdmin!,
                                               )));
                                 },
                                 title: Text(
@@ -115,7 +113,7 @@ class _BibliotecaState extends State<Biblioteca> {
 
   Future<void> obtenerUsuarioAdministrador() async {
     isUsuarioAdmin = await ControladorUsuario()
-        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
+        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser!.uid);
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
      */

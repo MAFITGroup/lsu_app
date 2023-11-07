@@ -1,11 +1,11 @@
 class Noticia {
-  String _titulo;
-  String _descripcion;
-  String _tipo;
-  String _usuarioAlta;
-  String _link;
-  String _documentID;
-  String _fechaSubida;
+  late String _titulo;
+  late String _descripcion;
+  late String _tipo;
+  late String _usuarioAlta;
+  late String _link;
+  late String _documentID;
+  late String _fechaSubida;
 
   Noticia();
 

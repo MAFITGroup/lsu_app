@@ -7,7 +7,7 @@ import 'package:lsu_app/widgets/Boton.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
 class ReactivarUsuario extends StatefulWidget {
-  const ReactivarUsuario({Key key}) : super(key: key);
+  const ReactivarUsuario({Key ?key}) : super(key: key);
 
   @override
   _ReactivarUsuarioState createState() => _ReactivarUsuarioState();
@@ -16,11 +16,11 @@ class ReactivarUsuario extends StatefulWidget {
 class _ReactivarUsuarioState extends State<ReactivarUsuario> {
   final formKey = new GlobalKey<FormState>();
 
-  String email;
+  String ?email;
 
   checkFields() {
     final form = formKey.currentState;
-    if (form.validate()) {
+    if (form!.validate()) {
       form.save();
       return true;
     }
@@ -28,13 +28,17 @@ class _ReactivarUsuarioState extends State<ReactivarUsuario> {
   }
 
   String validarCorreo(String value) {
+
+    String resultado = "";
+
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Por favor, ingrese un correo válido';
-    else
-      return null;
+    RegExp regex = new RegExp(pattern.toString());
+    if (!regex.hasMatch(value)) {
+      resultado = 'Por favor, ingrese un correo válido';
+    }
+
+    return resultado;
   }
 
   @override
@@ -61,7 +65,7 @@ class _ReactivarUsuarioState extends State<ReactivarUsuario> {
             valor: (value) {
               this.email = value;
             },
-            validacion: (value) => value.isEmpty
+            validacion: (value) => value!.isEmpty
                 ? 'El email es requerido'
                 : Validar().validarCorreo(value),
           ),
@@ -70,7 +74,7 @@ class _ReactivarUsuarioState extends State<ReactivarUsuario> {
             titulo: 'CONFIRMAR',
             onTap: () {
               if (checkFields()) {
-                ControladorUsuario().reactivarUsuario(email, context);
+                ControladorUsuario().reactivarUsuario(email!, context);
               } // if(checkField)
             }, // onTap
           ),

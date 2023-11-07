@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lsu_app/modelo/Senia.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -15,19 +15,19 @@ class ControladorSenia {
   final Trace myTrace = FirebasePerformance.instance.newTrace("Senias");
 
 
-  String _nombre;
-  String _categoria;
-  String _subCategoria;
-  String _usuarioAlta;
-  String _descripcion;
-  String _urlVideo;
-  Senia senia;
-  String _documentID;
-  int _cantidadVisualizaciones;
+  String ?_nombre;
+  String ?_categoria;
+  String ?_subCategoria;
+  String ?_usuarioAlta;
+  String ?_descripcion;
+  String ?_urlVideo;
+  Senia ?senia;
+  String ?_documentID;
+  int ?_cantidadVisualizaciones;
 
 
 
-  Future<UploadTask> crearYSubirSenia(
+  Future<UploadTask?> crearYSubirSenia(
       String idSenia,
       String nombre,
       String descripcion,
@@ -71,9 +71,11 @@ class ControladorSenia {
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
+      print(e.message);
       return null;
     }
     myTrace.stop();
+    return subida;
   }
 
 
@@ -82,7 +84,7 @@ class ControladorSenia {
   desde la web, ya que el reproductor de video es null en la web
   por lo tanto se pasa como @param un tipo de dato Uint8List
    */
-  Future<UploadTask> crearYSubirSeniaWeb(
+  Future<UploadTask?> crearYSubirSeniaWeb(
       String idSenia,
       String nombre,
       String descripcion,
@@ -121,16 +123,18 @@ class ControladorSenia {
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
+      print(e.message);
       return null;
     }
     myTrace.stop();
+    return subida;
   }
 
   /*
   Se usa para obtener el objeto Senia
   cuando entro a Visualizarla
    */
-  Future<Senia> obtenerSenia(String nombreSenia, String descripcionSenia,
+  Future<Senia?> obtenerSenia(String nombreSenia, String descripcionSenia,
       String categoriaSenia, String subCategoriaSenia) async {
     await firestore
         .collection('senias')
@@ -151,14 +155,14 @@ class ControladorSenia {
         _cantidadVisualizaciones = doc['cantidadVisualizaciones'];
 
         senia = new Senia();
-        senia.nombre = _nombre;
-        senia.descripcion = _descripcion;
-        senia.usuarioAlta = _usuarioAlta;
-        senia.categoria = _categoria;
-        senia.subCategoria = _subCategoria;
-        senia.urlVideo = _urlVideo;
-        senia.documentID = _documentID;
-        senia.cantidadVisualizaciones = _cantidadVisualizaciones;
+        senia?.nombre = _nombre!;
+        senia?.descripcion = _descripcion!;
+        senia?.usuarioAlta = _usuarioAlta!;
+        senia?.categoria = _categoria!;
+        senia?.subCategoria = _subCategoria!;
+        senia?.urlVideo = _urlVideo!;
+        senia?.documentID = _documentID!;
+        senia?.cantidadVisualizaciones = _cantidadVisualizaciones!;
       });
     });
 
@@ -169,7 +173,7 @@ class ControladorSenia {
   Se usa para obtener el objeto Senia
   cuando entro a Visualizarla
    */
-  Future<Senia> obtenerSeniaPorNombre(String nombreSenia) async {
+  Future<Senia?> obtenerSeniaPorNombre(String nombreSenia) async {
     await firestore
         .collection('senias')
         .where('nombre', isEqualTo: nombreSenia)
@@ -186,14 +190,14 @@ class ControladorSenia {
         _cantidadVisualizaciones = doc['cantidadVisualizaciones'];
 
         senia = new Senia();
-        senia.nombre = _nombre;
-        senia.descripcion = _descripcion;
-        senia.usuarioAlta = _usuarioAlta;
-        senia.categoria = _categoria;
-        senia.subCategoria = _subCategoria;
-        senia.urlVideo = _urlVideo;
-        senia.documentID = _documentID;
-        senia.cantidadVisualizaciones = _cantidadVisualizaciones;
+        senia?.nombre = _nombre!;
+        senia?.descripcion = _descripcion!;
+        senia?.usuarioAlta = _usuarioAlta!;
+        senia?.categoria = _categoria!;
+        senia?.subCategoria = _subCategoria!;
+        senia?.urlVideo = _urlVideo!;
+        senia?.documentID = _documentID!;
+        senia?.cantidadVisualizaciones = _cantidadVisualizaciones!;
       });
     });
 
@@ -209,9 +213,9 @@ class ControladorSenia {
       String descripcionNueva,
       String categoriaNueva,
       String subCategoriaNueva) async {
-    Senia senia = await obtenerSenia(nombreAnterior, descripcionAnterior,
+    Senia? senia = await obtenerSenia(nombreAnterior, descripcionAnterior,
         categoriaAnterior, subCategoriaAnterior);
-    String docId = senia.documentID;
+    String? docId = senia?.documentID;
 
     firestore.collection("senias").doc(docId).update({
       'nombre': nombreNuevo,
@@ -227,9 +231,9 @@ class ControladorSenia {
     String categoria,
     String subCategoria,
   ) async {
-    Senia senia =
+    Senia? senia =
         await obtenerSenia(nombre, descripcion, categoria, subCategoria);
-    String docId = senia.documentID;
+    String? docId = senia?.documentID;
 
     // primero elimino la senia
     await firestore
@@ -239,7 +243,7 @@ class ControladorSenia {
         .then((value) => print("Seña Eliminada correctamente"));
 
     // luego elimino el video
-    await eliminarVideoSenia(docId);
+    await eliminarVideoSenia(docId!);
   }
 
   Future eliminarVideoSenia(String docId) async {
@@ -268,16 +272,16 @@ class ControladorSenia {
 
         senia = new Senia();
 
-        senia.nombre = _nombre;
-        senia.descripcion = _descripcion;
-        senia.usuarioAlta = _usuarioAlta;
-        senia.categoria = _categoria;
-        senia.subCategoria = _subCategoria;
-        senia.urlVideo = _urlVideo;
-        senia.documentID = _documentID;
-        senia.cantidadVisualizaciones = _cantidadVisualizaciones;
+        senia?.nombre = _nombre!;
+        senia?.descripcion = _descripcion!;
+        senia?.usuarioAlta = _usuarioAlta!;
+        senia?.categoria = _categoria!;
+        senia?.subCategoria = _subCategoria!;
+        senia?.urlVideo = _urlVideo!;
+        senia?.documentID = _documentID!;
+        senia?.cantidadVisualizaciones = _cantidadVisualizaciones!;
 
-        lista.add(senia);
+        lista.add(senia!);
       });
     });
 
@@ -311,16 +315,16 @@ class ControladorSenia {
 
         senia = new Senia();
 
-        senia.nombre = _nombre;
-        senia.descripcion = _descripcion;
-        senia.usuarioAlta = _usuarioAlta;
-        senia.categoria = _categoria;
-        senia.subCategoria = _subCategoria;
-        senia.urlVideo = _urlVideo;
-        senia.documentID = _documentID;
-        senia.cantidadVisualizaciones = _cantidadVisualizaciones;
+        senia?.nombre = _nombre!;
+        senia?.descripcion = _descripcion!;
+        senia?.usuarioAlta = _usuarioAlta!;
+        senia?.categoria = _categoria!;
+        senia?.subCategoria = _subCategoria!;
+        senia?.urlVideo = _urlVideo!;
+        senia?.documentID = _documentID!;
+        senia?.cantidadVisualizaciones = _cantidadVisualizaciones!;
 
-        lista.add(senia);
+        lista.add(senia!);
       });
     });
 
@@ -355,16 +359,16 @@ class ControladorSenia {
 
         senia = new Senia();
 
-        senia.nombre = _nombre;
-        senia.descripcion = _descripcion;
-        senia.usuarioAlta = _usuarioAlta;
-        senia.categoria = _categoria;
-        senia.subCategoria = _subCategoria;
-        senia.urlVideo = _urlVideo;
-        senia.documentID = _documentID;
-        senia.cantidadVisualizaciones = _cantidadVisualizaciones;
+        senia?.nombre = _nombre!;
+        senia?.descripcion = _descripcion!;
+        senia?.usuarioAlta = _usuarioAlta!;
+        senia?.categoria = _categoria!;
+        senia?.subCategoria = _subCategoria!;
+        senia?.urlVideo = _urlVideo!;
+        senia?.documentID = _documentID!;
+        senia?.cantidadVisualizaciones = _cantidadVisualizaciones!;
 
-        lista.add(senia);
+        lista.add(senia!);
       });
     });
 
@@ -379,8 +383,8 @@ class ControladorSenia {
   }
 
   Future<void> incrementarVisualizacionSenia(String nombreSenia) async {
-    Senia senia = await obtenerSeniaPorNombre(nombreSenia);
-    String docId = senia.documentID;
+    Senia? senia = await obtenerSeniaPorNombre(nombreSenia);
+    String? docId = senia?.documentID;
     // Pasa el usuario a estado inactivo
     await firestore
         .collection('senias')
@@ -409,16 +413,16 @@ class ControladorSenia {
 
         senia = new Senia();
 
-        senia.nombre = _nombre;
-        senia.descripcion = _descripcion;
-        senia.usuarioAlta = _usuarioAlta;
-        senia.categoria = _categoria;
-        senia.subCategoria = _subCategoria;
-        senia.urlVideo = _urlVideo;
-        senia.documentID = _documentID;
-        senia.cantidadVisualizaciones = _cantidadVisualizaciones;
+        senia?.nombre = _nombre!;
+        senia?.descripcion = _descripcion!;
+        senia?.usuarioAlta = _usuarioAlta!;
+        senia?.categoria = _categoria!;
+        senia?.subCategoria = _subCategoria!;
+        senia?.urlVideo = _urlVideo!;
+        senia?.documentID = _documentID!;
+        senia?.cantidadVisualizaciones = _cantidadVisualizaciones!;
 
-        lista.add(senia);
+        lista.add(senia!);
       });
     });
 

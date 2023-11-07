@@ -1,19 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class TextFieldContrasenia extends StatefulWidget {
-  final String nombre;
-  final Function(String) valor;
-  final Function(String) validacion;
+  final String ?nombre;
+  final Function(String) ?valor;
+  final String? Function(String?) ?validacion;
   bool verContrasenia = true;
-  final Icon icon;
-  final Widget iconInfo;
-  final TextEditingController controlador;
-  final bool habilitado;
+  final Icon ?icon;
+  final Widget ?iconInfo;
+  final TextEditingController ?controlador;
+  final bool ?habilitado;
 
   TextFieldContrasenia(
-      {Key key,
+      {Key ?key,
       this.nombre,
       this.valor,
       this.validacion,

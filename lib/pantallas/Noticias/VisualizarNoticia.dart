@@ -15,16 +15,15 @@ import 'package:lsu_app/widgets/TextFieldDescripcion.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'Noticias.dart';
 
 enum RedesSociales { facebook, twitter, email, whatsapp }
 
 class VisualizarNoticia extends StatefulWidget {
-  final Noticia noticia;
-  final bool isUsuarioAdmin;
+  final Noticia ?noticia;
+  final bool ?isUsuarioAdmin;
 
   const VisualizarNoticia(
-      {Key key,
+      {Key ?key,
       this.noticia,
       this.isUsuarioAdmin})
       : super(key: key);
@@ -36,7 +35,7 @@ class VisualizarNoticia extends StatefulWidget {
 class _VisualizarNoticiaState extends State<VisualizarNoticia> {
   List _tipo = ['CHARLAS', 'LLAMADOS'];
 
-  bool modoEditar;
+  bool ?modoEditar;
 
   final formKey = new GlobalKey<FormState>();
 
@@ -54,8 +53,8 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
 
   @override
   Widget build(BuildContext context) {
-    Noticia noticia = widget.noticia;
-    bool isUsuarioAdmin = widget.isUsuarioAdmin;
+    Noticia? noticia = widget.noticia;
+    bool? isUsuarioAdmin = widget.isUsuarioAdmin;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -63,11 +62,11 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
           children: [
             BarraDeNavegacion(
                 titulo: Text(
-                  'NOTICIA' + '-' + noticia.titulo.toUpperCase(),
+                  'NOTICIA' + '-' + noticia!.titulo.toUpperCase(),
                   // AGREGRAR NOMBRE DE LA NOTICIA
                   style: TextStyle(fontFamily: 'Trueno', fontSize: 14),
                 ),
-                listaWidget: isUsuarioAdmin
+                listaWidget: isUsuarioAdmin!
                     ? [
                         PopupMenuButton<int>(
                           onSelected: (item) => onSelected(context, item),
@@ -76,12 +75,12 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                                 value: 0,
                                 child: ListTile(
                                     leading: Icon(
-                                        !modoEditar
+                                        !modoEditar!
                                             ? Icons.edit
                                             : Icons.cancel_outlined,
                                         color: Colores().colorAzul),
                                     title: Text(
-                                        !modoEditar
+                                        !modoEditar!
                                             ? "Editar Noticia"
                                             : "Cancelar Editar",
                                         style: TextStyle(
@@ -116,7 +115,7 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: DropdownSearch(
-                            enabled: modoEditar,
+                            enabled: modoEditar!,
                             selectedItem: noticia.tipo,
                             items: _tipo,
                             onChanged: (value) {
@@ -131,25 +130,6 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                                 return null;
                               }
                             }),
-                            showSearchBox: true,
-                            clearButton: Icon(Icons.close,
-                                color: Colores().colorSombraBotones),
-                            dropDownButton: Icon(Icons.arrow_drop_down,
-                                color: Colores().colorSombraBotones),
-                            showClearButton: true,
-                            mode: Mode.DIALOG,
-                            dropdownSearchDecoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    fontFamily: 'Trueno',
-                                    fontSize: 12,
-                                    color: Colores().colorSombraBotones),
-                                hintText: "TIPO",
-                                prefixIcon: Icon(Icons.category_outlined),
-                                focusColor: Colores().colorSombraBotones,
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colores().colorSombraBotones),
-                                )),
                           ),
                         ),
                         SizedBox(height: 15.0),
@@ -157,39 +137,39 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
                           nombre: 'TÍTULO',
                           icon: Icon(Icons.format_size_outlined),
                           habilitado: modoEditar,
-                          controlador: modoEditar
+                          controlador: modoEditar!
                               ? null
                               : TextEditingController(text: noticia.titulo),
                           valor: (value) {
                             tituloNoticiaNuevo = value;
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'Campo Obligatorio' : null),
+                              value!.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldTexto(
                           nombre: 'LINK',
                           icon: Icon(Icons.link),
                           habilitado: modoEditar,
-                          controlador: modoEditar
+                          controlador: modoEditar!
                               ? null
                               : TextEditingController(text: noticia.link),
                           valor: (value) {
-                            if (value.contains('https')) {
+                            if (value!.contains('https')) {
                               linkNoticiaNueva = value;
                             } else {
                               linkNoticiaNueva = 'https://$value';
                             }
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'Campo Obligatorio' : null),
+                              value!.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
                           nombre: 'DESCRIPCIÓN',
                           icon: Icon(Icons.format_align_left_outlined),
                           habilitado: modoEditar,
-                          controlador: modoEditar
+                          controlador: modoEditar!
                               ? null
                               : TextEditingController(
                                   text: noticia.descripcion),
@@ -203,8 +183,8 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
 
                            */
                         ),
-                        !modoEditar ? SocialMediaBotones() : Container(),
-                        !modoEditar
+                        !modoEditar! ? SocialMediaBotones() : Container(),
+                        !modoEditar!
                             ? Boton(
                                 titulo: 'NAVEGAR AL SITIO',
                                 onTap: () {
@@ -322,14 +302,14 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
   }
 
   void onSelected(BuildContext context, int item) {
-    String titulo = widget.noticia.titulo;
-    String tipo = widget.noticia.tipo;
-    String descripcion = widget.noticia.descripcion;
-    String link = widget.noticia.link;
+    String titulo = widget.noticia!.titulo;
+    String tipo = widget.noticia!.tipo;
+    String descripcion = widget.noticia!.descripcion;
+    String link = widget.noticia!.link;
 
     switch (item) {
       case 0:
-        !modoEditar ? editarNoticia() : canelarEditar();
+        !modoEditar! ? editarNoticia() : canelarEditar();
         break;
       case 1:
         showDialog(
@@ -413,23 +393,23 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
       children: [
         RedesBotones(
           icon: FontAwesomeIcons.facebook,
-          onTap: () => compartir(RedesSociales.facebook, widget.noticia.titulo,
-              widget.noticia.link),
+          onTap: () => compartir(RedesSociales.facebook, widget.noticia!.titulo,
+              widget.noticia!.link),
         ),
         RedesBotones(
           icon: FontAwesomeIcons.twitter,
-          onTap: () => compartir(RedesSociales.twitter, widget.noticia.titulo,
-              widget.noticia.link),
+          onTap: () => compartir(RedesSociales.twitter, widget.noticia!.titulo,
+              widget.noticia!.link),
         ),
         RedesBotones(
           icon: FontAwesomeIcons.whatsapp,
-          onTap: () => compartir(RedesSociales.whatsapp, widget.noticia.titulo,
-              widget.noticia.link),
+          onTap: () => compartir(RedesSociales.whatsapp, widget.noticia!.titulo,
+              widget.noticia!.link),
         ),
         RedesBotones(
           icon: Icons.email,
           onTap: () => compartir(
-              RedesSociales.email, widget.noticia.titulo, widget.noticia.link),
+              RedesSociales.email, widget.noticia!.titulo, widget.noticia!.link),
         ),
       ],
     );
@@ -456,24 +436,24 @@ class _VisualizarNoticiaState extends State<VisualizarNoticia> {
 
     final url = urls[redes];
 
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(url as Uri)) {
+      await launchUrl(url as Uri);
     } else {
-      throw AlertDialog().title;
+      throw AlertDialog().title!;
     }
   }
 
   lanzarLink(String link) async {
     String url = link;
-    if (await canLaunch(url)) {
-      await launch(url, forceWebView: true, webOnlyWindowName: '_blank');
+    if (await canLaunchUrl(url as Uri)) {
+      await launchUrl(url as Uri, mode: LaunchMode.inAppWebView, webOnlyWindowName: '_blank');
     } else {
-      throw AlertDialog().title;
+      throw AlertDialog().title!;
     }
   }
 
-  Widget navegarALink(String link, BuildContext context) {
-    showDialog(
+  Future navegarALink(String link, BuildContext context) {
+   return showDialog(
         useRootNavigator: false,
         context: context,
         builder: (BuildContext context) {

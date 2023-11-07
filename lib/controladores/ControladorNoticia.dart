@@ -8,17 +8,17 @@ class ControladorNoticia {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  String _tipo;
-  String _titulo;
-  String _descripcion;
-  String _link;
-  String _uid;
-  String _fechaSubida;
-  String _usuarioAlta;
+  String ?_tipo;
+  String ?_titulo;
+  String ?_descripcion;
+  String ?_link;
+  String ?_uid;
+  String ?_fechaSubida;
+  String ?_usuarioAlta;
 
-  Noticia noticia;
+  Noticia ?noticia;
 
-  Future<Noticia> obtenerNoticia(String tipoNoticia, String tituloNoticia,
+  Future<Noticia?> obtenerNoticia(String tipoNoticia, String tituloNoticia,
       String descripcionNoticia, String linkNoticia) async {
     await firestore
         .collection('noticias')
@@ -38,13 +38,13 @@ class ControladorNoticia {
         _fechaSubida = doc['fechaSubida'];
 
         noticia = new Noticia();
-        noticia.tipo = _tipo;
-        noticia.titulo = _titulo;
-        noticia.descripcion = _descripcion;
-        noticia.link = _link;
-        noticia.usuarioAlta = _usuarioAlta;
-        noticia.documentID = _uid;
-        noticia.fechaSubida = _fechaSubida;
+        noticia?.tipo = _tipo!;
+        noticia?.titulo = _titulo!;
+        noticia?.descripcion = _descripcion!;
+        noticia?.link = _link!;
+        noticia?.usuarioAlta = _usuarioAlta!;
+        noticia?.documentID = _uid!;
+        noticia?.fechaSubida = _fechaSubida!;
       });
     });
     return noticia;
@@ -54,7 +54,7 @@ class ControladorNoticia {
     var fechaHoy = DateTime.now();
     String fechaSubida = '${fechaHoy.day}-${fechaHoy.month}-${fechaHoy.year}';
     String docId = new UniqueKey().toString();
-    String usuarioAlta = await ControladorUsuario().obtenerNombreUsuario(firebaseAuth.currentUser.uid);
+    String usuarioAlta = await ControladorUsuario().obtenerNombreUsuario(firebaseAuth.currentUser!.uid);
     firestore.collection('noticias').doc(docId).set({
       'tipo': tipo,
       'titulo': titulo.trim(),
@@ -75,9 +75,9 @@ class ControladorNoticia {
       String tituloNuevo,
       String descripcionNueva,
       String linkNuevo) async {
-    Noticia noticia = await obtenerNoticia(
+    Noticia? noticia = await obtenerNoticia(
         tipoAnterior, tituloAnterior, descripcionAnterior, linkAnterior);
-    String docId = noticia.documentID;
+    String? docId = noticia?.documentID;
     print('docID: $docId');
 
     firestore.collection("noticias").doc(docId).update({
@@ -90,8 +90,8 @@ class ControladorNoticia {
 
   void eliminarNoticia(
       String tipo, String titulo, String descripcion, String link) async {
-    Noticia noticia = await obtenerNoticia(tipo, titulo, descripcion, link);
-    String docId = noticia.documentID;
+    Noticia? noticia = await obtenerNoticia(tipo, titulo, descripcion, link);
+    String? docId = noticia?.documentID;
 
     // primero elimino la senia
     await firestore
@@ -119,14 +119,14 @@ class ControladorNoticia {
 
         noticia = new Noticia();
 
-        noticia.tipo = _tipo;
-        noticia.titulo = _titulo;
-        noticia.descripcion = _descripcion;
-        noticia.link = _link;
-        noticia.usuarioAlta = _usuarioAlta;
-        noticia.fechaSubida = _fechaSubida;
+        noticia?.tipo = _tipo!;
+        noticia?.titulo = _titulo!;
+        noticia?.descripcion = _descripcion!;
+        noticia?.link = _link!;
+        noticia?.usuarioAlta = _usuarioAlta!;
+        noticia?.fechaSubida = _fechaSubida!;
 
-        listaCharlas.add(noticia);
+        listaCharlas.add(noticia!);
       });
     });
     listaCharlas.sort((a, b) {
@@ -153,14 +153,14 @@ class ControladorNoticia {
 
         noticia = new Noticia();
 
-        noticia.tipo = _tipo;
-        noticia.titulo = _titulo;
-        noticia.descripcion = _descripcion;
-        noticia.link = _link;
-        noticia.usuarioAlta = _usuarioAlta;
-        noticia.fechaSubida = _fechaSubida;
+        noticia?.tipo = _tipo!;
+        noticia?.titulo = _titulo!;
+        noticia?.descripcion = _descripcion!;
+        noticia?.link = _link!;
+        noticia?.usuarioAlta = _usuarioAlta!;
+        noticia?.fechaSubida = _fechaSubida!;
 
-        listaLlamados.add(noticia);
+        listaLlamados.add(noticia!);
       });
     });
     listaLlamados.sort((a, b) {
@@ -187,14 +187,14 @@ class ControladorNoticia {
 
         noticia = new Noticia();
 
-        noticia.tipo = _tipo;
-        noticia.titulo = _titulo;
-        noticia.descripcion = _descripcion;
-        noticia.link = _link;
-        noticia.usuarioAlta = _usuarioAlta;
-        noticia.fechaSubida = _fechaSubida;
+        noticia?.tipo = _tipo!;
+        noticia?.titulo = _titulo!;
+        noticia?.descripcion = _descripcion!;
+        noticia?.link = _link!;
+        noticia?.usuarioAlta = _usuarioAlta!;
+        noticia?.fechaSubida = _fechaSubida!;
 
-        listaNoticias.add(noticia);
+        listaNoticias.add(noticia!);
       });
     });
     listaNoticias.sort((a, b) {

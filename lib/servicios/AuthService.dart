@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -14,13 +13,13 @@ import 'ErrorHandler.dart';
 class AuthService extends ChangeNotifier {
   ControladorUsuario manej = new ControladorUsuario();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  Usuario usuarioLogueado;
+  Usuario ?usuarioLogueado;
 
   //Determino si el usuario esta autenticado.
   handleAuth(){
     return StreamBuilder(
         stream: firebaseAuth.authStateChanges(),
-        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.hasData) {
             return PaginaInicial();
           } else {
@@ -44,8 +43,7 @@ class AuthService extends ChangeNotifier {
     // Accion segun el tipo de usuario que se esta intentado logueando
     switch (estadoUsuario) {
       case 'PENDIENTE':
-        {
-          return showDialog(
+          showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {
@@ -68,7 +66,7 @@ class AuthService extends ChangeNotifier {
                   ],
                 );
               });
-        }
+
         break;
 
       case 'ACTIVO':
@@ -101,7 +99,7 @@ class AuthService extends ChangeNotifier {
 
       case 'INACTIVO':
         {
-          return showDialog(
+          showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) {
@@ -149,7 +147,7 @@ class AuthService extends ChangeNotifier {
 
       default:
         {
-          return showDialog(
+         showDialog(
               context: context,
               barrierDismissible: true,
               builder: (BuildContext context) {
@@ -201,7 +199,7 @@ class AuthService extends ChangeNotifier {
     return firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) async {
-      String userID = firebaseAuth.currentUser.uid;
+      String userID = firebaseAuth.currentUser!.uid;
       manej.crearUsuario(userID, email, nombreCompleto, telefono, departamento,
           especialidad, esAdministrador, statusUsuario);
       showDialog(

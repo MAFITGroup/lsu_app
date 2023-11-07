@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -13,16 +12,16 @@ import 'package:lsu_app/widgets/SubCategoriaDinamica.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
 class VisualizarCategoria extends StatefulWidget {
-  final Categoria categoria;
+  final Categoria ?categoria;
 
-  const VisualizarCategoria({Key key, this.categoria}) : super(key: key);
+  const VisualizarCategoria({Key? key, this.categoria}) : super(key: key);
 
   @override
   _VisualizarCategoriaState createState() => _VisualizarCategoriaState();
 }
 
 class _VisualizarCategoriaState extends State<VisualizarCategoria> {
-  bool modoEditar;
+  bool ?modoEditar;
   ControladorCategoria _controladorCategoria = new ControladorCategoria();
   final formKey = new GlobalKey<FormState>();
   bool isCategoriaExistente = false;
@@ -31,7 +30,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
   List<dynamic> listaSubCategoriasNuevas = [];
   List<SubCategoriaDinamica> listaDinamicaWidgetSubCategoria = [];
   List<SubCategoriaDinamica> WidgetSubCategoria = [];
-  SubCategoriaDinamica subWidget;
+  SubCategoriaDinamica ?subWidget;
   List<TextEditingController> controllers = <TextEditingController>[];
   TextEditingController controller = new TextEditingController();
   bool existeSubCategoriaEnSenia = false;
@@ -42,21 +41,21 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
   @override
   void initState() {
     setState(() {
-      listarSubCategorias(widget.categoria.nombre);
+      listarSubCategorias(widget.categoria!.nombre);
       modoEditar = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Categoria categoria = widget.categoria;
+    Categoria? categoria = widget.categoria;
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             BarraDeNavegacion(
-              titulo: Text('CATEGORÍA' + " - " + categoria.nombre.toUpperCase(),
+              titulo: Text('CATEGORÍA' + " - " + categoria!.nombre.toUpperCase(),
                   style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               listaWidget: [
                 PopupMenuButton<int>(
@@ -70,10 +69,10 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                       value: 0,
                       child: ListTile(
                           leading: Icon(
-                              !modoEditar ? Icons.edit : Icons.cancel_outlined,
+                              !modoEditar! ? Icons.edit : Icons.cancel_outlined,
                               color: Colores().colorAzul),
                           title: Text(
-                              !modoEditar
+                              !modoEditar!
                                   ? "Editar Categoría"
                                   : "Cancelar Editar",
                               style: TextStyle(
@@ -113,7 +112,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                   nombre: 'NOMBRE CATEGORÍA',
                                   icon: Icon(Icons.account_tree_outlined),
                                   habilitado: modoEditar,
-                                  controlador: modoEditar
+                                  controlador: modoEditar!
                                       ? null
                                       : TextEditingController(
                                           text: categoria.nombre),
@@ -121,13 +120,13 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                     this.nuevoNombreCategoria = value;
                                     existeCategoria(nuevoNombreCategoria);
                                   },
-                                  validacion: ((value) => value.isEmpty
+                                  validacion: ((value) => value!.isEmpty
                                       ? 'Campo Obligatorio'
                                       : null),
                                 ),
                               ),
                               Container(
-                                  child: modoEditar
+                                  child: modoEditar!
                                       ? FloatingActionButton(
                                           heroTag: "btnAgregar",
                                           onPressed: agregarWidgetSubCategoria,
@@ -158,7 +157,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                               itemCount: listaSubCategorias.length,
                               itemBuilder: (context, index) {
                                 subWidget = new SubCategoriaDinamica(
-                                  modoEditar: modoEditar,
+                                  modoEditar: modoEditar!,
                                   modoAlta: false,
                                   nombreSubCategoria: listaSubCategorias[index],
                                   nombreAnteriorSubCategoria:
@@ -214,9 +213,9 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                   },
                                 );
 
-                                if (!modoEditar) {
+                                if (!modoEditar!) {
                                   controllers.add(controller);
-                                  WidgetSubCategoria.add(subWidget);
+                                  WidgetSubCategoria.add(subWidget!);
                                 }
                                 return subWidget;
                               },
@@ -235,10 +234,10 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                 itemBuilder: (context, index) =>
                                     listaDinamicaWidgetSubCategoria[index]),
                           ),
-                          modoEditar
+                          modoEditar!
                               ? Boton(
                                   titulo: 'GUARDAR',
-                                  onTap: () {
+                                  onTap: () async {
                                     if (nuevoNombreCategoria == null) {
                                       nuevoNombreCategoria = categoria.nombre;
                                     }
@@ -246,7 +245,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                                       if (listaSubCategorias.length == 0 &&
                                           listaSubCategoriasNuevas.length ==
                                               0) {
-                                        return showCupertinoDialog(
+                                        await showCupertinoDialog(
                                             context: context,
                                             barrierDismissible: true,
                                             builder: (context) {
@@ -411,12 +410,12 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
     _controladorCategoria.eliminarCategoria(nombre);
   }
 
-  Future<bool> existeCategoria(String nombre) async {
-    isCategoriaExistente = await ControladorCategoria().existeCategoria(nombre);
+  Future<bool?> existeCategoria(String nombre) async {
+    return isCategoriaExistente = await ControladorCategoria().existeCategoria(nombre);
   }
 
-  Future<bool> existeCategoriaenSenia(String nombre) async {
-    isCategoriaEnSenia =
+  Future<bool?> existeCategoriaenSenia(String nombre) async {
+   return isCategoriaEnSenia =
         await ControladorCategoria().existeCategoriaenSenia(nombre);
   }
 
@@ -462,7 +461,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
       Elimino esa categoria de la base
        */
     _controladorCategoria.eliminarSubCategoria(
-        widget.categoria.nombre, listaSubCate[index], listaSubCategorias);
+        widget.categoria!.nombre, listaSubCate[index], listaSubCategorias);
 
     setState(() {
       if (listaSubCategorias.length > 0) {
@@ -507,11 +506,11 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
   void onSelected(BuildContext context, int item) {
     switch (item) {
       case 0:
-        !modoEditar ? editarCategoria() : cancelarEditar();
+        !modoEditar! ? editarCategoria() : cancelarEditar();
         break;
       case 1:
-        String nombreCategoria = widget.categoria.nombre;
-        existeCategoriaenSenia(nombreCategoria);
+        String? nombreCategoria = widget.categoria?.nombre;
+        existeCategoriaenSenia(nombreCategoria!);
         showDialog(
             useRootNavigator: false,
             context: context,
@@ -531,7 +530,7 @@ class _VisualizarCategoriaState extends State<VisualizarCategoria> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         if (isCategoriaEnSenia == false) {
-                          eliminarCategoria(widget.categoria.nombre);
+                          eliminarCategoria(widget.categoria!.nombre);
                           showCupertinoDialog(
                               context: context,
                               barrierDismissible: true,

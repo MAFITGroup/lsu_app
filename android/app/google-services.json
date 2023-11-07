@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1051905371406-capsn6b4h69r4gepl3ct9fgcv0pk4d1e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maf.uy.plataforma_lsu_android",
+            "certificate_hash": "0452cbfe5865283ec04cab376884bcc0c298321d"
+          }
+        },
+        {
           "client_id": "1051905371406-b5u0sus48hj3ru8eik2m2lv8bviq33a7.apps.googleusercontent.com",
           "client_type": 3
         }

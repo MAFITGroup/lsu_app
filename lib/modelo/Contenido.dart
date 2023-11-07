@@ -1,11 +1,11 @@
 class Contenido {
-  String _usuarioAlta;
-  String _titulo;
-  String _descripcion;
-  String _categoria;
-  String _autor;
-  String _urlarchivo;
-  String _documentID;
+  late String _usuarioAlta;
+  late String _titulo;
+  late String _descripcion;
+  late String _categoria;
+  late String _autor;
+  late String _urlarchivo;
+  late String _documentID;
 
   Contenido();
 

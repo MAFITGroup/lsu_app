@@ -1,19 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class TextFieldNumerico extends StatefulWidget {
-  final String nombre;
-  final Function(String) valor;
-  final Function(String) validacion;
-  final Icon icon;
-  final Widget iconInfo;
-  final TextEditingController controlador;
-  final bool habilitado;
+  final String ?nombre;
+  final Function(String) ?valor;
+  final String? Function(String?) ?validacion;
+  final Icon ?icon;
+  final Widget ?iconInfo;
+  final TextEditingController ?controlador;
+  final bool ?habilitado;
 
   TextFieldNumerico(
-      {Key key,
+      {Key? key,
       this.nombre,
       this.valor,
       this.validacion,

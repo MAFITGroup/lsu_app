@@ -1,29 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
 import 'package:lsu_app/modelo/Usuario.dart';
 import 'package:lsu_app/widgets/DialogoAlerta.dart';
-import 'dart:io' show Platform;
+
 
 class ControladorUsuario {
-  String _uid;
-  String _correo;
-  String _nombreCompleto;
-  String _telefono;
-  String _departamento;
-  String _especialidad;
-  bool _esAdministrador;
-  String _statusUsuario;
+  String ?_uid;
+  String ?_correo;
+  String ?_nombreCompleto;
+  String ?_telefono;
+  String ?_departamento;
+  String ?_especialidad;
+  bool ?_esAdministrador;
+  String ?_statusUsuario;
   Usuario usuario = new Usuario();
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  User user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
 
   Future<void> crearUsuario(
     String uid,
@@ -55,7 +52,7 @@ class ControladorUsuario {
   }
 
   Future<Usuario> obtenerUsuarioLogueado(String usuarioActualUID) async {
-    String usuarioActualUID = FirebaseAuth.instance.currentUser.uid;
+    String? usuarioActualUID = FirebaseAuth.instance.currentUser?.uid;
     await firestore
         .collection('usuarios')
         .doc(usuarioActualUID)
@@ -71,14 +68,14 @@ class ControladorUsuario {
         _esAdministrador = documentSnapshot['esAdministrador'];
         _statusUsuario = documentSnapshot['statusUsuario'];
 
-        usuario.uid = _uid;
-        usuario.correo = _correo;
-        usuario.nombreCompleto = _nombreCompleto;
-        usuario.telefono = _telefono;
-        usuario.departamento = _departamento;
-        usuario.especialidad = _especialidad;
-        usuario.esAdministrador = _esAdministrador;
-        usuario.statusUsuario = _statusUsuario;
+        usuario.uid = _uid!;
+        usuario.correo = _correo!;
+        usuario.nombreCompleto = _nombreCompleto!;
+        usuario.telefono = _telefono!;
+        usuario.departamento = _departamento!;
+        usuario.especialidad = _especialidad!;
+        usuario.esAdministrador = _esAdministrador!;
+        usuario.statusUsuario = _statusUsuario!;
 
         return usuario;
       }
@@ -101,7 +98,7 @@ class ControladorUsuario {
   Ver uso en AuthService/ signIn
    */
   Future<String> obtenerEstadoUsuario(String mail, BuildContext context) async {
-    String usuarioEstado;
+    String? usuarioEstado;
     await firestore
         .collection('usuarios')
         .where('correo', isEqualTo: mail)
@@ -111,7 +108,7 @@ class ControladorUsuario {
         usuarioEstado = element.get('statusUsuario').toString();
       });
     });
-    return usuarioEstado;
+    return usuarioEstado!;
   }
 
   Future<String> obtenerNombreUsuario(String usuarioActualUID) async {
@@ -136,14 +133,14 @@ class ControladorUsuario {
         _statusUsuario = doc['statusUsuario'];
 
         usuario = new Usuario();
-        usuario.uid = _uid;
-        usuario.correo = _correo;
-        usuario.nombreCompleto = _nombreCompleto;
-        usuario.telefono = _telefono;
-        usuario.departamento = _departamento;
-        usuario.especialidad = _especialidad;
-        usuario.esAdministrador = _esAdministrador;
-        usuario.statusUsuario = _statusUsuario;
+        usuario.uid = _uid!;
+        usuario.correo = _correo!;
+        usuario.nombreCompleto = _nombreCompleto!;
+        usuario.telefono = _telefono!;
+        usuario.departamento = _departamento!;
+        usuario.especialidad = _especialidad!;
+        usuario.esAdministrador = _esAdministrador!;
+        usuario.statusUsuario = _statusUsuario!;
 
         listaUsuarios.add(usuario);
       });
@@ -172,14 +169,14 @@ class ControladorUsuario {
         _statusUsuario = doc['statusUsuario'];
 
         usuario = new Usuario();
-        usuario.uid = _uid;
-        usuario.correo = _correo;
-        usuario.nombreCompleto = _nombreCompleto;
-        usuario.telefono = _telefono;
-        usuario.departamento = _departamento;
-        usuario.especialidad = _especialidad;
-        usuario.esAdministrador = _esAdministrador;
-        usuario.statusUsuario = _statusUsuario;
+        usuario.uid = _uid!;
+        usuario.correo = _correo!;
+        usuario.nombreCompleto = _nombreCompleto!;
+        usuario.telefono = _telefono!;
+        usuario.departamento = _departamento!;
+        usuario.especialidad = _especialidad!;
+        usuario.esAdministrador = _esAdministrador!;
+        usuario.statusUsuario = _statusUsuario!;
 
         listaUsuariosPendientes.add(usuario);
       });
@@ -193,7 +190,7 @@ class ControladorUsuario {
   Future<List<Usuario>> obtenerUsuariosActivos() async {
     List<Usuario> listaUsuariosActivos = [];
     Usuario usuarioLogueado =
-        await obtenerUsuarioLogueado(firebaseAuth.currentUser.uid);
+        await obtenerUsuarioLogueado(firebaseAuth.currentUser!.uid);
     await firestore
         .collection('usuarios')
         .where('statusUsuario', isEqualTo: 'ACTIVO')
@@ -210,14 +207,14 @@ class ControladorUsuario {
         _statusUsuario = doc['statusUsuario'];
 
         usuario = new Usuario();
-        usuario.uid = _uid;
-        usuario.correo = _correo;
-        usuario.nombreCompleto = _nombreCompleto;
-        usuario.telefono = _telefono;
-        usuario.departamento = _departamento;
-        usuario.especialidad = _especialidad;
-        usuario.esAdministrador = _esAdministrador;
-        usuario.statusUsuario = _statusUsuario;
+        usuario.uid = _uid!;
+        usuario.correo = _correo!;
+        usuario.nombreCompleto = _nombreCompleto!;
+        usuario.telefono = _telefono!;
+        usuario.departamento = _departamento!;
+        usuario.especialidad = _especialidad!;
+        usuario.esAdministrador = _esAdministrador!;
+        usuario.statusUsuario = _statusUsuario!;
 
         if (usuario.correo != usuarioLogueado.correo) {
           listaUsuariosActivos.add(usuario);
@@ -248,14 +245,14 @@ class ControladorUsuario {
         _statusUsuario = doc['statusUsuario'];
 
         usuario = new Usuario();
-        usuario.uid = _uid;
-        usuario.correo = _correo;
-        usuario.nombreCompleto = _nombreCompleto;
-        usuario.telefono = _telefono;
-        usuario.departamento = _departamento;
-        usuario.especialidad = _especialidad;
-        usuario.esAdministrador = _esAdministrador;
-        usuario.statusUsuario = _statusUsuario;
+        usuario.uid = _uid!;
+        usuario.correo = _correo!;
+        usuario.nombreCompleto = _nombreCompleto!;
+        usuario.telefono = _telefono!;
+        usuario.departamento = _departamento!;
+        usuario.especialidad = _especialidad!;
+        usuario.esAdministrador = _esAdministrador!;
+        usuario.statusUsuario = _statusUsuario!;
 
         listaUsuariosInactivos.add(usuario);
       });
@@ -303,13 +300,13 @@ class ControladorUsuario {
         _statusUsuario = doc['statusUsuario'];
 
         usuario = new Usuario();
-        usuario.correo = _correo;
-        usuario.nombreCompleto = _nombreCompleto;
-        usuario.telefono = _telefono;
-        usuario.departamento = _departamento;
-        usuario.especialidad = _especialidad;
-        usuario.uid = _uid;
-        usuario.statusUsuario = _statusUsuario;
+        usuario.correo = _correo!;
+        usuario.nombreCompleto = _nombreCompleto!;
+        usuario.telefono = _telefono!;
+        usuario.departamento = _departamento!;
+        usuario.especialidad = _especialidad!;
+        usuario.uid = _uid!;
+        usuario.statusUsuario = _statusUsuario!;
       });
     });
     return usuario;
@@ -326,7 +323,7 @@ class ControladorUsuario {
   }
 
   Future eliminarAuth() async {
-    await firebaseAuth.currentUser.delete();
+    await firebaseAuth.currentUser?.delete();
   }
 
   void inactivarUsuario(String correo) async {
@@ -398,13 +395,13 @@ class ControladorUsuario {
 
         usuario = new Usuario();
 
-        usuario.nombreCompleto = _nombreCompleto;
-        usuario.correo = _correo;
-        usuario.departamento = _departamento;
-        usuario.esAdministrador = _esAdministrador;
-        usuario.especialidad = _especialidad;
-        usuario.statusUsuario = _statusUsuario;
-        usuario.telefono = _telefono;
+        usuario.nombreCompleto = _nombreCompleto!;
+        usuario.correo = _correo!;
+        usuario.departamento = _departamento!;
+        usuario.esAdministrador = _esAdministrador!;
+        usuario.especialidad = _especialidad!;
+        usuario.statusUsuario = _statusUsuario!;
+        usuario.telefono = _telefono!;
 
         listaUsuarios.add(usuario);
       });

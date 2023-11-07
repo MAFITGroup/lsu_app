@@ -1,17 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class TextFieldDescripcion extends StatelessWidget {
-  final String nombre;
-  final Function(String) valor;
-  final Function(String) validacion;
-  final Icon icon;
-  final TextEditingController controlador;
-  final bool habilitado;
+  final String ?nombre;
+  final Function(String) ?valor;
+  final String? Function(String?) ?validacion;
+  final Icon ?icon;
+  final TextEditingController ?controlador;
+  final bool ?habilitado;
 
   TextFieldDescripcion({
-    Key key,
+    Key? key,
     this.nombre,
     this.valor,
     this.validacion,
@@ -45,7 +44,7 @@ class TextFieldDescripcion extends StatelessWidget {
                 borderSide: BorderSide(color: Colores().colorSombraBotones),
               )),
           onChanged: valor,
-          validator: validacion),
+          validator: validacion!),
     );
   }
 }

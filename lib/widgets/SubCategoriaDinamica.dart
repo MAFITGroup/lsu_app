@@ -1,21 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 import 'TextFieldTexto.dart';
 
 class SubCategoriaDinamica extends StatefulWidget {
-  final List<dynamic> listaSubcategorias;
-  final bool modoAlta;
-  final bool modoEditar;
-  final String nombreSubCategoria;
-  final String nombreAnteriorSubCategoria;
-  final Function onPressed;
-  final Function onSaved;
-  final TextEditingController controller;
+  final List<dynamic> ?listaSubcategorias;
+  final bool ?modoAlta;
+  final bool ?modoEditar;
+  final String ?nombreSubCategoria;
+  final String ?nombreAnteriorSubCategoria;
+  final void Function()? onPressed;
+  final Function ?onSaved;
+  final TextEditingController ?controller;
 
   const SubCategoriaDinamica(
-      {Key key,
+      {Key ?key,
       this.listaSubcategorias,
       this.modoAlta,
       this.modoEditar,
@@ -29,29 +28,29 @@ class SubCategoriaDinamica extends StatefulWidget {
 }
 
 class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
-  String _nombreSubCategoria;
+  String ?_nombreSubCategoria;
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> listaSubcategorias = widget.listaSubcategorias;
-    bool modoAlta = widget.modoAlta;
-    bool modoEditar = widget.modoEditar;
-    Function onPressed = widget.onPressed;
-    TextEditingController controller = widget.controller;
-    Function onSaved = widget.onSaved;
+    List? listaSubcategorias = widget.listaSubcategorias;
+    bool ?modoAlta = widget.modoAlta;
+    bool ?modoEditar = widget.modoEditar;
+    void Function()? onPressed = widget.onPressed;
+    TextEditingController ?controller = widget.controller;
+    Function ?onSaved = widget.onSaved;
 
     return Container(
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 30, right: modoEditar ? 40 : 90),
+            padding: EdgeInsets.only(left: 30, right: modoEditar! ? 40 : 90),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: TextFieldTexto(
                       controlador: controller,
-                      habilitado: modoEditar || modoAlta,
+                      habilitado: modoEditar || modoAlta!,
                       nombre: 'NOMBRE SUBCATEGORIA',
                       icon: Icon(Icons.category_outlined),
                       valor: (value) {
@@ -60,17 +59,17 @@ class _SubCategoriaDinamicaState extends State<SubCategoriaDinamica> {
                         });
                       },
                       validacion: ((value) =>
-                          value.isEmpty ? 'Campo Obligatorio' : null),
+                          value!.isEmpty ? 'Campo Obligatorio' : null),
                       onSaved: (value) {
                         if (_nombreSubCategoria == null) {
                           _nombreSubCategoria = value;
                         }
                         setState(() {
                           listaSubcategorias
-                              .add(_nombreSubCategoria.toUpperCase().trim());
+                              ?.add(_nombreSubCategoria!.toUpperCase().trim());
                         });
                         if(onSaved != null){
-                          widget.onSaved();
+                          widget.onSaved!();
                         }
                       }),
                 ),

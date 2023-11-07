@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Validar.dart';
@@ -14,12 +14,12 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
   final formKey = new GlobalKey<FormState>();
 
-  String _email;
+  String ?_email;
   List<String> listaCorreos = [];
 
   checkFields() {
     final form = formKey.currentState;
-    if (form.validate()) {
+    if (form!.validate()) {
       form.save();
       return true;
     }
@@ -27,13 +27,16 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 
   String validarCorreo(String value) {
+
+    String resultado = "";
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Por favor, ingrese un correo válido';
-    else
-      return null;
+    RegExp regex = new RegExp(pattern.toString());
+    if (!regex.hasMatch(value)) {
+      resultado = 'Por favor, ingrese un correo válido';
+    }
+
+      return resultado;
   }
 
   @override
@@ -56,7 +59,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             valor: (value) {
               this._email = value;
             },
-            validacion: (value) => value.isEmpty
+            validacion: (value) => value!.isEmpty
                 ? 'El email es requerido'
                 : Validar().validarCorreo(value),
           ),
@@ -65,7 +68,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             titulo: 'CONFIRMAR',
             onTap: () {
               if (checkFields()) {
-                AuthService().resetPasswordLink(_email, context);
+                AuthService().resetPasswordLink(_email!, context);
               } // if(checkField)
             }, // onTap
           ),

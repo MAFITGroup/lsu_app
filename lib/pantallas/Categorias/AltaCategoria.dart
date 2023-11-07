@@ -17,9 +17,9 @@ class AltaCategoria extends StatefulWidget {
 }
 
 class _AltaCategoria extends State<AltaCategoria> {
-  String _nombreCategoria;
+  String ?_nombreCategoria;
   final formKey = new GlobalKey<FormState>();
-  String _nombreSubCategoria;
+  String ?_nombreSubCategoria;
   bool isCategoriaExistente = false;
   List<SubCategoriaDinamica> listaDinamicaWidgetSubCategoria = [];
   List<String> listaDeSubcategorias = [];
@@ -55,10 +55,10 @@ class _AltaCategoria extends State<AltaCategoria> {
                             valor: (value) {
                               this._nombreCategoria = value;
                               //me guardo el valor en el metodo para hacer el chequeo.
-                              existeCategoria(_nombreCategoria);
+                              existeCategoria(_nombreCategoria!);
                             },
                             validacion: ((value) =>
-                                value.isEmpty ? 'Campo Obligatorio' : null),
+                                value!.isEmpty ? 'Campo Obligatorio' : null),
                           ),
                         ),
                         Container(
@@ -87,10 +87,10 @@ class _AltaCategoria extends State<AltaCategoria> {
                                 });
                               },
                               validacion: ((value) =>
-                                  value.isEmpty ? 'Campo Obligatorio' : null),
+                                  value!.isEmpty ? 'Campo Obligatorio' : null),
                               onSaved: (value) {
                                 listaDeSubcategorias.add(
-                                    _nombreSubCategoria.toUpperCase().trim());
+                                    _nombreSubCategoria!.toUpperCase().trim());
                               },
                             ),
                           ),
@@ -122,7 +122,7 @@ class _AltaCategoria extends State<AltaCategoria> {
                     ),
                     Boton(
                       titulo: 'GUARDAR',
-                      onTap: () {
+                      onTap: () async {
                         if (Validar().camposVacios(formKey)) {
                           listaTotalSubs.addAll(listaDeSubcategorias);
                           listaTotalSubs
@@ -176,7 +176,7 @@ class _AltaCategoria extends State<AltaCategoria> {
                               listaDeSubcategorias.clear();
                               listaDeSubcategoriasClaseDinamica.clear();
                               listaTotalSubs.clear();
-                              return showCupertinoDialog(
+                              await showCupertinoDialog(
                                   context: context,
                                   barrierDismissible: true,
                                   builder: (context) {
@@ -209,7 +209,7 @@ class _AltaCategoria extends State<AltaCategoria> {
                                   return DialogoAlerta(
                                     tituloMensaje: "Advertencia",
                                     mensaje: "La categoría ingresada " +
-                                        _nombreCategoria +
+                                        _nombreCategoria! +
                                         " ya existe.",
                                     acciones: [
                                       TextButton(
@@ -262,11 +262,11 @@ class _AltaCategoria extends State<AltaCategoria> {
 
   Future crearCategoria() async {
     _controladorCategoria.crearCategoria(
-        this._nombreCategoria, this.listaTotalSubs);
+        this._nombreCategoria!, this.listaTotalSubs);
   }
 
-  Future<bool> existeCategoria(String nombre) async {
-    isCategoriaExistente = await _controladorCategoria.existeCategoria(nombre);
+  Future<bool?> existeCategoria(String nombre) async {
+   return isCategoriaExistente = await _controladorCategoria.existeCategoria(nombre);
   }
 
   bool existeSubCategoria(List lista) {

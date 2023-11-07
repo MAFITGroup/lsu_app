@@ -4,7 +4,7 @@ import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class TerminosCondiciones extends StatelessWidget {
-  const TerminosCondiciones({Key key}) : super(key: key);
+  const TerminosCondiciones({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

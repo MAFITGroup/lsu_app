@@ -4,7 +4,7 @@ class Validar {
 //To check fields during submit
   camposVacios(GlobalKey<FormState> formKey) {
     final form = formKey.currentState;
-    if (form.validate()) {
+    if (form!.validate()) {
       form.save();
       return true;
     }
@@ -12,10 +12,10 @@ class Validar {
   }
 
 //Valido el correo y su formato
-  String validarCorreo(String value) {
+  String? validarCorreo(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = new RegExp(pattern.toString());
     if (!regex.hasMatch(value))
       return 'Ingresa un correo valido';
     else
@@ -23,19 +23,19 @@ class Validar {
   }
 
   // Validar campo celular
-  String validarCelular(String value) {
+  String? validarCelular(String value) {
     Pattern pattern = r'(^09+[0-9]{7}$)';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = new RegExp(pattern.toString());
     if (!regex.hasMatch(value))
       return 'Campo Obligatorio';
     else
       return null;
   }
 
-  String validarPassword(String value) {
+  String? validarPassword(String value) {
     Pattern pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~.]).{8,}$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = new RegExp(pattern.toString());
 
     if (!regex.hasMatch(value))
       /*

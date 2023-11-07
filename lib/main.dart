@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
 
+
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'channel id', 'channel notifications',
     description: 'channel description',
@@ -27,7 +28,7 @@ void main() async {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()
-        .createNotificationChannel(channel);
+        ?.createNotificationChannel(channel);
 
     await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true,

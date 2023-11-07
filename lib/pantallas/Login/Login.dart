@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 import 'package:lsu_app/manejadores/Navegacion.dart';
@@ -17,8 +17,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final formKey = new GlobalKey<FormState>();
-  String _email;
-  String _password;
+  late String _email;
+  late String _password;
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +59,11 @@ class _LoginState extends State<Login> {
             nombre: 'CORREO',
             icon: Icon(Icons.alternate_email_rounded),
             valor: (value) {
-              this._email = value.toLowerCase().trim();
+              this._email = value!.toLowerCase().trim();
             },
-            validacion: (value) => value.isEmpty
+            validacion: (value) => value!.isEmpty
                 ? 'Campo Obligatorio'
-                : Validar().validarCorreo(value),
+                : Validar().validarCorreo(value!),
           ),
           SizedBox(height: 30),
           TextFieldContrasenia(
@@ -73,7 +73,7 @@ class _LoginState extends State<Login> {
               this._password = value;
             },
             validacion: (value) {
-              if (value.isEmpty) {
+              if (value!.isEmpty) {
                 return Validar().validarPassword(value);
               }
             },

@@ -1,6 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorContenido.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -17,19 +16,16 @@ import 'package:lsu_app/widgets/TextFieldTexto.dart';
 import 'VisualizarPDF.dart';
 
 class VisualizarContenido extends StatefulWidget {
-  final Contenido contenido;
-  final bool isUsuarioAdmin;
-  final String archivoRef;
-  final String titulo;
-  final String autor;
+  late Contenido contenido;
+  late bool isUsuarioAdmin;
+  late String archivoRef;
+  late String titulo;
+  late String autor;
 
-  const VisualizarContenido(
-      {Key key,
-      this.contenido,
-      this.isUsuarioAdmin,
-      this.archivoRef,
-      this.titulo,
-      this.autor})
+  VisualizarContenido(
+      {Key? key,
+      required this.contenido,
+      required this.isUsuarioAdmin})
       : super(key: key);
 
   @override
@@ -43,7 +39,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
     'Investigaciones',
     'Otros'
   ]; // Lista de las categorias dentro de biblioteca. Hardcodeadas xq son únicas.
-  bool modoEditar;
+  late bool modoEditar;
   ControladorContenido _controladorContenido = new ControladorContenido();
   final formKey = new GlobalKey<FormState>();
 
@@ -127,8 +123,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                           nombre: 'TÍTULO',
                           icon: Icon(Icons.format_size_outlined),
                           habilitado: modoEditar,
-                          controlador: modoEditar
-                              ? null
+                          controlador: modoEditar ? null
                               : TextEditingController(text: contenido.titulo),
                           valor: (value) {
                             setState(() {
@@ -136,7 +131,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             });
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'Campo Obligatorio' : null),
+                              value!.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         TextFieldDescripcion(
@@ -152,7 +147,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                               nuevaDescripcionContenido = value;
                             });
                           },
-                          validacion: ((value) => value.isEmpty
+                          validacion: ((value) => value!.isEmpty
                               ? 'Campo Obligatorio'
                               : null),
                         ),
@@ -170,7 +165,7 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             });
                           },
                           validacion: ((value) =>
-                              value.isEmpty ? 'Campo Obligatorio' : null),
+                              value!.isEmpty ? 'Campo Obligatorio' : null),
                         ),
                         SizedBox(height: 15.0),
                         // Menu desplegable de Categorias
@@ -188,25 +183,6 @@ class _VisualizarContenidoState extends State<VisualizarContenido> {
                             validator: ((value) => value == null
                                 ? 'Campo Obligatorio'
                                 : null),
-                            showSearchBox: true,
-                            clearButton: Icon(Icons.close,
-                                color: Colores().colorSombraBotones),
-                            dropDownButton: Icon(Icons.arrow_drop_down,
-                                color: Colores().colorSombraBotones),
-                            showClearButton: true,
-                            mode: Mode.DIALOG,
-                            dropdownSearchDecoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    fontFamily: 'Trueno',
-                                    fontSize: 12,
-                                    color: Colores().colorSombraBotones),
-                                hintText: "CATEGORÍA",
-                                prefixIcon: Icon(Icons.category_outlined),
-                                focusColor: Colores().colorSombraBotones,
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colores().colorSombraBotones),
-                                )),
                             autoValidateMode: AutovalidateMode.always,
                           ),
                         ),

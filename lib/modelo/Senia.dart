@@ -1,12 +1,12 @@
 class Senia {
-  String _usuarioAlta;
-  String _nombre;
-  String _descripcion;
-  String _categoria;
-  String _subCategoria;
-  String _urlVideo;
-  String _documentID;
-  int _cantidadVisualizaciones;
+  late String _usuarioAlta;
+  late String _nombre;
+  late String _descripcion;
+  late String _categoria;
+  late String _subCategoria;
+  late String _urlVideo;
+  late String _documentID;
+  late int _cantidadVisualizaciones;
 
   Senia();
 

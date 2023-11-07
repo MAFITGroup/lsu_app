@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lsu_app/buscadores/BuscadorSenias.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
@@ -25,7 +23,7 @@ class _GlosarioState extends State<Glosario> {
   List listaSubCategoriasParaAlta = [];
   List<Senia> listaSeniaXCategoria = [];
   List<Senia> listaSenias = [];
-  bool isUsuarioAdmin;
+  bool ?isUsuarioAdmin;
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
   ControladorCategoria _controladorCategoria = new ControladorCategoria();
   ControladorSenia _controladorSenia = new ControladorSenia();
@@ -63,7 +61,7 @@ class _GlosarioState extends State<Glosario> {
                         showSearch(
                             context: context,
                             delegate: BuscadorSenias(
-                                listaSenias, listaSenias, isUsuarioAdmin));
+                                listaSenias, listaSenias, isUsuarioAdmin!));
                       },
                       icon: Icon(Icons.search)),
                 ],
@@ -150,7 +148,7 @@ Lista de señas para el buscador.
 
   Future<void> obtenerUsuarioAdministrador() async {
     isUsuarioAdmin = await _controladorUsuario
-        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
+        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser!.uid);
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
      */

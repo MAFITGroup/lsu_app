@@ -4,17 +4,17 @@ import 'package:lsu_app/modelo/Categoria.dart';
 import 'package:lsu_app/modelo/SubCategoria.dart';
 
 class ControladorCategoria {
-  String _nombreCategoria;
+  String ?_nombreCategoria;
   final categoriasRef = FirebaseFirestore.instance.collection('categorias');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  Categoria categoria;
-  SubCategoria subCategoria;
-  String _documentID;
+  Categoria ?categoria;
+  SubCategoria ?subCategoria;
+  String ?_documentID;
 
   /*
   Crea la categoría
    */
-  void crearCategoria(String nombre, List<String> listaDeSubs) {
+  void crearCategoria(String ?nombre, List<String> ?listaDeSubs) {
     /*
     Pido al menos una subCategoria, sino tengo no dejo guardar.
      */
@@ -36,15 +36,15 @@ class ControladorCategoria {
     //creo mi categoria
     firestore.collection("categorias").doc(docId).set({
       'documentID': docId,
-      'nombre': nombre.toUpperCase().trim(),
+      'nombre': nombre!.toUpperCase().trim(),
       'subCategorias': subCategorias,
     });
   }
 
   void editarCategoria(String nombreAnterior, String nombreNuevo,
       List<dynamic> listaDeSubsAnterior, List<dynamic> listaDeSubsNueva) async {
-    Categoria categoria = await obtenerCategoriaPorNombre(nombreAnterior);
-    String docId = categoria.documentID;
+    Categoria? categoria = await obtenerCategoriaPorNombre(nombreAnterior);
+    String? docId = categoria?.documentID;
 
     int index = 0;
     Map<String, String> subCategorias =
@@ -68,8 +68,8 @@ class ControladorCategoria {
 
   Future eliminarSubCategoria(String nombreCategoria, String nombreSubCategoria,
       List<dynamic> listaDeSubs) async {
-    Categoria categoria = await obtenerCategoriaPorNombre(nombreCategoria);
-    String docId = categoria.documentID;
+    Categoria? categoria = await obtenerCategoriaPorNombre(nombreCategoria);
+    String? docId = categoria?.documentID;
 
     int index = 0;
     Map<String, String> subCategorias =
@@ -90,8 +90,8 @@ class ControladorCategoria {
   }
 
   void eliminarCategoria(String nombre) async {
-    Categoria categoria = await obtenerCategoriaPorNombre(nombre);
-    String docId = categoria.documentID;
+    Categoria? categoria = await obtenerCategoriaPorNombre(nombre);
+    String? docId = categoria?.documentID;
 
     firestore
         .collection("categorias")
@@ -104,7 +104,7 @@ class ControladorCategoria {
   Se usa para obtener el objeto categoria
   cuando entro a Visualizarla
    */
-  Future<Categoria> obtenerCategoriaPorNombre(String nombreCategoria) async {
+  Future<Categoria?> obtenerCategoriaPorNombre(String nombreCategoria) async {
     await firestore
         .collection('categorias')
         .where('nombre', isEqualTo: nombreCategoria)
@@ -115,8 +115,8 @@ class ControladorCategoria {
         _documentID = doc['documentID'];
 
         categoria = new Categoria();
-        categoria.nombre = _nombreCategoria;
-        categoria.documentID = _documentID;
+        categoria?.nombre = _nombreCategoria!;
+        categoria?.documentID = _documentID!;
       });
     });
 
@@ -135,10 +135,10 @@ class ControladorCategoria {
         _documentID = doc['documentID'];
 
         categoria = new Categoria();
-        categoria.nombre = _nombreCategoria;
-        categoria.documentID = _documentID;
+        categoria?.nombre = _nombreCategoria!;
+        categoria?.documentID = _documentID!;
 
-        lista.add(categoria);
+        lista.add(categoria!);
       });
     });
 
@@ -185,7 +185,7 @@ class ControladorCategoria {
     Map<String, dynamic> mapSubCategorias =
         new Map<String, dynamic>(); //map para armar las subCategorias
     for (mapSubCategorias in dataSubCat) {
-      for (String valor in mapSubCategorias.values) {
+      for (String ?valor in mapSubCategorias.values) {
         if (valor != null && valor.isNotEmpty) {
           subCategorias.add(valor);
         }
@@ -218,7 +218,7 @@ class ControladorCategoria {
     Map<String, dynamic> mapSubCategorias =
         new Map<String, dynamic>(); //map para armar las subCategorias
     for (mapSubCategorias in dataSubCat) {
-      for (String keys in mapSubCategorias.values) {
+      for (String ?keys in mapSubCategorias.values) {
         if (keys != null && keys.isNotEmpty) {
           subCategorias.add(keys);
         }
@@ -251,7 +251,7 @@ class ControladorCategoria {
     Map<String, dynamic> mapSubCategorias =
         new Map<String, dynamic>(); //map para armar las subCategorias
     for (mapSubCategorias in dataSubCat) {
-      for (String value in mapSubCategorias.values) {
+      for (String ?value in mapSubCategorias.values) {
         if (value != null && value.isNotEmpty) {
           SubCategoria sub = new SubCategoria();
           sub.nombre = value;
@@ -298,9 +298,9 @@ class ControladorCategoria {
             });
   }
 
-  Future<bool> existeCategoria(String nombre) async {
+  Future<bool> existeCategoria(String ?nombre) async {
     bool existeCategoria = false;
-    String nombreCat;
+    String ?nombreCat;
 
     if (nombre != null) {
       await categoriasRef
@@ -319,9 +319,9 @@ class ControladorCategoria {
     return existeCategoria;
   }
 
-  Future<bool> existeCategoriaenSenia(String nombre) async {
+  Future<bool> existeCategoriaenSenia(String ?nombre) async {
     bool existeCategoriaEnSenia = false;
-    String nombreCat;
+    String ?nombreCat;
 
     if (nombre != null) {
       await firestore
@@ -342,7 +342,7 @@ class ControladorCategoria {
 
   Future<bool> existeSubCategoriaEnSenia(String nombreSubCategoria) async {
     bool existeSubCategoriaEnSenia = false;
-    String nombreSubCat;
+    String ?nombreSubCat;
 
     await firestore
         .collection('senias')
@@ -359,14 +359,17 @@ class ControladorCategoria {
     return existeSubCategoriaEnSenia;
   }
 
-  Future<bool> existeSubCategoria(String nombreSubCategoria) async {
+  Future<bool?> existeSubCategoria(String nombreSubCategoria) async {
+    bool resultado = false;
     List subCategorias = await ControladorCategoria().listarSubCategorias();
     for (String subCat in subCategorias) {
       if (subCat == nombreSubCategoria) {
-        return true;
+        resultado = true;
       } else {
-        return false;
+        resultado = false;
       }
     }
+
+    return resultado;
   }
 }

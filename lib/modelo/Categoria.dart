@@ -1,7 +1,7 @@
 class Categoria {
-  String _nombre;
-  String _documentID;
-  List<Categoria> subCategorias;
+  late String _nombre;
+  late String _documentID;
+  late List<Categoria> subCategorias;
 
   Categoria();
 

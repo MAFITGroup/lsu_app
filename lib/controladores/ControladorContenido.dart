@@ -2,27 +2,27 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lsu_app/modelo/Contenido.dart';
 
 class ControladorContenido {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
-  String titulo;
-  String autor;
-  String categoria;
-  String usuarioAlta;
-  String descripcion;
-  String urlarchivo;
-  Contenido contenido;
-  String documentID;
+  String ?titulo;
+  String ?autor;
+  String ?categoria;
+  String ?usuarioAlta;
+  String ?descripcion;
+  String ?urlarchivo;
+  Contenido ?contenido;
+  String ?documentID;
 
   /*
   Se usa para obtener el objeto Contenido
   cuando entro a Visualizarla
    */
-  Future<Contenido> obtenerContenido(
+  Future<Contenido?> obtenerContenido(
       String tituloContenido,
       String descripcionContenido,
       String categoriaContenido,
@@ -45,13 +45,13 @@ class ControladorContenido {
         documentID = doc['documentID'];
 
         contenido = new Contenido();
-        contenido.titulo = titulo;
-        contenido.descripcion = descripcion;
-        contenido.autor = autor;
-        contenido.usuarioAlta = usuarioAlta;
-        contenido.categoria = categoria;
-        contenido.urlarchivo = urlarchivo;
-        contenido.documentID = documentID;
+        contenido?.titulo = titulo!;
+        contenido?.descripcion = descripcion!;
+        contenido?.autor = autor!;
+        contenido?.usuarioAlta = usuarioAlta!;
+        contenido?.categoria = categoria!;
+        contenido?.urlarchivo = urlarchivo!;
+        contenido?.documentID = documentID!;
       });
     });
 
@@ -67,9 +67,9 @@ class ControladorContenido {
       String descripcionNueva,
       String categoriaNueva,
       String autorNuevo) async {
-    Contenido contenido = await obtenerContenido(
+    Contenido? contenido = await obtenerContenido(
         tituloAnterior, descripcionAnterior, categoriaAnterior, autorAnterior);
-    String docId = contenido.documentID;
+    String? docId = contenido?.documentID;
 
     firestore.collection("biblioteca").doc(docId).update({
       'titulo': tituloNuevo.trim(),
@@ -85,9 +85,9 @@ class ControladorContenido {
     String categoria,
     String autor,
   ) async {
-    Contenido contenido =
+    Contenido? contenido =
         await obtenerContenido(titulo, descripcion, categoria, autor);
-    String docId = contenido.documentID;
+    String? docId = contenido?.documentID;
 
     // primero elimino el contenido
     await firestore
@@ -98,7 +98,7 @@ class ControladorContenido {
 
     // luego elimino el archivo
 
-    await eliminarArchivoContenido(contenido.documentID);
+    await eliminarArchivoContenido(contenido!.documentID);
   }
 
   Future eliminarArchivoContenido(String docID) async {
@@ -108,7 +108,7 @@ class ControladorContenido {
         .then((value) => print("Archivo eliminado correctamente"));
   }
 
-  Future<UploadTask> crearYSubirContenido(
+  Future<UploadTask?> crearYSubirContenido(
       String docID,
       String titulo,
       String descripcion,
@@ -117,6 +117,7 @@ class ControladorContenido {
       String usuarioAlta,
       String destino,
       File archivo) async {
+
     /*
     Primero subo el archivo
      */
@@ -148,8 +149,11 @@ class ControladorContenido {
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
+      print(e.message);
       return null;
     }
+
+    return subida;
   }
 
   /*
@@ -157,7 +161,7 @@ class ControladorContenido {
   desde la web, ya que el reproductor de video es null en la web
   por lo tanto se pasa como @param un tipo de dato Uint8List
    */
-  Future<UploadTask> crearYSubirContenidoWeb(
+  Future<UploadTask?> crearYSubirContenidoWeb(
       String docID,
       String titulo,
       String descripcion,
@@ -190,8 +194,11 @@ class ControladorContenido {
       });
     } on FirebaseException catch (e) {
       print('error al subir archivo ');
+      print(e.message);
       return null;
     }
+
+    return subida;
   }
 
   Future<List<Contenido>> obtenerTodosContenido() async {
@@ -212,15 +219,15 @@ class ControladorContenido {
 
         contenido = new Contenido();
 
-        contenido.titulo = titulo;
-        contenido.autor = autor;
-        contenido.descripcion = descripcion;
-        contenido.usuarioAlta = usuarioAlta;
-        contenido.categoria = categoria;
-        contenido.urlarchivo = urlarchivo;
-        contenido.documentID = documentID;
+        contenido?.titulo = titulo!;
+        contenido?.autor = autor!;
+        contenido?.descripcion = descripcion!;
+        contenido?.usuarioAlta = usuarioAlta!;
+        contenido?.categoria = categoria!;
+        contenido?.urlarchivo = urlarchivo!;
+        contenido?.documentID = documentID!;
 
-        lista.add(contenido);
+        lista.add(contenido!);
       });
     });
 

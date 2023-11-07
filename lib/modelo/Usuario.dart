@@ -1,12 +1,12 @@
 class Usuario {
-  String _uid;
-  String _correo;
-  String _nombreCompleto;
-  String _telefono;
-  String _departamento;
-  String _especialidad;
-  bool _esAdministrador;
-  String _statusUsuario;
+  late String _uid;
+  late String _correo;
+  late String _nombreCompleto;
+  late String _telefono;
+  late String _departamento;
+  late String _especialidad;
+  late bool _esAdministrador;
+  late String _statusUsuario;
 
   Usuario();
 

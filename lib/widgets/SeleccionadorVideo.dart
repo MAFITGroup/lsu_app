@@ -7,19 +7,21 @@ import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 class SeleccionadorVideo extends StatefulWidget {
-  final File file;
-  final String url;
+  late File file;
+  late String url;
 
-  const SeleccionadorVideo(this.file, this.url);
+  SeleccionadorVideo(this.file);
+
+  SeleccionadorVideo.fromUrl(this.url);
 
   @override
   SeleccionadorVideoState createState() => SeleccionadorVideoState();
 }
 
 class SeleccionadorVideoState extends State<SeleccionadorVideo> {
-  VideoPlayerController _controladorDeVideo;
-  ChewieController chewieController;
-  Chewie playerWidget;
+  late VideoPlayerController _controladorDeVideo;
+  late ChewieController chewieController;
+  late Chewie playerWidget;
 
   @override
   void initState() {
@@ -60,15 +62,15 @@ class SeleccionadorVideoState extends State<SeleccionadorVideo> {
             color: Colors.black,
           ),
           videoPlayerController: _controladorDeVideo =
-              VideoPlayerController.network(widget.url));
+              VideoPlayerController.networkUrl(widget.url as Uri));
     }
   }
 
   @override
   void dispose() {
     super.dispose();
-    chewieController.dispose();
-    _controladorDeVideo.dispose();
+    chewieController!.dispose();
+    _controladorDeVideo!.dispose();
   }
 
   @override

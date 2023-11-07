@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorSenia.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
@@ -24,8 +23,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
   ControladorUsuario controladorUsuario = new ControladorUsuario();
   ControladorSenia controladorSenia = new ControladorSenia();
   Usuario usuario = new Usuario();
-  int cantidadUsuariosActivos;
-  int cantidadUsuariosRegistrados;
+  int ?cantidadUsuariosActivos;
+  int ?cantidadUsuariosRegistrados;
 
   List<Usuario> listaUsuarios = [];
   List<Senia> listaSenias = [];
@@ -277,7 +276,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
 
   Future<void> obtenerUsuarioAdministrador() async {
     isUsuarioAdmin = await controladorUsuario
-        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
+        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser!.uid);
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
      */
@@ -286,7 +285,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
 
   Future<void> obtenerDatosUsuarioLogueado() async {
     usuario = await controladorUsuario
-        .obtenerUsuarioLogueado(FirebaseAuth.instance.currentUser.uid);
+        .obtenerUsuarioLogueado(FirebaseAuth.instance.currentUser!.uid);
 
     if (usuario.statusUsuario == 'PENDIENTE' ||
         usuario.statusUsuario == 'INACTIVO' ||

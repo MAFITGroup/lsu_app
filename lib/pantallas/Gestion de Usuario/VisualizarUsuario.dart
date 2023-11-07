@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -14,19 +11,18 @@ import 'package:lsu_app/widgets/DialogoAlerta.dart';
 import 'package:lsu_app/widgets/TextFieldNumerico.dart';
 import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
-
 class VisualizarUsuario extends StatefulWidget {
-  final Usuario usuario;
-  final String nombre;
-  final String correo;
-  final String departamento;
-  final bool esAdministrador;
-  final String especialidad;
-  final String statusUsuario;
-  final String telefono;
+  final Usuario? usuario;
+  final String? nombre;
+  final String? correo;
+  final String? departamento;
+  final bool? esAdministrador;
+  final String? especialidad;
+  final String? statusUsuario;
+  final String? telefono;
 
   const VisualizarUsuario(
-      {Key key,
+      {Key? key,
       this.usuario,
       this.nombre,
       this.correo,
@@ -45,7 +41,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
   final formKey = new GlobalKey<FormState>();
   List listaCorreos = [];
   ControladorUsuario controladorUsuario = ControladorUsuario();
-  bool modoEditar;
+  bool? modoEditar;
 
   @override
   void initState() {
@@ -57,9 +53,9 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
 
   @override
   Widget build(BuildContext context) {
-    Usuario usuario = widget.usuario;
-    String estadoUsuario = usuario.statusUsuario;
-    bool estadoU;
+    Usuario? usuario = widget.usuario;
+    String estadoUsuario = usuario!.statusUsuario;
+    bool ?estadoU;
 
     if (estadoUsuario == 'PENDIENTE' || estadoUsuario == 'INACTIVO') {
       print(estadoUsuario);
@@ -91,12 +87,12 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                         value: 0,
                         child: ListTile(
                             leading: Icon(
-                                !modoEditar
+                                !modoEditar!
                                     ? Icons.edit
                                     : Icons.cancel_outlined,
                                 color: Colores().colorAzul),
                             title: Text(
-                                !modoEditar
+                                !modoEditar!
                                     ? "Editar Usuario"
                                     : "Cancelar Editar",
                                 style: TextStyle(
@@ -104,20 +100,18 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                     fontSize: 14,
                                     color: Colores().colorSombraBotones))),
                       ),
-                      usuario.statusUsuario == 'PENDIENTE'
-                          ? PopupMenuItem(
-                              value: 1,
-                              child: ListTile(
-                                  leading: Icon(Icons.delete_forever_outlined,
-                                      color: Colores().colorAzul),
-                                  title: Text("Eliminar Usuario",
-                                      style: TextStyle(
-                                          fontFamily: 'Trueno',
-                                          fontSize: 14,
-                                          color:
-                                              Colores().colorSombraBotones))),
-                            )
-                          : null,
+                      if (usuario.statusUsuario == 'PENDIENTE')
+                        PopupMenuItem(
+                          value: 1,
+                          child: ListTile(
+                              leading: Icon(Icons.delete_forever_outlined,
+                                  color: Colores().colorAzul),
+                              title: Text("Eliminar Usuario",
+                                  style: TextStyle(
+                                      fontFamily: 'Trueno',
+                                      fontSize: 14,
+                                      color: Colores().colorSombraBotones))),
+                        ),
                     ],
                   ),
                 ]),
@@ -170,7 +164,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                         controlador:
                             TextEditingController(text: usuario.especialidad),
                       ),
-                      modoEditar
+                      modoEditar!
                           ? Column(
                               children: [
                                 Table(
@@ -203,11 +197,11 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                                               fontSize: 14,
                                               color: Colores().colorAzul)),
                                       Switch(
-                                        value: estadoU,
+                                        value: estadoU!,
                                         onChanged: (value) {
                                           setState(() {
                                             estadoU = value;
-                                            if (estadoU) {
+                                            if (estadoU!) {
                                               estadoUsuario = 'ACTIVO';
                                               usuario.statusUsuario =
                                                   estadoUsuario;
@@ -231,13 +225,16 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          modoEditar
+                          modoEditar!
                               ? Boton(
                                   titulo: 'GUARDAR',
                                   onTap: () {
                                     if (usuario.statusUsuario == 'ACTIVO') {
                                       String estadoSolicitud = 'Aceptada';
-                                      EnvioMail().enviarMail(usuario.nombreCompleto, usuario.correo, estadoSolicitud);
+                                      EnvioMail().enviarMail(
+                                          usuario.nombreCompleto,
+                                          usuario.correo,
+                                          estadoSolicitud);
                                     }
                                     controladorUsuario.administrarUsuario(
                                         usuario.correo,
@@ -310,13 +307,14 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
   void onSelected(BuildContext context, int item) {
     switch (item) {
       case 0:
-        !modoEditar ? modoEditarUsuario() : cancelarModoEditarUsuario();
+        !modoEditar! ? modoEditarUsuario() : cancelarModoEditarUsuario();
         break;
       case 1:
         String estadoSolicitud = 'Denegada';
-        EnvioMail().enviarMail(widget.usuario.nombreCompleto, widget.usuario.correo, estadoSolicitud);
-        controladorUsuario.administrarUsuario(
-            widget.usuario.correo, estadoSolicitud, widget.usuario.esAdministrador);
+        EnvioMail().enviarMail(widget.usuario!.nombreCompleto,
+            widget.usuario!.correo, estadoSolicitud);
+        controladorUsuario.administrarUsuario(widget.usuario!.correo,
+            estadoSolicitud, widget.usuario!.esAdministrador);
 
         showDialog(
             barrierDismissible: true,
@@ -325,7 +323,7 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
               return DialogoAlerta(
                 tituloMensaje: 'Edición de Usuario',
                 mensaje: 'El usuario ' +
-                    widget.usuario.nombreCompleto +
+                    widget.usuario!.nombreCompleto +
                     ', ha sido actualizado.',
                 acciones: [
                   TextButton(
@@ -346,11 +344,9 @@ class _VisualizarUsuarioState extends State<VisualizarUsuario> {
     }
   }
 
-  Future<void> obtenerCorreosUsuariosAdministrador() async {
+  Future<List> obtenerCorreosUsuariosAdministrador() async {
     listaCorreos =
         await controladorUsuario.obtenerCorreosUsuariosAdministrador();
     return listaCorreos;
   }
-
-
 }

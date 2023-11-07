@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
 import 'package:lsu_app/controladores/ControladorUsuario.dart';
@@ -8,9 +7,9 @@ import 'package:lsu_app/pantallas/Glosario/VisualizarSeniasPorSubCategoria.dart'
 import 'package:lsu_app/widgets/BarraDeNavegacion.dart';
 
 class VisualizarSubCategoriaPorCategoria extends StatefulWidget {
-  final String nombreCategoria;
+  final String ?nombreCategoria;
 
-  const VisualizarSubCategoriaPorCategoria({Key key, this.nombreCategoria})
+  const VisualizarSubCategoriaPorCategoria({Key ?key, this.nombreCategoria})
       : super(key: key);
 
   @override
@@ -20,7 +19,7 @@ class VisualizarSubCategoriaPorCategoria extends StatefulWidget {
 
 class _VisualizarSubCategoriaPorCategoriaState
     extends State<VisualizarSubCategoriaPorCategoria> {
-  bool isUsuarioAdmin;
+  bool ?isUsuarioAdmin;
   List<SubCategoria> listaSubCategoriaPorCategoria = [];
   ControladorCategoria _controladorCategoria = new ControladorCategoria();
 
@@ -31,7 +30,7 @@ class _VisualizarSubCategoriaPorCategoriaState
 
   @override
   Widget build(BuildContext context) {
-    String nombreCategoria = widget.nombreCategoria;
+    String? nombreCategoria = widget.nombreCategoria;
     return Container(
       height: 600,
       width: 600,
@@ -41,13 +40,13 @@ class _VisualizarSubCategoriaPorCategoriaState
             children: [
               BarraDeNavegacion(
                 titulo: Text(
-                    "SUBCATEGORÍAS " + "- CATEGORÍA: " + widget.nombreCategoria,
+                    "SUBCATEGORÍAS " + "- CATEGORÍA: " + widget.nombreCategoria!,
                     style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
               ),
               Expanded(
                 child: Container(
                   child: FutureBuilder(
-                    future: listarSubCategoriasXCategorias(nombreCategoria),
+                    future: listarSubCategoriasXCategorias(nombreCategoria!),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(
@@ -93,13 +92,13 @@ class _VisualizarSubCategoriaPorCategoriaState
 
   Future<List<SubCategoria>> listarSubCategoriasXCategorias(
       String nombreCategoria) async {
-    listaSubCategoriaPorCategoria = await _controladorCategoria
+    return listaSubCategoriaPorCategoria = await _controladorCategoria
         .listarSubCategoriasPorCategoria(nombreCategoria);
   }
 
   Future<void> obtenerUsuarioAdministrador() async {
     isUsuarioAdmin = await ControladorUsuario()
-        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser.uid);
+        .isUsuarioAdministrador(FirebaseAuth.instance.currentUser!.uid);
     /*
     setState para que la pagina se actualize sola si el usuario es administrador.
      */

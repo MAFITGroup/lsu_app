@@ -1,28 +1,27 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
 
 class TextFieldTexto extends StatefulWidget {
-  final String nombre;
-  final Function(String) valor;
-  final Function(String) validacion;
+  final String ?nombre;
+  final Function(String?) ?valor;
+  final String? Function(String?) ?validacion;
 
   /*
   @onSaved se usa para las subCategorias
    */
-  final Function(String) onSaved;
-  final Icon icon;
-  final Widget iconInfo;
+  final Function(String?) ?onSaved;
+  final Icon ?icon;
+  final Widget ?iconInfo;
 
   /*
   Con este controlador, puedo limpiar el textfield,
   setearle un valor por defecto,etc.
    */
-  final TextEditingController controlador;
-  final bool habilitado;
+  final TextEditingController ?controlador;
+  final bool ?habilitado;
 
   TextFieldTexto({
-    Key key,
+    Key? key,
     this.nombre,
     this.valor,
     this.validacion,
@@ -49,7 +48,7 @@ class _TextFieldTextoState extends State<TextFieldTexto> {
         decoration: InputDecoration(
             prefixIcon: widget.icon == null ? Icon(null) : widget.icon,
             suffixIcon: widget.iconInfo,
-            labelText: widget.nombre.toUpperCase(),
+            labelText: widget.nombre?.toUpperCase(),
             labelStyle: TextStyle(
                 fontFamily: 'Trueno',
                 fontSize: 12.0,

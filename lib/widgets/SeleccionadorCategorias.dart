@@ -1,7 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lsu_app/manejadores/Colores.dart';
 
 class SeleccionadorCategorias extends StatefulWidget {
   final List list;
@@ -35,15 +34,6 @@ class SeleccionadorCategoriasState extends State<SeleccionadorCategorias> {
             catSeleccionada = value;
           });
         },
-        showSearchBox: true,
-        clearButton: Icon(Icons.close, color: Colores().colorSombraBotones),
-        dropDownButton:
-            Icon(Icons.arrow_drop_down, color: Colores().colorSombraBotones),
-        showClearButton: true,
-        mode: Mode.DIALOG,
-        dropdownSearchDecoration: InputDecoration(
-          focusColor: Colores().colorSombraBotones,
-        ),
         autoValidateMode: AutovalidateMode.always,
       ),
     );

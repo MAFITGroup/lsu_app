@@ -1,8 +1,6 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lsu_app/controladores/ControladorCategoria.dart';
@@ -21,12 +19,12 @@ import 'package:lsu_app/widgets/TextFieldTexto.dart';
 
 
 class VisualizarSenia extends StatefulWidget {
-  final Senia senia;
-  final bool isUsuarioAdmin;
-  final List subCategorias;
+  final Senia ?senia;
+  final bool ?isUsuarioAdmin;
+  final List ?subCategorias;
 
   const VisualizarSenia(
-      {Key key, this.senia, this.isUsuarioAdmin, this.subCategorias})
+      {Key? key, this.senia, this.isUsuarioAdmin, this.subCategorias})
       : super(key: key);
 
   @override
@@ -34,22 +32,22 @@ class VisualizarSenia extends StatefulWidget {
 }
 
 class _VisualizarSeniaState extends State<VisualizarSenia> {
-  File archivoDeVideo;
-  Uint8List fileWeb;
+  File ?archivoDeVideo;
+  Uint8List ?fileWeb;
   List listaCategorias = [];
   List listaSubCategorias = [];
-  bool modoEditar;
+  bool ?modoEditar;
   ControladorSenia _controladorSenia = new ControladorSenia();
   final formKey = new GlobalKey<FormState>();
   final subCategoriaKey = new GlobalKey<DropdownSearchState>();
   final categoriaKey = new GlobalKey<DropdownSearchState>();
-  bool isSubCategoriaSeleccionada;
+  bool ?isSubCategoriaSeleccionada;
 
   //usadas para editar
-  String nuevoNombreSenia;
-  String nuevaDescripcionSenia;
-  String nuevaCategoriaSenia;
-  String nuevaSubCategoriaSenia;
+  String ?nuevoNombreSenia;
+  String ?nuevaDescripcionSenia;
+  String ?nuevaCategoriaSenia;
+  String ?nuevaSubCategoriaSenia;
 
   @override
   void initState() {
@@ -62,17 +60,17 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
 
   @override
   Widget build(BuildContext context) {
-    Senia senia = widget.senia;
-    bool isUsuarioAdmin = widget.isUsuarioAdmin;
+    Senia? senia = widget.senia;
+    bool? isUsuarioAdmin = widget.isUsuarioAdmin;
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             BarraDeNavegacion(
-              titulo: Text('SEÑA' + " - " + senia.nombre.toUpperCase(),
+              titulo: Text('SEÑA' + " - " + senia!.nombre.toUpperCase(),
                   style: TextStyle(fontFamily: 'Trueno', fontSize: 14)),
-              listaWidget: isUsuarioAdmin
+              listaWidget: isUsuarioAdmin!
                   ? [
                       PopupMenuButton<int>(
                         /*
@@ -85,12 +83,12 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                             value: 0,
                             child: ListTile(
                                 leading: Icon(
-                                    !modoEditar
+                                    !modoEditar!
                                         ? Icons.edit
                                         : Icons.cancel_outlined,
                                     color: Colores().colorAzul),
                                 title: Text(
-                                    !modoEditar
+                                    !modoEditar!
                                         ? "Editar Seña"
                                         : "Cancelar Editar",
                                     style: TextStyle(
@@ -127,14 +125,14 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                         child: senia.urlVideo == null
                             ? Icon(Icons.video_library_outlined,
                                 color: Colores().colorTextos, size: 150)
-                            : SeleccionadorVideo(null, senia.urlVideo),
+                            : SeleccionadorVideo.fromUrl(senia.urlVideo),
                       ),
                       SizedBox(height: 15.0),
                       TextFieldTexto(
                         nombre: 'NOMBRE',
                         icon: Icon(Icons.format_size_outlined),
                         habilitado: modoEditar,
-                        controlador: modoEditar
+                        controlador: modoEditar!
                             ? null
                             : TextEditingController(text: senia.nombre),
                         valor: (value) {
@@ -143,14 +141,14 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                           });
                         },
                         validacion: ((value) =>
-                            value.isEmpty ? 'Campo Obligatorio' : null),
+                            value!.isEmpty ? 'Campo Obligatorio' : null),
                       ),
                       SizedBox(height: 15.0),
                       TextFieldDescripcion(
                         nombre: 'DESCRIPCION',
                         icon: Icon(Icons.description),
                         habilitado: modoEditar,
-                        controlador: modoEditar
+                        controlador: modoEditar!
                             ? null
                             : TextEditingController(text: senia.descripcion),
                         valor: (value) {
@@ -166,43 +164,22 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                         child: DropdownSearch(
                           key: categoriaKey,
                           items: listaCategorias,
-                          enabled: modoEditar,
+                          enabled: modoEditar!,
                           selectedItem: senia.categoria,
                           onChanged: (value) async {
                             await listarSubCategorias(value);
-                            subCategoriaKey.currentState.clear();
+                            subCategoriaKey.currentState!.clear();
                             setState(() {
                               nuevaCategoriaSenia = value;
                               if (value != null) {
                                 isSubCategoriaSeleccionada = true;
-                                subCategoriaKey.currentState.clear();
+                                subCategoriaKey.currentState!.clear();
                               } else {
                                 isSubCategoriaSeleccionada = false;
-                                subCategoriaKey.currentState.clear();
+                                subCategoriaKey.currentState!.clear();
                               }
                             });
                           },
-                          showSearchBox: true,
-                          clearButton: Icon(Icons.close,
-                              color: Colores().colorSombraBotones),
-                          dropDownButton: modoEditar
-                              ? Icon(Icons.arrow_drop_down,
-                                  color: Colores().colorSombraBotones)
-                              : Container(),
-                          showClearButton: modoEditar ? true : false,
-                          mode: Mode.DIALOG,
-                          dropdownSearchDecoration: InputDecoration(
-                              hintStyle: TextStyle(
-                                  fontFamily: 'Trueno',
-                                  fontSize: 12,
-                                  color: Colores().colorSombraBotones),
-                              hintText: "CATEGORÍA",
-                              prefixIcon: Icon(Icons.category_outlined),
-                              focusColor: Colores().colorSombraBotones,
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colores().colorSombraBotones),
-                              )),
                           validator: (dynamic valor) {
                             if (valor == null) {
                               return "Campo Obligatorio";
@@ -219,35 +196,13 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                         child: DropdownSearch(
                           key: subCategoriaKey,
                           items: listaSubCategorias,
-                          enabled: modoEditar && isSubCategoriaSeleccionada,
+                          enabled: modoEditar! && isSubCategoriaSeleccionada!,
                           selectedItem: senia.subCategoria,
                           onChanged: (value) {
                             setState(() {
                               nuevaSubCategoriaSenia = value;
                             });
                           },
-                          dropdownBuilderSupportsNullItem: true,
-                          showSearchBox: true,
-                          clearButton: Icon(Icons.close,
-                              color: Colores().colorSombraBotones),
-                          dropDownButton: modoEditar
-                              ? Icon(Icons.arrow_drop_down,
-                                  color: Colores().colorSombraBotones)
-                              : Container(),
-                          showClearButton: modoEditar ? true : false,
-                          mode: Mode.DIALOG,
-                          dropdownSearchDecoration: InputDecoration(
-                              hintStyle: TextStyle(
-                                  fontFamily: 'Trueno',
-                                  fontSize: 12,
-                                  color: Colores().colorSombraBotones),
-                              hintText: "SUBCATEGORÍA",
-                              prefixIcon: Icon(Icons.category_outlined),
-                              focusColor: Colores().colorSombraBotones,
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colores().colorSombraBotones),
-                              )),
                           validator: (dynamic valor) {
                             if (valor == null) {
                               return "Campo Obligatorio";
@@ -259,7 +214,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                       ),
 
                       SizedBox(height: 20.0),
-                      modoEditar
+                      modoEditar!
                           ? Boton(
                               titulo: 'GUARDAR',
                               onTap: () {
@@ -286,10 +241,10 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                                       senia.descripcion,
                                       senia.categoria,
                                       senia.subCategoria,
-                                      nuevoNombreSenia,
-                                      nuevaDescripcionSenia,
-                                      nuevaCategoriaSenia,
-                                      nuevaSubCategoriaSenia)
+                                      nuevoNombreSenia!,
+                                      nuevaDescripcionSenia!,
+                                      nuevaCategoriaSenia!,
+                                      nuevaSubCategoriaSenia!)
                                     ..then((userCreds) {
                                       /*
                                         Luego de editar la seña,
@@ -407,7 +362,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
   void onSelected(BuildContext context, int item) {
     switch (item) {
       case 0:
-        !modoEditar ? modoEditarSenia() : canelarModoEditarSenia();
+        !modoEditar! ? modoEditarSenia() : canelarModoEditarSenia();
         break;
       case 1:
         showDialog(
@@ -427,10 +382,10 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                               decoration: TextDecoration.underline)),
                       onPressed: () {
                         eliminarSenia(
-                            widget.senia.nombre,
-                            widget.senia.descripcion,
-                            widget.senia.categoria,
-                            widget.senia.subCategoria)
+                            widget.senia!.nombre,
+                            widget.senia!.descripcion,
+                            widget.senia!.categoria,
+                            widget.senia!.subCategoria)
                           ..then((userCreds) {
                             /*
                                     Luego de eliminar la seña,

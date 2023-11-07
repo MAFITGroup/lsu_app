@@ -1,5 +1,4 @@
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lsu_app/manejadores/Colores.dart';
@@ -20,13 +19,13 @@ class Registrarse extends StatefulWidget {
 
 class _RegistrarseState extends State<Registrarse> {
   final formKey = new GlobalKey<FormState>();
-  String _email;
-  String _password;
-  String _nombreCompleto;
-  String _telefono;
-  String _departamento;
-  String _especialidad;
-  String _statusUsuario;
+  String ?_email;
+  String ?_password;
+  String ?_nombreCompleto;
+  String ?_telefono;
+  String ?_departamento;
+  String ?_especialidad;
+  String ?_statusUsuario;
   List departamentos = [
     'ARTIGAS',
     'CANELONES',
@@ -76,9 +75,9 @@ class _RegistrarseState extends State<Registrarse> {
               nombre: 'CORREO',
               icon: Icon(Icons.alternate_email_rounded),
               valor: (value) {
-                this._email = value.toLowerCase();
+                this._email = value!.toLowerCase();
               },
-              validacion: (value) => value.isEmpty
+              validacion: (value) => value!.isEmpty
                   ? 'Campo Obligatorio'
                   : Validar().validarCorreo(value)),
 
@@ -89,14 +88,14 @@ class _RegistrarseState extends State<Registrarse> {
               iconInfo: Tooltip(
                 message: 'La contraseña debe contener al menos 8 caracteres,\n1 Mayúscula, 1 número y 1 carácter especial ( !@#\$&*~. )',
                 child: InkWell(
-                  child: Icon(FontAwesomeIcons.infoCircle, color: Colores().colorAzul),
+                  child: Icon(FontAwesomeIcons.circleInfo, color: Colores().colorAzul),
                 ),
               ),
               valor: (value) {
                 this._password = value;
               },
               validacion: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return Validar().validarPassword(value);
                 }
               }),
@@ -106,10 +105,10 @@ class _RegistrarseState extends State<Registrarse> {
               nombre: 'NOMBRE COMPLETO',
               icon: Icon(Icons.person),
               valor: (value) {
-                this._nombreCompleto = value.toUpperCase();
+                this._nombreCompleto = value!.toUpperCase();
               },
               validacion: ((value) =>
-                  value.isEmpty ? 'Campo Obligatorio' : null)),
+                  value!.isEmpty ? 'Campo Obligatorio' : null)),
 
           // CELULAR
           TextFieldNumerico(
@@ -118,13 +117,13 @@ class _RegistrarseState extends State<Registrarse> {
               iconInfo: Tooltip(
                 message: 'El número de celular debe comenzar con 09 \ny tener un largo de 9 caracteres',
                 child: InkWell(
-                  child: Icon(FontAwesomeIcons.infoCircle, color: Colores().colorAzul),
+                  child: Icon(FontAwesomeIcons.circleInfo, color: Colores().colorAzul),
                 ),
               ),
               valor: (value) {
                 this._telefono = value;
               },
-              validacion: (value) => value.isEmpty
+              validacion: (value) => value!.isEmpty
                   ? 'Campo Obligatorio'
                   : Validar().validarCelular(value)),
 
@@ -145,24 +144,7 @@ class _RegistrarseState extends State<Registrarse> {
                   return null;
                 }
               }),
-              showSearchBox: true,
-              clearButton:
-                  Icon(Icons.close, color: Colores().colorSombraBotones),
-              dropDownButton: Icon(Icons.arrow_drop_down,
-                  color: Colores().colorSombraBotones),
-              showClearButton: true,
-              mode: Mode.DIALOG,
-              dropdownSearchDecoration: InputDecoration(
-                  hintStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12,
-                      color: Colores().colorSombraBotones),
-                  hintText: "DEPARTAMENTO",
-                  prefixIcon: Icon(Icons.location_city_outlined),
-                  focusColor: Colores().colorSombraBotones,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colores().colorSombraBotones),
-                  )),
+
             ),
           ),
 
@@ -171,10 +153,10 @@ class _RegistrarseState extends State<Registrarse> {
               nombre: 'ESPECIALIDAD',
               icon: Icon(Icons.military_tech_outlined),
               valor: (value) {
-                this._especialidad = value.toUpperCase();
+                this._especialidad = value!.toUpperCase();
               },
               validacion: ((value) =>
-                  value.isEmpty ? 'Campo Obligatorio' : null)),
+                  value!.isEmpty ? 'Campo Obligatorio' : null)),
 
           Container(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
@@ -184,7 +166,7 @@ class _RegistrarseState extends State<Registrarse> {
                     value: isCheckedTerminosyCondiciones,
                     onChanged: (value) {
                       setState(() {
-                        isCheckedTerminosyCondiciones = value;
+                        isCheckedTerminosyCondiciones = value!;
                       });
                     },
                   ),
@@ -209,14 +191,14 @@ class _RegistrarseState extends State<Registrarse> {
                 if (Validar().camposVacios(formKey)) {
                   if (isCheckedTerminosyCondiciones) {
                     AuthService().signUp(
-                        _email,
-                        _password,
-                        _nombreCompleto,
-                        _telefono,
-                        _departamento,
-                        _especialidad,
+                        _email!,
+                        _password!,
+                        _nombreCompleto!,
+                        _telefono!,
+                        _departamento!,
+                        _especialidad!,
                         false,
-                        _statusUsuario,
+                        _statusUsuario!,
                         context);
                   } else {
                     showDialog(
