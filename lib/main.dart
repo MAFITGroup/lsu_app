@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lsu_app/servicios/AuthService.dart';
-
+import 'firebase_options.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'channel id', 'channel notifications',
@@ -21,7 +21,7 @@ Future<void> _firebaseMessagingBackgroundHanlder(RemoteMessage mensaje) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHanlder);
 
   if(!kIsWeb){

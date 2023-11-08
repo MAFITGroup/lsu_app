@@ -4,7 +4,7 @@ import 'package:lsu_app/manejadores/Colores.dart';
 class TextFieldDescripcion extends StatelessWidget {
   final String ?nombre;
   final Function(String) ?valor;
-  final String? Function(String?) ?validacion;
+  final String? Function(String?)?validacion;
   final Icon ?icon;
   final TextEditingController ?controlador;
   final bool ?habilitado;
@@ -44,7 +44,7 @@ class TextFieldDescripcion extends StatelessWidget {
                 borderSide: BorderSide(color: Colores().colorSombraBotones),
               )),
           onChanged: valor,
-          validator: validacion!),
+          validator: validacion),
     );
   }
 }

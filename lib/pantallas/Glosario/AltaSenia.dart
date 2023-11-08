@@ -41,31 +41,32 @@ class AltaSenia extends StatefulWidget {
 class _AltaSeniaState extends State<AltaSenia> {
   ControladorSenia _controladorSenia = new ControladorSenia();
   ControladorUsuario _controladorUsuario = new ControladorUsuario();
-  String ?_nombreSenia;
-  String ?_descripcionSenia;
-  File ?archivoDeVideo;
-  String ?_url;
-  Uint8List ?fileWeb;
+  String _nombreSenia = "";
+  String _descripcionSenia = "";
+  File? archivoDeVideo;
+  String _url = "";
+  Uint8List fileWeb = new Uint8List(0);
   final formKey = new GlobalKey<FormState>();
   final subCategoriaKey = new GlobalKey<DropdownSearchState>();
   final categoriaKey = new GlobalKey<DropdownSearchState>();
   String _usuarioUID = FirebaseAuth.instance.currentUser!.uid;
-  String ?fileExtension;
+  String fileExtension = "";
   FirebaseFirestore ?firestore;
-  List ?listaCategorias;
-  List<dynamic> ?listaSubCategorias;
+  List listaCategorias = [];
+  List<dynamic> listaSubCategorias = [];
   dynamic _catSeleccionada;
   dynamic _subCatSeleccionada;
   UploadTask ?uploadTask;
   CollectionReference ?categoriasRef;
-  bool ?isCategoriaSeleccionada;
-  String ?_idSenia;
+  bool isCategoriaSeleccionada = false;
+  String _idSenia = "";
   final Trace myTrace = FirebasePerformance.instance.newTrace("Senias");
 
   @override
   void initState() {
     listarCategorias();
     isCategoriaSeleccionada = false;
+
   }
 
   @override
@@ -94,19 +95,15 @@ class _AltaSeniaState extends State<AltaSenia> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: 300,
-                          child: archivoDeVideo == null && this._url == null
-                              ? Icon(Icons.video_library_outlined,
-                                  color: Colores().colorTextos, size: 150)
-                              : (kIsWeb
-                                  ? SeleccionadorVideo.fromUrl(_url!)
-                                  : SeleccionadorVideo(archivoDeVideo!)),
-                        ),
+                          child: kIsWeb
+                                  ? SeleccionadorVideo(file: null, url: _url,)
+                                  : SeleccionadorVideo(file: archivoDeVideo, url: null,)),
                         SizedBox(height: 8.0),
                         TextFieldTexto(
                           nombre: 'NOMBRE',
                           icon: Icon(Icons.format_size_outlined),
                           valor: (value) {
-                            this._nombreSenia = value;
+                            this._nombreSenia = value!;
                           },
                           validacion: ((value) =>
                               value!.isEmpty ? 'El nombre es requerido' : null),
@@ -130,7 +127,7 @@ class _AltaSeniaState extends State<AltaSenia> {
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: DropdownSearch(
                             key: categoriaKey,
-                            items: listaCategorias!,
+                            items: listaCategorias,
                             onChanged: (value) async {
                               await listarSubCategorias(value);
                               subCategoriaKey.currentState!.clear();
@@ -160,8 +157,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: DropdownSearch(
                             key: subCategoriaKey,
-                            enabled: isCategoriaSeleccionada!,
-                            items: listaSubCategorias!,
+                            enabled: isCategoriaSeleccionada,
+                            items: listaSubCategorias,
                             onChanged: (value) {
                               setState(() {
                                 _subCatSeleccionada = value;
@@ -342,8 +339,8 @@ class _AltaSeniaState extends State<AltaSenia> {
      */
     setState(() {
       archivoDeVideo = null;
-      fileWeb = null;
-      this._url = null;
+      fileWeb = new Uint8List(0);
+
     });
 
     FilePickerResult? result =
@@ -357,7 +354,7 @@ class _AltaSeniaState extends State<AltaSenia> {
         var fileName = result.files.first.name;
         final blob = html.Blob([fileBytes]);
         //guardo fileWeb como bytes.
-        fileWeb = fileBytes;
+        fileWeb = fileBytes!;
 
         // con esta URL reproduzco el video en la web
         this._url = html.Url.createObjectUrlFromBlob(blob);
@@ -436,9 +433,8 @@ class _AltaSeniaState extends State<AltaSenia> {
                           fontSize: 11.0,
                           decoration: TextDecoration.underline)),
                   onPressed: () {
-                    archivoDeVideo = null;
-                    fileWeb = null;
-                    this._url = null;
+                    archivoDeVideo = new File("");
+                    fileWeb = new Uint8List(0);
                     Navigator.of(context).pop();
                   },
                 )
@@ -452,7 +448,7 @@ class _AltaSeniaState extends State<AltaSenia> {
   }
 
   void listarCategorias() async {
-    listaCategorias = widget.listaCategorias;
+    listaCategorias = widget.listaCategorias!;
   }
 
   Future<void> listarSubCategorias(String nombreCategoria) async {

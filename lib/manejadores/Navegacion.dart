@@ -65,14 +65,19 @@ class Navegacion {
   }
 
   void navegarAPerfil(Usuario usuario) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Perfil(usuario: usuario),
-        ));
+    if(usuario != null){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Perfil(usuario: usuario),
+          ));
+    }
   }
 
   void navegarAltaSenia(List listaCategorias) {
+    if(listaCategorias == null){
+      listaCategorias = [];
+    }
     Navigator.push(
         context,
         MaterialPageRoute(

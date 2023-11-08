@@ -23,8 +23,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
   ControladorUsuario controladorUsuario = new ControladorUsuario();
   ControladorSenia controladorSenia = new ControladorSenia();
   Usuario usuario = new Usuario();
-  int ?cantidadUsuariosActivos;
-  int ?cantidadUsuariosRegistrados;
+  int cantidadUsuariosActivos = 0;
+  int cantidadUsuariosRegistrados = 0;
 
   List<Usuario> listaUsuarios = [];
   List<Senia> listaSenias = [];
@@ -284,6 +284,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
   }
 
   Future<void> obtenerDatosUsuarioLogueado() async {
+
+
     usuario = await controladorUsuario
         .obtenerUsuarioLogueado(FirebaseAuth.instance.currentUser!.uid);
 

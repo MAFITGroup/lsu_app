@@ -197,7 +197,7 @@ class AuthService extends ChangeNotifier {
       String statusUsuario,
       context) {
     return firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: password)
+        .createUserWithEmailAndPassword(email: email, password: password )
         .then((value) async {
       String userID = firebaseAuth.currentUser!.uid;
       manej.crearUsuario(userID, email, nombreCompleto, telefono, departamento,

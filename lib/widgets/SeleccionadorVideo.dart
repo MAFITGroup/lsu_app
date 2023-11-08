@@ -6,79 +6,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
-class SeleccionadorVideo extends StatefulWidget {
-  late File file;
-  late String url;
+import '../manejadores/Colores.dart';
 
-  SeleccionadorVideo(this.file);
+class SeleccionadorVideo extends StatelessWidget {
+  final File? file;
+  final String? url;
 
-  SeleccionadorVideo.fromUrl(this.url);
-
-  @override
-  SeleccionadorVideoState createState() => SeleccionadorVideoState();
-}
-
-class SeleccionadorVideoState extends State<SeleccionadorVideo> {
-  late VideoPlayerController _controladorDeVideo;
-  late ChewieController chewieController;
-  late Chewie playerWidget;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.file != null) {
-      chewieController = ChewieController(
-        aspectRatio: kIsWeb ? 16 / 9 : 4 / 3,
-        allowMuting: true,
-        autoPlay: true,
-        looping: true,
-        showControls: true,
-        showControlsOnInitialize: true,
-        showOptions: true,
-        deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
-        placeholder: Container(
-          color: Colors.black,
-        ),
-        videoPlayerController: _controladorDeVideo =
-            VideoPlayerController.file(widget.file),
-      );
-
-      /*
-      Uso tanto para reproductor web, como para visualizador de senias
-       */
-    } else if (widget.url != null) {
-      chewieController = ChewieController(
-          aspectRatio: kIsWeb ? 16 / 9 : 4 / 3,
-          allowMuting: true,
-          autoPlay: true,
-          looping: true,
-          showControls: true,
-          showControlsOnInitialize: true,
-          showOptions: true,
-          allowFullScreen: false,
-          deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
-          placeholder: Container(
-            color: Colors.black,
-          ),
-          videoPlayerController: _controladorDeVideo =
-              VideoPlayerController.networkUrl(widget.url as Uri));
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    chewieController!.dispose();
-    _controladorDeVideo!.dispose();
-  }
+  SeleccionadorVideo({this.file, this.url});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Chewie(
-        controller: chewieController,
+    VideoPlayerController? _videoController;
+    ChewieController? _chewieController;
+
+    if (file != null) {
+      _videoController = VideoPlayerController.file(file!);
+    } else if (url != null) {
+      _videoController = VideoPlayerController.network(url!);
+    }
+
+    if (_videoController != null) {
+      _chewieController = ChewieController(
+        videoPlayerController: _videoController,
+        aspectRatio: 16 / 9, // You can customize the aspect ratio here
+        autoPlay: true,
+        looping: true,
+        showControls: true,
+        // Add more ChewieController configurations as needed
+      );
+    }
+
+    return _chewieController != null
+        ? Chewie(controller: _chewieController!)
+        : Container(
+      // Placeholder widget when there is no video to display
+      child: Center(
+        child: Icon(Icons.video_library_outlined,
+            color: Colores().colorTextos, size: 150),
       ),
     );
   }
+
 }

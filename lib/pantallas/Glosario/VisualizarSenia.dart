@@ -125,7 +125,7 @@ class _VisualizarSeniaState extends State<VisualizarSenia> {
                         child: senia.urlVideo == null
                             ? Icon(Icons.video_library_outlined,
                                 color: Colores().colorTextos, size: 150)
-                            : SeleccionadorVideo.fromUrl(senia.urlVideo),
+                            : SeleccionadorVideo(url: senia.urlVideo),
                       ),
                       SizedBox(height: 15.0),
                       TextFieldTexto(
